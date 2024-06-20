@@ -35,7 +35,7 @@ contract AsyncPuzzleBetSystem is System {
     _;
   }
 
-  function newGame2(
+  function newGame(
     Puzzle puzzleType,
     uint32 submissionWindowSeconds,
     uint32 playbackWindowSeconds,
@@ -67,14 +67,14 @@ contract AsyncPuzzleBetSystem is System {
     return gameId;
   }
 
-  function joinGame2(bytes32 gameId) public payable {
+  function joinGame(bytes32 gameId) public payable {
     // Require that this game has no password hash set when called without a password
     bytes32 passwordHash = GamePasswordHash.get(gameId);
     require(passwordHash == bytes32(0), "Must provide a password");
     _joinGame(gameId);
   }
 
-  function joinGame2(bytes32 gameId, string memory password) public payable {
+  function joinGame(bytes32 gameId, string memory password) public payable {
     // Assume passwordHash is set and check the password when provided
     bytes32 checkHash = keccak256(abi.encodePacked(password));
     require(checkHash == GamePasswordHash.get(gameId), "Incorrect password");
@@ -93,10 +93,10 @@ contract AsyncPuzzleBetSystem is System {
     Balance.set(gameId, _msgSender(), _msgValue());
     GameStatus.set(gameId, Status.Active);
 
-    startTurn2(gameId);
+    startTurn(gameId);
   }
 
-  function startTurn2(bytes32 gameId) public playerOnly(gameId) {
+  function startTurn(bytes32 gameId) public playerOnly(gameId) {
     Status status = GameStatus.get(gameId);
     require(status == Status.Active, "Game must be active");
 
@@ -113,7 +113,7 @@ contract AsyncPuzzleBetSystem is System {
    * @notice Can only be called by the creator of the game while the game is
    * still in a pending state (second player has not joined)
    */
-  function cancelPendingGame2(bytes32 gameId) public {
+  function cancelPendingGame(bytes32 gameId) public {
     require(_msgSender() == Player1.get(gameId), "Only creator can cancel");
     require(GameStatus.get(gameId) == Status.Pending, "Game is not pending");
     GameStatus.set(gameId, Status.Inactive);
@@ -123,7 +123,7 @@ contract AsyncPuzzleBetSystem is System {
   /**
    * Verify the score signed by the puzzle master
    */
-  function submitSolution2(bytes32 gameId, uint32 score, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
+  function submitSolution(bytes32 gameId, uint32 score, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
     address sender = _msgSender();
     Status status = GameStatus.get(gameId);
     require(status == Status.Active, "Game is not active");
@@ -159,7 +159,7 @@ contract AsyncPuzzleBetSystem is System {
    * @notice Players can claim funds after the deadline has passed, but may claim before
    * the deadline if both players have submitted
    */
-  function claim2(bytes32 gameId) public playerOnly(gameId) {
+  function claim(bytes32 gameId) public playerOnly(gameId) {
     address p1 = Player1.get(gameId);
     address p2 = Player2.get(gameId);
 
@@ -221,7 +221,7 @@ contract AsyncPuzzleBetSystem is System {
     GameStatus.set(gameId, Status.Complete);
   }
 
-  function voteRematch2(bytes32 gameId) public playerOnly(gameId) {
+  function voteRematch(bytes32 gameId) public playerOnly(gameId) {
     // Can't restart if either player has withdrawn (status is set to 'complete' once a claim occurs)
     Status status = GameStatus.get(gameId);
     require(status == Status.Active, "Game is not active");
@@ -242,7 +242,7 @@ contract AsyncPuzzleBetSystem is System {
       GamePlayerStartTime.set(gameId, p2, 0);
       RematchCount.set(gameId, RematchCount.get(gameId) + 1);
 
-      startTurn2(gameId);
+      startTurn(gameId);
     }
   }
 

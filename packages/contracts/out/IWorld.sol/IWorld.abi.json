@@ -1285,19 +1285,6 @@
   },
   {
     "type": "function",
-    "name": "v1__cancelPendingGame2",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "v1__claim",
     "inputs": [
       {
@@ -1311,19 +1298,6 @@
   },
   {
     "type": "function",
-    "name": "v1__claim2",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "v1__joinGame",
     "inputs": [
       {
@@ -1338,37 +1312,6 @@
   {
     "type": "function",
     "name": "v1__joinGame",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "password",
-        "type": "string",
-        "internalType": "string"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "v1__joinGame2",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "v1__joinGame2",
     "inputs": [
       {
         "name": "gameId",
@@ -1387,45 +1330,6 @@
   {
     "type": "function",
     "name": "v1__newGame",
-    "inputs": [
-      {
-        "name": "puzzleType",
-        "type": "uint8",
-        "internalType": "enum Puzzle"
-      },
-      {
-        "name": "submissionWindowSeconds",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "inviteExpirationTimestamp",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "puzzleMaster",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "passwordHash",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "v1__newGame2",
     "inputs": [
       {
         "name": "puzzleType",
@@ -1469,7 +1373,7 @@
   },
   {
     "type": "function",
-    "name": "v1__startTurn2",
+    "name": "v1__startTurn",
     "inputs": [
       {
         "name": "gameId",
@@ -1505,43 +1409,7 @@
   },
   {
     "type": "function",
-    "name": "v1__submitSolution2",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "score",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "puzzleMasterSignature",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "v1__voteRematch",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "v1__voteRematch2",
     "inputs": [
       {
         "name": "gameId",

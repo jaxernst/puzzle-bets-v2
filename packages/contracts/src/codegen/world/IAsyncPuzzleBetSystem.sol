@@ -11,7 +11,7 @@ import { Puzzle } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IAsyncPuzzleBetSystem {
-  function v1__newGame2(
+  function v1__newGame(
     Puzzle puzzleType,
     uint32 submissionWindowSeconds,
     uint32 playbackWindowSeconds,
@@ -20,17 +20,17 @@ interface IAsyncPuzzleBetSystem {
     bytes32 passwordHash
   ) external payable returns (bytes32);
 
-  function v1__joinGame2(bytes32 gameId) external payable;
+  function v1__joinGame(bytes32 gameId) external payable;
 
-  function v1__joinGame2(bytes32 gameId, string memory password) external payable;
+  function v1__joinGame(bytes32 gameId, string memory password) external payable;
 
-  function v1__startTurn2(bytes32 gameId) external;
+  function v1__startTurn(bytes32 gameId) external;
 
-  function v1__cancelPendingGame2(bytes32 gameId) external;
+  function v1__cancelPendingGame(bytes32 gameId) external;
 
-  function v1__submitSolution2(bytes32 gameId, uint32 score, bytes memory puzzleMasterSignature) external;
+  function v1__submitSolution(bytes32 gameId, uint32 score, bytes memory puzzleMasterSignature) external;
 
-  function v1__claim2(bytes32 gameId) external;
+  function v1__claim(bytes32 gameId) external;
 
-  function v1__voteRematch2(bytes32 gameId) external;
+  function v1__voteRematch(bytes32 gameId) external;
 }
