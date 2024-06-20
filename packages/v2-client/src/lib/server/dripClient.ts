@@ -1,5 +1,4 @@
 import { DRIP_ACCOUNT_PRIVATE_KEY } from "$env/static/private"
-import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import { networkConfig } from "$lib/mud/networkConfig"
 import { createWalletClient } from "viem"
 import { privateKeyToAccount } from "viem/accounts"

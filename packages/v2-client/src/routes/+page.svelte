@@ -1,29 +1,59 @@
-<script>
-  import GameStartCard from "./GameStartCard.svelte"
+<script lang="ts">
+  import { setupNetwork, type Components } from "$lib/mud/setupNetwork";
+  import { type Wallet } from "$lib/mud/setupNetwork";
+  import { type EvmAddress } from "$lib";
+  import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common";
+  import { createWalletClient } from "viem";
+  import { networkConfig } from "$lib/mud/networkConfig";
+  import { mud } from "$lib/mudStore.svelte";
+
+  let wallet = $state<{
+    address: EvmAddress | null;
+    connected: boolean;
+    client: Wallet | null;
+  }>({
+    address: null,
+    connected: false,
+    client: null,
+  });
+
+  $effect(() => {
+    if (wallet.client?.account) {
+      mud.setup(wallet.client);
+    }
+  });
+
+  function connectBurner() {
+    const burnerAccount = createBurnerAccount(getBurnerPrivateKey());
+
+    const walletClient = createWalletClient({
+      ...networkConfig,
+      account: burnerAccount,
+    }) as Wallet;
+
+    wallet.client = walletClient;
+    wallet.address = walletClient.account.address;
+    wallet.connected = true;
+  }
 </script>
 
-<div
-  class="size absolute left-1/2 top-[40vh] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
->
-  <a href="/connect" class="rounded-md bg-black px-3 py-2 text-white">
-    Connect to Play
-  </a>
-</div>
+<h1>Puzzle Bets Controller</h1>
 
-<div class="h-[40vh]"></div>
+{#if !wallet.connected}
+  <button onclick={connectBurner}>Connect wallet</button>
+{:else}
+  <h2>
+    Welcome {wallet.address}
+  </h2>
+{/if}
 
-<div class="h-20"></div>
+Mud status: {mud.synced ? "Synced" : wallet.address ? "Syncing" : "Inactive"}
 
-<div class="flex flex-wrap justify-center gap-5 px-10">
-  <GameStartCard game="wordle" />
-  <GameStartCard game="crossword" disabled={true} />
-  <GameStartCard game="connections" disabled={true} />
-  <GameStartCard game="sudoku" disabled={true} />
-</div>
-
-<style>
-  .size {
-    height: 70px;
-    width: 180px;
-  }
-</style>
+{#if mud.synced}
+  <div class="p-2">
+    <h1>Actions</h1>
+    {#each Object.entries(mud.systemCalls!) as [key, val]}
+      <div>{key}()</div>
+    {/each}
+  </div>
+{/if}
