@@ -1,6 +1,6 @@
-import type { Entity } from "@latticexyz/recs";
+import type { Entity } from "@latticexyz/recs"
 
-export type EvmAddress = `0x${string}`;
+export type EvmAddress = `0x${string}`
 
 export type Game = {
   id: Entity;
@@ -38,12 +38,12 @@ export const gameTypeToNumber: Record<PuzzleType, number> = {
   connections: 1,
   crossword: 2,
   sudoku: 3,
-};
+}
 
 export const gameNumberToType: Record<number, PuzzleType> = {
   0: "wordle",
   1: "connections",
-};
+}
 
 export enum GameStatus {
   Inactive,
