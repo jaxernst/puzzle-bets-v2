@@ -12,7 +12,7 @@ export const mud = (function createMudStore() {
         components: Components;
         systemCalls: ReturnType<typeof createSystemCalls>;
       }
-  >({ synced: true });
+  >({ synced: false });
 
   let stop = () => {};
 
