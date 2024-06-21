@@ -32,6 +32,7 @@
   "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.3",
+    "@types/jsonwebtoken": "^9.0.6",
     "jsonwebtoken": "^9.0.2",
     "rxjs": "7.5.5"
   }
