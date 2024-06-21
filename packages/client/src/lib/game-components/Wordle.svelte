@@ -8,65 +8,65 @@
     onSubmitGuess,
     onGameOver,
   } = $props<{
-    answers: string[];
-    answer: null | string;
-    guesses: string[];
-    badGuess: boolean | undefined;
-    paused: boolean;
-    onSubmitGuess: (guess: string) => void;
-    onGameOver: (won: boolean) => void;
-  }>();
+    answers: string[]
+    answer: null | string
+    guesses: string[]
+    badGuess: boolean | undefined
+    paused: boolean
+    onSubmitGuess: (guess: string) => void
+    onGameOver: (won: boolean) => void
+  }>()
 
-  $inspect(answers);
+  $inspect(answers)
 
-  let won = $derived(answers[answers.length - 1] === "xxxxx");
-  let gameOver = $derived(won || answers.length >= 6);
-  let i = $derived(won ? -1 : answers.length); // Row index of current guess
+  let won = $derived(answers[answers.length - 1] === "xxxxx")
+  let gameOver = $derived(won || answers.length >= 6)
+  let i = $derived(won ? -1 : answers.length) // Row index of current guess
 
-  let currentGuess = $state(guesses[i]);
-  let submittable = $derived(currentGuess?.length === 5);
+  let currentGuess = $state(guesses[i])
+  let submittable = $derived(currentGuess?.length === 5)
 
   /**
    * A map of classnames for all letters that have been guessed,
    * used for styling the keyboard
    */
-  let classnames: Record<string, "exact" | "close" | "missing"> = $state({});
+  let classnames: Record<string, "exact" | "close" | "missing"> = $state({})
 
   /**
    * A map of descriptions for all letters that have been guessed,
    * used for adding text for assistive technology (e.g. screen readers)
    */
-  let description: Record<string, string>;
+  let description: Record<string, string>
 
   $effect(() => {
-    classnames = {};
-    description = {};
+    classnames = {}
+    description = {}
 
     answers.forEach((answer, i) => {
-      const guess = guesses[i];
+      const guess = guesses[i]
 
       for (let i = 0; i < 5; i += 1) {
-        const letter = guess[i];
+        const letter = guess[i]
 
         if (answer[i] === "x") {
-          classnames[letter] = "exact";
-          description[letter] = "correct";
+          classnames[letter] = "exact"
+          description[letter] = "correct"
         } else if (!classnames[letter]) {
-          classnames[letter] = answer[i] === "c" ? "close" : "missing";
-          description[letter] = answer[i] === "c" ? "present" : "absent";
+          classnames[letter] = answer[i] === "c" ? "close" : "missing"
+          description[letter] = answer[i] === "c" ? "present" : "absent"
         }
       }
-    });
-  });
+    })
+  })
 
   // Add or remove a letter from the current guess
   function updateCurrentGuess(event: MouseEvent) {
-    const key = (event.target as HTMLButtonElement).getAttribute("data-key");
+    const key = (event.target as HTMLButtonElement).getAttribute("data-key")
 
     if (key === "backspace") {
-      currentGuess = currentGuess.slice(0, -1);
+      currentGuess = currentGuess.slice(0, -1)
     } else if (currentGuess.length < 5) {
-      currentGuess += key;
+      currentGuess += key
     }
   }
 
@@ -75,26 +75,26 @@
    * desktop users can use the keyboard to play the game
    */
   function keydown(event: KeyboardEvent) {
-    const activeElement = document.activeElement;
-    if (activeElement?.tagName === "INPUT") return;
-    if (event.metaKey) return;
+    const activeElement = document.activeElement
+    if (activeElement?.tagName === "INPUT") return
+    if (event.metaKey) return
 
-    if (event.key === "Enter" && !submittable) return;
+    if (event.key === "Enter" && !submittable) return
 
     document
       .querySelector(`[data-key="${event.key}" i]`)
-      ?.dispatchEvent(new MouseEvent("click", { cancelable: true }));
+      ?.dispatchEvent(new MouseEvent("click", { cancelable: true }))
   }
 
   $effect(() => {
     if (won) {
-      gameOver(true);
+      gameOver(true)
     }
 
     if (answers.length >= 6 && !won) {
-      gameOver(false);
+      gameOver(false)
     }
-  });
+  })
 </script>
 
 <svelte:window on:keydown={keydown} />
@@ -108,9 +108,9 @@
   method="POST"
   class="w-full"
   onsubmit={(e) => {
-    e.preventDefault();
-    badGuess = false;
-    onSubmitGuess(currentGuess);
+    e.preventDefault()
+    badGuess = false
+    onSubmitGuess(currentGuess)
   }}
 >
   <div class="flex gap-3 text-xs italic text-neutral-600">
@@ -196,8 +196,8 @@
 
           <button
             onclick={(e) => {
-              e.preventDefault();
-              updateCurrentGuess(e);
+              e.preventDefault()
+              updateCurrentGuess(e)
             }}
             data-key="backspace"
             name="key"
@@ -211,8 +211,8 @@
               {#each row as letter}
                 <button
                   onclick={(e) => {
-                    e.preventDefault();
-                    updateCurrentGuess(e);
+                    e.preventDefault()
+                    updateCurrentGuess(e)
                   }}
                   data-key={letter}
                   class={classnames[letter]}

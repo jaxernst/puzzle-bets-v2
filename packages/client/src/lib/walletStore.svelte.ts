@@ -1,39 +1,39 @@
-import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common";
-import { derived, writable } from "svelte/store";
-import { createWalletClient } from "viem";
-import { networkConfig } from "./mud/networkConfig";
-import { type Wallet } from "./mud/setupNetwork";
+import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common"
+import { derived, writable } from "svelte/store"
+import { createWalletClient } from "viem"
+import { networkConfig } from "./mud/networkConfig"
+import { type Wallet } from "./mud/setupNetwork"
 
-export const chain = networkConfig.chain;
+export const chain = networkConfig.chain
 
 export const walletStore = (() => {
-  let wallet = $state<Wallet | undefined>();
-  let connecting = $state(false);
+  let wallet = $state<Wallet | undefined>()
+  let connecting = $state(false)
 
   const connectBurner = () => {
-    const burnerAccount = createBurnerAccount(getBurnerPrivateKey());
+    const burnerAccount = createBurnerAccount(getBurnerPrivateKey())
     const walletClient = createWalletClient({
       ...networkConfig,
       account: burnerAccount,
-    }) as Wallet;
+    }) as Wallet
 
-    wallet = walletClient;
-    return walletClient;
-  };
+    wallet = walletClient
+    return walletClient
+  }
 
   return {
     get connecting() {
-      return connecting;
+      return connecting
     },
 
     get address() {
-      return wallet?.account.address;
+      return wallet?.account.address
     },
 
     get walletClient() {
-      return wallet;
+      return wallet
     },
 
     connect: async () => connectBurner(),
-  };
-})();
+  }
+})()

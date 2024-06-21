@@ -1,6 +1,6 @@
-import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import type { PuzzleType } from "$lib/types";
-import { supabase } from "./supabaseClient";
+import { PUBLIC_CHAIN_ID } from "$env/static/public"
+import type { PuzzleType } from "$lib/types"
+import { supabase } from "./supabaseClient"
 
 const chainId = PUBLIC_CHAIN_ID
 

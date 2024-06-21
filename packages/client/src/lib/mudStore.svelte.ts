@@ -1,30 +1,30 @@
-import type { Components } from "./mud/setupNetwork";
-import { type Component } from "@latticexyz/recs";
+import type { Components } from "./mud/setupNetwork"
+import { type Component } from "@latticexyz/recs"
 
-import { setupNetwork, type Wallet } from "$lib/mud/setupNetwork";
-import { createSystemCalls } from "$lib/mud/createSystemCalls";
+import { setupNetwork, type Wallet } from "$lib/mud/setupNetwork"
+import { createSystemCalls } from "$lib/mud/createSystemCalls"
 
 export const mud = (function createMudStore() {
   let mudState = $state<
     | { synced: false }
     | {
-        synced: true;
-        components: Components;
-        systemCalls: ReturnType<typeof createSystemCalls>;
+        synced: true
+        components: Components
+        systemCalls: ReturnType<typeof createSystemCalls>
       }
-  >({ synced: false });
+  >({ synced: false })
 
-  let stop = () => {};
+  let stop = () => {}
 
   async function setup(wallet: Wallet) {
-    const network = await setupNetwork(wallet);
-    await waitForSync(network.components);
+    const network = await setupNetwork(wallet)
+    await waitForSync(network.components)
 
     mudState = {
       synced: true,
       components: network.components,
       systemCalls: createSystemCalls(network),
-    };
+    }
 
     /**
      * Subscribe to component updates and propgate those changes to the mud store
@@ -33,52 +33,52 @@ export const mud = (function createMudStore() {
       ([componentName, component]) => {
         return (component as Component).update$.subscribe((update) => {
           if ("components" in mudState) {
-            (mudState.components as Record<string, Component>)[componentName] =
-              update.component;
+            ;(mudState.components as Record<string, Component>)[componentName] =
+              update.component
           }
-        });
-      }
-    );
+        })
+      },
+    )
 
     stop = () => {
-      network.stopSync();
+      network.stopSync()
 
       componentSubscriptions.forEach((subscription) =>
-        subscription.unsubscribe()
-      );
+        subscription.unsubscribe(),
+      )
 
-      mudState = { synced: false };
-    };
+      mudState = { synced: false }
+    }
   }
 
   return {
     get components() {
       if (mudState.synced) {
-        return mudState.components;
+        return mudState.components
       }
     },
 
     get systemCalls() {
       if (mudState.synced) {
-        return mudState.systemCalls;
+        return mudState.systemCalls
       }
     },
 
     get synced() {
-      return mudState.synced;
+      return mudState.synced
     },
 
     setup,
     stop,
-  };
-})();
+  }
+})()
 
 async function waitForSync(components: Components) {
   return new Promise((resolve) => {
     components.SyncProgress.update$.subscribe((update) => {
       if (update.value[0]?.step === "live") {
-        resolve(true);
+        resolve(true)
       }
-    });
-  });
+    })
+  })
 }

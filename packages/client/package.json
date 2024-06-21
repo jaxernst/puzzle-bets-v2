@@ -37,6 +37,9 @@
     "@supabase/supabase-js": "^2.39.3",
     "@types/jsonwebtoken": "^9.0.6",
     "jsonwebtoken": "^9.0.2",
+    "prettier": "^3.3.2",
+    "prettier-plugin-svelte": "^3.2.2",
+    "prettier-plugin-tailwindcss": "^0.5.13",
     "rxjs": "7.5.5",
     "tailwind-merge": "^2.3.0"
   }
