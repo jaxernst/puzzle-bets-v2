@@ -3,15 +3,13 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "bundler",
-    "incremental": true,
-    "composite": true
+    "moduleResolution": "node",
+    "esModuleInterop": true
   },
-  "exclude": ["node_modules", ".svelte-kit"]
+  "exclude": ["node_modules", ".svelte-kit", "../_client_old"]
 }
