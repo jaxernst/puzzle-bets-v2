@@ -39,7 +39,7 @@ const makeBalanceSync = (setBalance: (balance: string) => any) => {
   };
 };
 
-export const makeUserStore = (wallet: typeof walletStore) => {
+export const user = (() => {
   let userState = $state<{
     address: EvmAddress | undefined;
     authenticated: boolean;
@@ -56,41 +56,43 @@ export const makeUserStore = (wallet: typeof walletStore) => {
     }
   });
 
-  $effect(() => {
-    console.log("Effect");
-    if (!wallet.address) {
-      balanceSync.stop();
-      userState = initialState;
-    }
-
-    if (!wallet.walletClient?.signMessage) {
-      throw new Error("No SIWE Signer Available");
-    }
-
+  const onWalletChange = async (wallet: typeof walletStore) => {
     if (userState.address !== wallet.address) {
+      console.log("Sync user to wallet");
       balanceSync.stop();
       userState = initialState;
 
       if (wallet.address) {
+        console.log("Address available, signing in");
         userState.address = wallet.address;
         balanceSync.start(wallet.address);
 
-        signInWithEthereum(wallet.address, wallet.walletClient.signMessage);
+        if (!wallet.walletClient?.signMessage) {
+          throw new Error("No SIWE Signer Available");
+        }
+
+        userState.authenticated = await signInWithEthereum(
+          wallet.address,
+          wallet.walletClient.signMessage
+        );
       } else {
+        console.log("Signing out (todo)");
         // TODO: When address changes to none (disconnected), we should logout
       }
     }
-  });
+  };
 
   return {
     get address() {
       return userState.address;
     },
-    get authenticate() {
+    get authenticated() {
       return userState.authenticated;
     },
     get balance() {
       return userState.balance;
     },
+
+    onWalletChange,
   };
-};
+})();

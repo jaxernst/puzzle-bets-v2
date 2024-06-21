@@ -1,18 +1,15 @@
 <script lang="ts">
   import { mud } from "$lib/mudStore.svelte";
   import { walletStore } from "$lib/walletStore.svelte"
-  import { makeUserStore } from "$lib/userStore.svelte"
-
-  let user: ReturnType<typeof makeUserStore> | undefined
+  import { user } from "$lib/userStore.svelte"
 
   $effect(() => {
     if (walletStore.walletClient?.account) {
       mud.setup(walletStore.walletClient);
-      user = makeUserStore(walletStore)
     }
   });
 
-  $inspect(user)
+  $effect(() => user.onWalletChange(walletStore))
 
 </script>
 
@@ -26,7 +23,13 @@
   </h2>
 {/if}
 
-Mud status: {mud.synced ? "Synced" : walletStore.address ? "Syncing" : "Inactive"}
+<div>
+  Mud status: {mud.synced ? "Synced" : walletStore.address ? "Syncing" : "Inactive"}
+</div>
+
+<div>
+  User authenticated: {user.authenticated}
+</div>
 
 {#if mud.synced}
   <div class="p-2">
