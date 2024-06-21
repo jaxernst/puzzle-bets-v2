@@ -1,53 +1,32 @@
 <script lang="ts">
-  import { setupNetwork, type Components } from "$lib/mud/setupNetwork";
-  import { type Wallet } from "$lib/mud/setupNetwork";
-  import { type EvmAddress } from "$lib";
-  import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common";
-  import { createWalletClient } from "viem";
-  import { networkConfig } from "$lib/mud/networkConfig";
   import { mud } from "$lib/mudStore.svelte";
+  import { walletStore } from "$lib/walletStore.svelte"
+  import { makeUserStore } from "$lib/userStore.svelte"
 
-  let wallet = $state<{
-    address: EvmAddress | null;
-    connected: boolean;
-    client: Wallet | null;
-  }>({
-    address: null,
-    connected: false,
-    client: null,
-  });
+  let user: ReturnType<typeof makeUserStore> | undefined
 
   $effect(() => {
-    if (wallet.client?.account) {
-      mud.setup(wallet.client);
+    if (walletStore.walletClient?.account) {
+      mud.setup(walletStore.walletClient);
+      user = makeUserStore(walletStore)
     }
   });
 
-  function connectBurner() {
-    const burnerAccount = createBurnerAccount(getBurnerPrivateKey());
+  $inspect(user)
 
-    const walletClient = createWalletClient({
-      ...networkConfig,
-      account: burnerAccount,
-    }) as Wallet;
-
-    wallet.client = walletClient;
-    wallet.address = walletClient.account.address;
-    wallet.connected = true;
-  }
 </script>
 
 <h1>Puzzle Bets Controller</h1>
 
-{#if !wallet.connected}
-  <button onclick={connectBurner}>Connect wallet</button>
+{#if !walletStore.address}
+  <button onclick={walletStore.connect}>Connect wallet</button>
 {:else}
   <h2>
-    Welcome {wallet.address}
+    Welcome {walletStore.address}
   </h2>
 {/if}
 
-Mud status: {mud.synced ? "Synced" : wallet.address ? "Syncing" : "Inactive"}
+Mud status: {mud.synced ? "Synced" : walletStore.address ? "Syncing" : "Inactive"}
 
 {#if mud.synced}
   <div class="p-2">
