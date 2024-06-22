@@ -1,12 +1,12 @@
 <script lang="ts">
   let {
-    answers = [],
+    answers = ["x---c"],
     answer = null,
     guesses = ["think"],
     badGuess = false,
-    paused = true,
-    onSubmitGuess,
-    onGameOver,
+    paused = false,
+    onSubmitGuess = () => {},
+    onGameOver = () => {},
   } = $props<{
     answers: string[]
     answer: null | string
@@ -17,14 +17,19 @@
     onGameOver: (won: boolean) => void
   }>()
 
-  $inspect(answers)
-
   let won = $derived(answers[answers.length - 1] === "xxxxx")
   let gameOver = $derived(won || answers.length >= 6)
   let i = $derived(won ? -1 : answers.length) // Row index of current guess
 
-  let currentGuess = $state(guesses[i])
+  let currentGuess = $state("")
+
+  $effect(() => {
+    if (guesses[i]) currentGuess = guesses[i]
+  })
+
   let submittable = $derived(currentGuess?.length === 5)
+
+  $inspect(currentGuess, i)
 
   /**
    * A map of classnames for all letters that have been guessed,
@@ -32,17 +37,16 @@
    */
   let classnames: Record<string, "exact" | "close" | "missing"> = $state({})
 
+  $inspect(classnames)
+
   /**
    * A map of descriptions for all letters that have been guessed,
    * used for adding text for assistive technology (e.g. screen readers)
    */
-  let description: Record<string, string>
+  let description: Record<string, string> = $state({})
 
   $effect(() => {
-    classnames = {}
-    description = {}
-
-    answers.forEach((answer, i) => {
+    answers.forEach((answer: string, i: number) => {
       const guess = guesses[i]
 
       for (let i = 0; i < 5; i += 1) {
@@ -60,13 +64,11 @@
   })
 
   // Add or remove a letter from the current guess
-  function updateCurrentGuess(event: MouseEvent) {
-    const key = (event.target as HTMLButtonElement).getAttribute("data-key")
-
-    if (key === "backspace") {
+  function updateCurrentGuess(pressedKey: string) {
+    if (pressedKey === "backspace") {
       currentGuess = currentGuess.slice(0, -1)
-    } else if (currentGuess.length < 5) {
-      currentGuess += key
+    } else if (pressedKey.length === 1 && currentGuess.length < 5) {
+      currentGuess += pressedKey
     }
   }
 
@@ -78,21 +80,19 @@
     const activeElement = document.activeElement
     if (activeElement?.tagName === "INPUT") return
     if (event.metaKey) return
-
     if (event.key === "Enter" && !submittable) return
 
-    document
-      .querySelector(`[data-key="${event.key}" i]`)
-      ?.dispatchEvent(new MouseEvent("click", { cancelable: true }))
+    if (event.key === "Backspace") updateCurrentGuess("backspace")
+    if (/^[a-zA-Z]$/.test(event.key)) updateCurrentGuess(event.key)
   }
 
   $effect(() => {
     if (won) {
-      gameOver(true)
+      onGameOver(true)
     }
 
     if (answers.length >= 6 && !won) {
-      gameOver(false)
+      onGameOver(false)
     }
   })
 </script>
@@ -110,6 +110,7 @@
   onsubmit={(e) => {
     e.preventDefault()
     badGuess = false
+
     onSubmitGuess(currentGuess)
   }}
 >
@@ -197,7 +198,7 @@
           <button
             onclick={(e) => {
               e.preventDefault()
-              updateCurrentGuess(e)
+              updateCurrentGuess("backspace")
             }}
             data-key="backspace"
             name="key"
@@ -212,7 +213,7 @@
                 <button
                   onclick={(e) => {
                     e.preventDefault()
-                    updateCurrentGuess(e)
+                    updateCurrentGuess(letter)
                   }}
                   data-key={letter}
                   class={classnames[letter]}
@@ -241,27 +242,6 @@
     justify-content: center;
     gap: 1rem;
     flex: 1;
-  }
-
-  .how-to-play {
-    color: var(--color-text);
-  }
-
-  .how-to-play::before {
-    content: "i";
-    display: inline-block;
-    font-size: 0.8em;
-    font-weight: 900;
-    width: 1em;
-    height: 1em;
-    padding: 0.2em;
-    line-height: 1;
-    border: 1.5px solid var(--color-text);
-    border-radius: 50%;
-    text-align: center;
-    margin: 0 0.5em 0 0;
-    position: relative;
-    top: -0.05em;
   }
 
   .grid {
@@ -301,7 +281,6 @@
     text-align: center;
     box-sizing: border-box;
     text-transform: lowercase;
-    border: none;
     font-size: calc(0.08 * var(--width));
     border-radius: 4px;
     background: white;
@@ -315,17 +294,15 @@
   }
 
   .letter.exact {
-    background: var(--color-theme-1);
-    color: white;
+    @apply bg-green-600 text-white;
   }
 
   .letter.close {
-    background: var(--color-theme-2);
-    color: white;
+    @apply bg-orange-600 text-white;
   }
 
   .selected {
-    outline: 2px solid #eacb28;
+    @apply border-x border-b-4 border-t border-black;
   }
 
   .controls {
