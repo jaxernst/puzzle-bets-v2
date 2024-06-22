@@ -7,6 +7,7 @@
   import { page } from "$app/stores"
   import GameSelector from "./GameSelector.svelte"
   import AppHeader from "./AppHeader.svelte";
+    import Confetti from "$lib/components/Confetti.svelte"
 
   let { children } = $props()
 
@@ -18,6 +19,9 @@
 
   $effect(() => void user.onWalletChange(walletStore))
 </script>
+
+<Confetti />
+
 
 <div
   class="overflow-none fixed flex h-screen w-screen flex-col justify-between bg-yellow-400"

@@ -1,8 +1,8 @@
 <script lang="ts">
   let {
-    answers = ["x---c"],
+    answers = [],
     answer = null,
-    guesses = ["think"],
+    guesses = [],
     badGuess = false,
     paused = false,
     onSubmitGuess = () => {},
@@ -12,7 +12,7 @@
     answer: null | string
     guesses: string[]
     badGuess: boolean | undefined
-    paused: boolean
+    paused?: boolean
     onSubmitGuess: (guess: string) => void
     onGameOver: (won: boolean) => void
   }>()
@@ -24,7 +24,7 @@
   let currentGuess = $state("")
 
   $effect(() => {
-    if (guesses[i]) currentGuess = guesses[i]
+    currentGuess = guesses[i] ?? ""
   })
 
   let submittable = $derived(currentGuess?.length === 5)
@@ -36,8 +36,6 @@
    * used for styling the keyboard
    */
   let classnames: Record<string, "exact" | "close" | "missing"> = $state({})
-
-  $inspect(classnames)
 
   /**
    * A map of descriptions for all letters that have been guessed,
@@ -80,7 +78,10 @@
     const activeElement = document.activeElement
     if (activeElement?.tagName === "INPUT") return
     if (event.metaKey) return
-    if (event.key === "Enter" && !submittable) return
+    if (event.key === "Enter" && submittable) {
+      badGuess = false
+      onSubmitGuess(currentGuess)
+    }
 
     if (event.key === "Backspace") updateCurrentGuess("backspace")
     if (/^[a-zA-Z]$/.test(event.key)) updateCurrentGuess(event.key)
