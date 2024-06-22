@@ -24,7 +24,7 @@
 {/snippet}
 
 {#if user.address}
-  <div class="flex flex-col justify-evenly self-stretch">
+  <div class="flex h-full w-full flex-col items-center justify-evenly">
     <h1 class="text-xl font-bold">Welcome {shortenAddress(user.address)}</h1>
 
     <div class="">
