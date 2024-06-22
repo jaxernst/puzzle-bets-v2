@@ -6,6 +6,7 @@
   import { shortenAddress } from "$lib/util"
   import { page } from "$app/stores"
   import GameSelector from "./GameSelector.svelte"
+  import AppHeader from "./AppHeader.svelte";
 
   let { children } = $props()
 
@@ -21,18 +22,7 @@
 <div
   class="overflow-none fixed flex h-screen w-screen flex-col justify-between bg-yellow-400"
 >
-  <div class="flex justify-between p-4">
-    {#if $page.route.id !== "/"}
-      <div class="text-2xl font-bold text-white">Puzzle Bets</div>
-      <div>
-        {#if user.address}
-          {shortenAddress(user.address)}
-        {:else}
-          <button> Connect </button>
-        {/if}
-      </div>
-    {/if}
-  </div>
+  <AppHeader />
 
   <div class="flex-grow overflow-y-auto">
     {@render children()}

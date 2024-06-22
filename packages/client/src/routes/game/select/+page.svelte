@@ -5,7 +5,7 @@
 {#snippet card(title: string, disabled: boolean = false)}
   <button
     {disabled}
-    class="bg-white p-2 disabled:text-neutral-500"
+    class="bg-white p-2 disabled:text-neutral-500 w-[343px]"
     onclick={() => goto(`/game/${title.toLowerCase()}/practice`)}
   >
     <div class="font-bold">
@@ -14,10 +14,16 @@
   </button>
 {/snippet}
 
-<div class="flex items-center justify-center gap-4">
-  {@render card("Wordle", false)}
+<div class="h-full flex flex-col gap-6 items-center justify-center">
 
-  {#each ["Connections", "Soduko", "Crossword"] as gameName}
+  <h1>Choose your Game.</h1>
+
+  <div class="w-full flex flex-wrap items-center justify-center gap-4">
+    {@render card("Wordle", false)}
+    
+    {#each ["Connections", "Soduko", "Crossword"] as gameName}
     {@render card(gameName, true)}
-  {/each}
+    {/each}
+  </div>
+
 </div>

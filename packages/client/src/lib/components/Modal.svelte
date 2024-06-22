@@ -82,7 +82,7 @@
     aria-describedby={description}
   >
     <div
-      class="rounded-md bg-white p-6 sm:min-h-[500px] sm:w-[500px]"
+      class="rounded-t-md sm:rounded-b-md bg-white p-6 sm:min-h-[500px] sm:w-[500px]"
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
     >
       {@render children()}
