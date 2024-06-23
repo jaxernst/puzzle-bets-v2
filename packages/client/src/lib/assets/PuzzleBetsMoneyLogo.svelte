@@ -1,6 +1,9 @@
+<script lang="ts">
+  let { class: className } = $props<{ class: string }>()
+</script>
+
 <svg
-  width="375"
-  height="196"
+  class={className}
   viewBox="0 0 375 196"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"

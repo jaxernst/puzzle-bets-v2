@@ -6,7 +6,7 @@
   import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
   import { clickOutside } from "$lib/actions/clickOutside"
 
-  const SIZE_CLOSED = 70
+  const SIZE_CLOSED = 55
   const SIZE_OPEN = 600
 
   const size = tweened(SIZE_CLOSED, {
@@ -36,8 +36,8 @@
   role="button"
   style={`height: ${$size}px;`}
 >
-  <div class="flex items-center gap-2 p-4 font-bold">
-    <PuzzlePiece class="h-8 w-8" />
+  <div class="flex items-center gap-2 p-4 text-sm font-bold">
+    <PuzzlePiece class="h-6 w-6" />
     Dashboard
 
     <div class="flex flex-grow justify-end">
