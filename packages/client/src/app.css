@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-button,
-a {
+@font-face {
+  font-family: "Angkor";
+  src: url("/fonts/Angkor/Angkor-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
 }
 
 h1 {
