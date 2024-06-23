@@ -35,7 +35,7 @@
   let showRestart = $state(false)
 </script>
 
-<div class=" flex flex-col gap-4 p-4">
+<div class="flex flex-col gap-4 p-4">
   <GameHeader puzzle="wordle" />
   <OpponentDisplay opponent={null} />
   <Wordle
@@ -50,7 +50,7 @@
 {#if showRestart || game?.solved || game?.lost}
   <div class="w-ful flex justify-center py-4">
     <button
-      class="rounded-lg bg-lime-500 p-2 font-semibold"
+      class="rounded-lg bg-black p-2 font-semibold text-white"
       onclick={() => {
         reset()
         showRestart = false
