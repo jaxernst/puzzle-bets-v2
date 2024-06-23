@@ -44,6 +44,11 @@
   let description: Record<string, string> = $state({})
 
   $effect(() => {
+    if (guesses.length === 0) {
+      classnames = {}
+      description = {}
+    }
+
     answers.forEach((answer: string, i: number) => {
       const guess = guesses[i]
 
@@ -337,15 +342,13 @@
     background-color: white;
     color: black;
     width: var(--size);
-    border: none;
     border-radius: 2px;
     font-size: calc(var(--size) * 0.5);
     margin: 0;
   }
 
   .keyboard button.exact {
-    background: var(--color-theme-1);
-    color: white;
+    @apply bg-green-600 text-white;
   }
 
   .keyboard button.missing {
@@ -353,7 +356,7 @@
   }
 
   .keyboard button.close {
-    border: 2px solid var(--color-theme-2);
+    @apply border-2 border-orange-600;
   }
 
   .keyboard button:focus {
