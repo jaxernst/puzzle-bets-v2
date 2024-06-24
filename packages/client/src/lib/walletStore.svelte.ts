@@ -35,5 +35,8 @@ export const walletStore = (() => {
     },
 
     connect: async () => connectBurner(),
+    disconnect: async () => {
+      wallet = undefined
+    },
   }
 })()

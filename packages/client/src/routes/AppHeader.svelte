@@ -4,9 +4,8 @@
   import { user } from "$lib/userStore.svelte"
   import PuzzleBetsSmall from "$lib/assets/PuzzleBetsSmall.svelte"
   import Avatar1 from "$lib/assets/Avatar1.svelte"
-  import { walletStore } from "$lib/walletStore.svelte"
-  import { formatEther } from "viem"
   import Wallet from "$lib/icons/Wallet.svelte"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
 </script>
 
 <div
@@ -35,7 +34,7 @@
       {:else}
         <button
           class="rounded-full bg-yellow-200 px-2 py-1 text-sm"
-          onclick={() => walletStore.connect()}
+          onclick={promptConnectWallet}
         >
           Connect
         </button>

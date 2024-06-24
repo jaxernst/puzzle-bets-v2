@@ -34,7 +34,7 @@ export type SignInMode = "burner" | "embedded"
 
 const chainConnectMethod = {
   31337: "burner",
-  84532: "embedded",
+  84532: "burner",
 } as const
 
 export const networkConfig = (() => {

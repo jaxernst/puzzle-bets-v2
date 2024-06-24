@@ -60,7 +60,7 @@ export const user = (() => {
     if (userState.address !== wallet.address) {
       console.log("Sync user to wallet")
       balanceSync.stop()
-      userState = initialState
+      userState = { ...initialState }
 
       if (wallet.address) {
         console.log("Address available, signing in")

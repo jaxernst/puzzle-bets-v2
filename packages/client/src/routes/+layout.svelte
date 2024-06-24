@@ -7,6 +7,7 @@
   import GameController from "./GameController.svelte"
   import AppHeader from "./AppHeader.svelte"
   import Confetti from "$lib/components/Confetti.svelte"
+  import WalletConnector from "$lib/components/WalletConnector.svelte"
 
   let { children } = $props()
 
@@ -22,6 +23,7 @@
 </script>
 
 <Confetti />
+<WalletConnector />
 
 <div
   class="overflow-none fixed flex h-screen w-screen flex-col justify-between bg-yellow-400"

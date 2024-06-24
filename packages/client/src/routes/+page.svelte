@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { goto } from "$app/navigation"
   import PuzzleBetsMoneyLogo from "$lib/assets/PuzzleBetsMoneyLogo.svelte"
   import Modal from "$lib/components/Modal.svelte"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import { user } from "$lib/userStore.svelte"
 
   let showAboutModal = $state(false)
 </script>
@@ -73,9 +76,19 @@
     </div>
 
     <div class="flex flex-col gap-1.5 text-center font-bold">
-      <a href="/me" class="rounded border-white bg-black px-3 py-2 text-white">
-        Connect and Play
-      </a>
+      <button
+        onclick={async () => {
+          await promptConnectWallet()
+          goto("/me")
+        }}
+        class="rounded border-white bg-black px-3 py-2 text-white"
+      >
+        {#if !user.address}
+          Connect and Play
+        {:else}
+          Enter
+        {/if}
+      </button>
 
       <a href="/game/select" class="rounded border-2 border-black px-3 py-2">
         Play a Practice Game
