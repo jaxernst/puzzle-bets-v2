@@ -9,6 +9,7 @@ export default {
       },
       fontSize: {
         angkor: ["14px", "15.4px"],
+        base: ["14px", "15.4px"],
       },
       colors: {
         "pb-yellow": "#FFC700",
