@@ -23,7 +23,7 @@
       Welcome {shortenAddress(user.address)}
     </h1>
 
-    <div class="px-4 font-bold">
+    <!-- <div class="px-4 font-bold">
       Start a Live Game
 
       <div class="flex flex-wrap items-center justify-center gap-4 p-4">
@@ -33,6 +33,6 @@
           {@render card(gameName, true)}
         {/each}
       </div>
-    </div>
+    </div> -->
   </div>
 {/if}

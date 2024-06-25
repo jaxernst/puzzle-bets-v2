@@ -7,6 +7,7 @@
   import DotLoader from "./DotLoader.svelte"
   import { networkConfig } from "$lib/mud/networkConfig"
   import WalletIcon from "$lib/icons/Wallet.svelte"
+  import HandUp from "$lib/assets/HandUp.svelte"
 
   let showModal = $state(false)
 
@@ -42,61 +43,39 @@
   })
 </script>
 
-<Modal bind:show={showModal} title="">
-  <div class="flex items-center gap-2 self-start pr-4 text-base font-bold">
-    <WalletIcon class="h-5 w-5 stroke-white" />
-    {#if walletStore.address}
-      Welcome {shortenAddress(walletStore?.address ?? "")}
-    {:else}
-      Wallet Sign In
-    {/if}
-  </div>
+<Modal bind:show={showModal} title="" class="p-0 sm:w-[375px]">
+  <div class="flex flex-col gap-6 px-4 pt-4">
+    <div
+      class="flex items-center justify-between gap-2 self-start pr-4 text-base font-bold"
+    >
+      <div class="flex items-center gap-2 text-sm">
+        <WalletIcon class="h-6 w-6 stroke-white" />
 
-  <button
-    class="absolute right-2 top-0 text-lg text-zinc-400"
-    onclick={() => (showModal = false)}
-  >
-    x
-  </button>
-
-  <div class="flex flex-grow flex-col justify-center gap-4">
-    {#if walletStore.address}
-      <div class="flex-grow"></div>
-
-      <button
-        class="mb-2 mt-3 self-center rounded-full bg-black px-3 py-1 text-white"
-        onclick={walletStore.disconnect}
-      >
-        Disconnect
-      </button>
-    {:else if walletStore.connecting}
-      <DotLoader class="fill-neutral-400" />
-    {:else if networkConfig.connectMode === "burner"}
-      <div class="border-l border-neutral-400 px-3 text-sm text-neutral-400">
-        This is a testnet preview of Puzzle Bets. Click 'Connect' to create a
-        temporary wallet auto-funded with testnet Ethereum (ETH).
+        {#if walletStore.address}
+          Welcome {shortenAddress(walletStore?.address ?? "")}
+        {:else}
+          Wallet Sign In
+        {/if}
       </div>
+    </div>
 
-      <button
-        class="mb-2 mt-3 self-center rounded-full bg-black px-3 py-1 text-white"
-        onclick={() => {
-          walletStore.connect()
-          showModal = false
-        }}
-      >
-        Connect
-      </button>
-    {:else if networkConfig.connectMode === "embedded"}
-      <div class="border-l border-neutral-400 pl-3 text-sm text-neutral-300">
-        This is a testnet preview of Puzzle Bets. Sign in to create or access
-        your testnet wallet auto-funded with testnet Ethereum (eth).
+    <div class="flex flex-col gap-4">
+      <div style={"font-weight: 900"}>We're in Beta</div>
+      <div>Basically it's all “play money” and not real until launch.</div>
+
+      <div>
+        Connecting and playing games will NOT use your real ETH. We will give
+        you a temporary wallet auto-funded with testnet Ethereum.
       </div>
-      <div class="flex w-full justify-center py-3">
-        <div class="max-w-[300px]">
-          Not in use
-          <!-- <EmbeddedWalletConnect onConnect={() => (showModal = false)} /> -->
-        </div>
-      </div>
-    {/if}
+    </div>
+
+    <button
+      class="w-full rounded bg-black px-3 py-2 text-center text-sm font-bold text-white"
+      onclick={walletStore.connect}
+    >
+      Connect
+    </button>
+
+    <HandUp />
   </div>
 </Modal>

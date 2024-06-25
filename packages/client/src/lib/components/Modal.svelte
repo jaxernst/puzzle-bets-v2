@@ -3,19 +3,20 @@
   import { onMount } from "svelte"
   import { cubicInOut, cubicOut } from "svelte/easing"
   import { fade, fly } from "svelte/transition"
+  import { twMerge } from "tailwind-merge"
 
   let {
     show = $bindable(),
     title,
     description,
     children,
-    onClose = () => {},
+    class: className = "sm:min-h-[500px] sm:w-[500px]",
   } = $props<{
     show: Boolean
     title?: string
     description?: string
-    onClose?: () => void
     children: any
+    class?: string
   }>()
 
   let modal = $state<HTMLElement>()
@@ -24,7 +25,6 @@
     const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         show = false
-        onClose()
       }
     }
 
@@ -42,7 +42,6 @@
   function clickOutside(event: MouseEvent) {
     if (event.target === modal) {
       show = false
-      onClose()
     }
   }
 
@@ -86,7 +85,7 @@
     aria-describedby={description}
   >
     <div
-      class="rounded-t-md bg-white p-6 sm:min-h-[500px] sm:w-[500px] sm:rounded-b-md"
+      class={twMerge("rounded-t-md bg-white p-6  sm:rounded-b-md", className)}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
     >
       {@render children()}
