@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { walletStore } from "$lib/walletStore"
+  import { walletStore } from "$lib/walletStore.svelte"
   import { mud } from "$lib/mud/mudStore"
   import { shortenAddress } from "$lib/util"
   import { get, writable } from "svelte/store"
@@ -12,7 +12,7 @@
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import EmbeddedWalletConnect from "./EmbeddedWalletConnect.svelte"
 
-  const showModal = writable(false)
+  const showModal = $state(false)
 
   export const loginAndConnect = async () => {
     const wallet = await promptConnectWallet()

@@ -6,6 +6,13 @@
   import { user } from "$lib/userStore.svelte"
 
   let showAboutModal = $state(false)
+
+  const connect = async () => {
+    try {
+      await promptConnectWallet()
+      goto("/me")
+    } catch {}
+  }
 </script>
 
 <Modal bind:show={showAboutModal} title="About puzzle bets"
@@ -77,10 +84,7 @@
 
     <div class="flex flex-col gap-1.5 text-center font-bold">
       <button
-        onclick={async () => {
-          await promptConnectWallet()
-          goto("/me")
-        }}
+        onclick={connect}
         class="rounded border-white bg-black px-3 py-2 text-white"
       >
         {#if !user.address}

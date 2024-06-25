@@ -9,10 +9,12 @@
     title,
     description,
     children,
+    onClose = () => {},
   } = $props<{
     show: Boolean
     title?: string
     description?: string
+    onClose?: () => void
     children: any
   }>()
 
@@ -22,6 +24,7 @@
     const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         show = false
+        onClose()
       }
     }
 
@@ -39,6 +42,7 @@
   function clickOutside(event: MouseEvent) {
     if (event.target === modal) {
       show = false
+      onClose()
     }
   }
 
@@ -82,7 +86,7 @@
     aria-describedby={description}
   >
     <div
-      class="rounded-t-md sm:rounded-b-md bg-white p-6 sm:min-h-[500px] sm:w-[500px]"
+      class="rounded-t-md bg-white p-6 sm:min-h-[500px] sm:w-[500px] sm:rounded-b-md"
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
     >
       {@render children()}
