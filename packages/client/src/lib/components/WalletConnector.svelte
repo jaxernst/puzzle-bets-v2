@@ -1,11 +1,8 @@
 <script context="module" lang="ts">
   import { walletStore } from "$lib/walletStore.svelte"
-  import { mud } from "$lib/mudStore.svelte"
   import { shortenAddress } from "$lib/util"
   import Modal from "./Modal.svelte"
   import type { Wallet } from "$lib/mud/setupNetwork"
-  import DotLoader from "./DotLoader.svelte"
-  import { networkConfig } from "$lib/mud/networkConfig"
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import HandUp from "$lib/assets/HandUp.svelte"
 
