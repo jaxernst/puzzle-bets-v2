@@ -3,6 +3,10 @@
   import { user } from "$lib/userStore.svelte"
   import { shortenAddress } from "$lib/util"
   import { walletStore } from "$lib/walletStore.svelte"
+
+  $effect(() => {
+    if (!user.address) goto("/")
+  })
 </script>
 
 {#snippet card(title: string, disabled: boolean = false)}
@@ -18,10 +22,26 @@
 {/snippet}
 
 {#if user.address}
-  <div class="flex h-full w-full flex-col items-center justify-evenly">
+  <div
+    class="flex h-full min-h-[600px] w-full flex-col items-center justify-evenly"
+  >
     <h1 class="p-10 text-xl font-bold">
       Welcome {shortenAddress(user.address)}
     </h1>
+
+    <div class="flex w-[250px] flex-col items-stretch gap-2">
+      <button class="rounded-md bg-black px-4 py-2 font-bold text-white">
+        Start a New Game
+      </button>
+
+      <button class="rounded-md border-2 border-black px-4 py-2 font-bold">
+        Join a Public Game
+      </button>
+
+      <button class="rounded-md border-2 border-black px-4 py-2 font-bold">
+        Play a Practice Game
+      </button>
+    </div>
 
     <!-- <div class="px-4 font-bold">
       Start a Live Game
