@@ -78,7 +78,7 @@
 
       <div class="font-angkor text-angkor flex flex-col items-center">
         <div>Play Puzzles.</div>
-        <div>Compete with Friends</div>
+        <div>Compete with Friends.</div>
       </div>
     </div>
 
