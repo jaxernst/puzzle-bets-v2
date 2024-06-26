@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation"
   import { user } from "$lib/userStore.svelte"
   import { shortenAddress } from "$lib/util"
-  import { walletStore } from "$lib/walletStore.svelte"
+  import { openWithTab } from "../GameController.svelte"
 
   $effect(() => {
     if (!user.address) goto("/")
@@ -34,13 +34,22 @@
         Start a New Game
       </button>
 
-      <button class="rounded-md border-2 border-black px-4 py-2 font-bold">
+      <button
+        onclick={(e) => {
+          e.stopImmediatePropagation()
+          openWithTab("lobby")
+        }}
+        class="rounded-md border-2 border-black px-4 py-2 font-bold"
+      >
         Join a Public Game
       </button>
 
-      <button class="rounded-md border-2 border-black px-4 py-2 font-bold">
+      <a
+        href="/game/wordle/practice"
+        class="rounded-md border-2 border-black px-4 py-2 text-center font-bold"
+      >
         Play a Practice Game
-      </button>
+      </a>
     </div>
 
     <!-- <div class="px-4 font-bold">
