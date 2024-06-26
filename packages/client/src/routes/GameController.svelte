@@ -1,10 +1,41 @@
+<script context="module" lang="ts">
+  type Tab = "lobby" | "active" | "history" | "top"
+  let tab = $state<Tab>("active")
+  let open = $state(false)
+
+  export function openWithTab(_tab: Tab) {
+    tab = _tab
+    open = true
+  }
+</script>
+
 <script lang="ts">
-  import Puzzly from "$lib/icons/Puzzly.svelte"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import { tweened } from "svelte/motion"
   import { cubicOut } from "svelte/easing"
   import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
   import { clickOutside } from "$lib/actions/clickOutside"
+  import { capitalized } from "$lib/util"
+  import type { Component } from "svelte"
+
+  import Smiley from "$lib/icons/Smiley.svelte"
+  import Clock from "$lib/icons/Clock.svelte"
+  import Book from "$lib/icons/Book.svelte"
+  import Crown from "$lib/icons/Crown.svelte"
+
+  const descriptions: Record<Tab, string> = {
+    active: "Your active onchain games.",
+    lobby: "Public games anyone can join.",
+    history: "Your previous games and results.",
+    top: "The top players and their records.",
+  }
+
+  const logos: Record<Tab, Component> = {
+    active: Clock,
+    lobby: Smiley,
+    history: Book,
+    top: Crown,
+  }
 
   const SIZE_CLOSED = 55
   const SIZE_OPEN = 600
@@ -14,34 +45,70 @@
     easing: cubicOut,
   })
 
-  const toggleExpand = () => {
-    console.log("Expand")
-    if ($size === SIZE_CLOSED) {
+  $effect(() => {
+    if (open) {
       $size = SIZE_OPEN
     } else {
       $size = SIZE_CLOSED
     }
-  }
+  })
 </script>
 
-<div
-  onclick={toggleExpand}
-  onkeydown={(event) => event.key === "Enter" && toggleExpand()}
-  use:clickOutside={{
-    enabled: $size === SIZE_OPEN,
-    cb: () => ($size = SIZE_CLOSED),
-  }}
-  tabindex="0"
-  class="bg-slate-200"
-  role="button"
-  style={`height: ${$size}px;`}
->
-  <div class="flex items-center gap-2 p-4 text-sm font-bold">
-    <PuzzlePiece class="h-6 w-6" />
-    Dashboard
+{#snippet TabButton(name: Tab)}
+  <button
+    onclick={() => (tab = name)}
+    class={`flex w-full flex-col items-center justify-center gap-1 p-4 font-extrabold leading-none sm:flex-row ${tab === name ? "bg-black text-white" : "text-black"}`}
+  >
+    <svelte:component this={logos[name]} class={tab === name && "invert"} />
+    {capitalized(name)}
+  </button>
+{/snippet}
 
-    <div class="flex flex-grow justify-end">
-      <AnimatedArrow class="h-6 w-6 font-bold" direction="up" />
+<div style={`height: ${SIZE_CLOSED}`}></div>
+
+<div class="px1 absolute bottom-0 w-full sm:px-4">
+  <div
+    onclick={() => (open = true)}
+    onkeydown={(event) => {
+      if (event.key === "Enter") open = !open
+    }}
+    use:clickOutside={{
+      enabled: open,
+      cb: () => {
+        open = false
+      },
+    }}
+    tabindex="0"
+    class="bg-pb-beige-2 flex flex-col gap-6 rounded-t-md border-x-2 border-t-2 border-black p-4"
+    role="button"
+    style={`height: ${$size}px;`}
+  >
+    <div class="flex items-center gap-2 font-extrabold">
+      <PuzzlePiece class="h-6 w-6" />
+      Dashboard
+
+      <div class="flex flex-grow justify-end">
+        <AnimatedArrow
+          class="h-6 w-6 font-bold"
+          direction={open ? "down" : "up"}
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center justify-center gap-2">
+      <div
+        class="flex w-full items-center justify-evenly rounded-md border-2 border-black sm:w-3/4"
+      >
+        {@render TabButton("lobby")}
+        <div class="h-full border border-black"></div>
+        {@render TabButton("active")}
+        <div class="h-full border border-black"></div>
+        {@render TabButton("history")}
+        <div class="h-full border border-black"></div>
+        {@render TabButton("top")}
+      </div>
+
+      <div class="text-sm">{descriptions[tab]}</div>
     </div>
   </div>
 </div>
