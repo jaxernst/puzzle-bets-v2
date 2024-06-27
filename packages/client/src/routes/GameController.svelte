@@ -56,7 +56,7 @@
     if (path === "/me") return "Dashboard | Home"
     if (path.includes("/game/select")) return "Dashboard | Select"
     if (path === "/game/wordle/practice") return "Wordle | Practice"
-    return "Nav"
+    return ""
   })
 
   const SIZE_CLOSED = 55
