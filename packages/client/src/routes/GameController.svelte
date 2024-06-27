@@ -34,6 +34,7 @@
   import Clock from "$lib/icons/Clock.svelte"
   import Book from "$lib/icons/Book.svelte"
   import Crown from "$lib/icons/Crown.svelte"
+  import { page } from "$app/stores"
 
   const descriptions: Record<Tab, string> = {
     active: "Your active onchain games.",
@@ -48,6 +49,15 @@
     history: Book,
     top: Crown,
   }
+
+  const routeLabel = $derived.by(() => {
+    const path = $page.url.pathname
+    console.log($page.url)
+    if (path === "/me") return "Dashboard | Home"
+    if (path.includes("/game/select")) return "Dashboard | Select"
+    if (path === "/game/wordle/practice") return "Wordle | Practice"
+    return "Nav"
+  })
 
   const SIZE_CLOSED = 55
   const SIZE_OPEN = 600
@@ -99,7 +109,8 @@
   >
     <div class="flex items-center gap-2 font-extrabold">
       <PuzzlePiece class="h-6 w-6" />
-      Dashboard
+
+      {routeLabel}
 
       <div class="flex flex-grow justify-end">
         <AnimatedArrow
