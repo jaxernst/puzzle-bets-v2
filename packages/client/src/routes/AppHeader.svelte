@@ -9,10 +9,10 @@
 </script>
 
 <div
-  class="flex items-center justify-between border-b border-[#E5B300] px-4 py-2 font-bold"
+  class="bg-pb-beige-2 mx-2 flex items-center justify-between rounded-b-md border-x-2 border-b-2 border-black px-4 py-2 font-bold sm:mx-4"
 >
   {#if $page.route.id !== "/"}
-    <a href="/">
+    <a href="/" class="">
       <PuzzleBetsSmall />
     </a>
 
@@ -25,7 +25,7 @@
           </div>
 
           <div
-            class="flex items-center gap-1 rounded-full bg-yellow-200 px-2 py-1.5"
+            class="bg-pb-beige-1 flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
           >
             <Wallet />
             {user.balance}
@@ -33,7 +33,7 @@
         </div>
       {:else}
         <button
-          class="rounded-full bg-yellow-200 px-2 py-1 text-sm"
+          class="bg-pb-beige-1 flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
           onclick={promptConnectWallet}
         >
           Connect
