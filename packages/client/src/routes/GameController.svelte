@@ -23,7 +23,7 @@
 
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
-  import { tweened } from "svelte/motion"
+  import { tweened, spring } from "svelte/motion"
   import { cubicOut } from "svelte/easing"
   import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
   import { clickOutside } from "$lib/actions/clickOutside"
@@ -62,9 +62,9 @@
   const SIZE_CLOSED = 55
   const SIZE_OPEN = 600
 
-  const size = tweened(SIZE_CLOSED, {
-    duration: 300,
-    easing: cubicOut,
+  const size = spring(SIZE_CLOSED, {
+    damping: 0.37,
+    stiffness: 0.09,
   })
 
   $effect(() => {
