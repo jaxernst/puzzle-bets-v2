@@ -18,8 +18,8 @@
 
     <div>
       {#if user.address}
-        <div class="flex gap-2">
-          <div class="flex items-center gap-1">
+        <div class="flex gap-2 text-sm">
+          <div class="flex items-center gap-1 px-1 text-sm">
             <Avatar1 />
             {shortenAddress(user.address)}
           </div>
@@ -29,6 +29,12 @@
           >
             <Wallet />
             {user.balance}
+          </div>
+
+          <div
+            class="bg-pb-beige-1 hidden items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1 sm:flex"
+          >
+            0 Live Games
           </div>
         </div>
       {:else}
