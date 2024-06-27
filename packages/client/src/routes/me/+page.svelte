@@ -27,9 +27,17 @@
   <div
     class="flex h-full min-h-[600px] w-full flex-col items-center justify-evenly"
   >
-    <h1 class="font-angkor text-angkor p-10 font-bold">
-      Welcome {shortenAddress(user.address)}
-    </h1>
+    <div class="p-10">
+      <h1 class="font-angkor text-xl font-bold">
+        Welcome {shortenAddress(user.address)}
+      </h1>
+
+      <div class="flex justify-center p-4">
+        <button class="rounded-full border border-black px-3 py-1 text-sm"
+          >Set display name</button
+        >
+      </div>
+    </div>
 
     <div class="flex w-[250px] flex-col items-stretch gap-2">
       <button class="rounded-md bg-black px-4 py-2 font-bold text-white">
