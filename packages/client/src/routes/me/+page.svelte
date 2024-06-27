@@ -2,11 +2,13 @@
   import { goto } from "$app/navigation"
   import { user } from "$lib/userStore.svelte"
   import { shortenAddress } from "$lib/util"
-  import { openWithTab } from "../GameController.svelte"
+  import { openControls, showControls } from "../GameController.svelte"
 
   $effect(() => {
     if (!user.address) goto("/")
   })
+
+  $effect(showControls)
 </script>
 
 {#snippet card(title: string, disabled: boolean = false)}
@@ -37,7 +39,7 @@
       <button
         onclick={(e) => {
           e.stopImmediatePropagation()
-          openWithTab("lobby")
+          openControls("lobby")
         }}
         class="rounded-md border-2 border-black px-4 py-2 font-bold"
       >

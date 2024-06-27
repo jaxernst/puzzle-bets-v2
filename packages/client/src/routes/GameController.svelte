@@ -2,10 +2,22 @@
   type Tab = "lobby" | "active" | "history" | "top"
   let tab = $state<Tab>("active")
   let open = $state(false)
+  let hidden = $state(false)
 
-  export function openWithTab(_tab: Tab) {
-    tab = _tab
+  export function openControls(_tab?: Tab) {
+    if (_tab) tab = _tab
     open = true
+    hidden = false
+  }
+
+  export function hideControls() {
+    console.log("Hide")
+    open = false
+    hidden = true
+  }
+
+  export function showControls() {
+    hidden = false
   }
 </script>
 
@@ -66,9 +78,11 @@
 
 <div style={`height: ${SIZE_CLOSED}`}></div>
 
-<div class="absolute bottom-0 w-full px-2 sm:px-4">
+<div
+  class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} px-2 transition-transform sm:px-4`}
+>
   <div
-    onclick={() => (open = true)}
+    onclick={() => openControls()}
     onkeydown={(event) => {
       if (event.key === "Enter") open = !open
     }}

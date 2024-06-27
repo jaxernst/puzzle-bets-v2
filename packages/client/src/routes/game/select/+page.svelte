@@ -1,11 +1,14 @@
 <script lang="ts">
   import { goto } from "$app/navigation"
+  import { showControls } from "../../GameController.svelte"
+
+  $effect(showControls)
 </script>
 
 {#snippet card(title: string, disabled: boolean = false)}
   <button
     {disabled}
-    class="bg-white p-2 disabled:text-neutral-500 w-[343px]"
+    class="w-[343px] bg-white p-2 disabled:text-neutral-500"
     onclick={() => goto(`/game/${title.toLowerCase()}/practice`)}
   >
     <div class="font-bold">
@@ -14,16 +17,14 @@
   </button>
 {/snippet}
 
-<div class="h-full flex flex-col gap-6 items-center justify-center">
-
+<div class="flex h-full flex-col items-center justify-center gap-6">
   <h1>Choose your Game.</h1>
 
-  <div class="w-full flex flex-wrap items-center justify-center gap-4">
+  <div class="flex w-full flex-wrap items-center justify-center gap-4">
     {@render card("Wordle", false)}
-    
+
     {#each ["Connections", "Soduko", "Crossword"] as gameName}
-    {@render card(gameName, true)}
+      {@render card(gameName, true)}
     {/each}
   </div>
-
 </div>
