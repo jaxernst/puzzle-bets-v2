@@ -25,7 +25,7 @@
   <div
     class="flex h-full min-h-[600px] w-full flex-col items-center justify-evenly"
   >
-    <h1 class="p-10 text-xl font-bold">
+    <h1 class="font-angkor text-angkor p-10 font-bold">
       Welcome {shortenAddress(user.address)}
     </h1>
 

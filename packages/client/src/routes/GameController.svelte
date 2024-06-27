@@ -66,7 +66,7 @@
 
 <div style={`height: ${SIZE_CLOSED}`}></div>
 
-<div class="px1 absolute bottom-0 w-full sm:px-4">
+<div class="absolute bottom-0 w-full px-2 sm:px-4">
   <div
     onclick={() => (open = true)}
     onkeydown={(event) => {
