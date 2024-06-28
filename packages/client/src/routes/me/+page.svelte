@@ -4,6 +4,7 @@
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
   import { openControls, showControls } from "../GameController.svelte"
+  import { openNewGameModal } from "../NewGameModal.svelte"
 
   $effect(showControls)
 
@@ -85,7 +86,10 @@
     <div class="font-angkor text-2xl">Play Live</div>
 
     <div class="flex gap-3">
-      <button class="rounded-lg bg-black px-4 py-2 font-bold text-white">
+      <button
+        onclick={() => openNewGameModal()}
+        class="rounded-lg bg-black px-4 py-2 font-bold text-white"
+      >
         Start a New Game
       </button>
 

@@ -8,6 +8,7 @@
   import AppHeader from "./AppHeader.svelte"
   import Confetti from "$lib/components/Confetti.svelte"
   import WalletConnector from "$lib/components/WalletConnector.svelte"
+  import NewGameModal from "./NewGameModal.svelte"
 
   let { children } = $props()
 
@@ -24,6 +25,7 @@
 
 <Confetti />
 <WalletConnector />
+<NewGameModal />
 
 <div
   class="overflow-none bg-pb-yellow fixed flex h-screen w-screen flex-col justify-between"
