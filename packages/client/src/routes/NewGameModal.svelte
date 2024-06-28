@@ -1,5 +1,6 @@
 <script context="module">
   import Modal from "$lib/components/Modal.svelte"
+  import Stars from "$lib/icons/Stars.svelte"
 
   let show = $state()
 
@@ -8,4 +9,9 @@
   }
 </script>
 
-<Modal bind:show>Wip</Modal>
+<Modal bind:show>
+  <div class="flex gap-2 font-extrabold">
+    <Stars />
+    Create Game
+  </div>
+</Modal>
