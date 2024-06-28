@@ -25,21 +25,21 @@
 
 {#if user.address}
   <div
-    class="flex h-full min-h-[600px] w-full flex-col items-center justify-evenly"
+    class="flex h-full min-h-[600px] w-full flex-col items-center justify-center gap-14"
   >
     <div class="p-10">
       <h1 class="font-angkor text-xl font-bold">
         Welcome {shortenAddress(user.address)}
       </h1>
 
-      <div class="flex justify-center p-4">
+      <div class=" flex justify-center p-4">
         <button class="rounded-full border border-black px-3 py-1 text-sm"
           >Set display name</button
         >
       </div>
     </div>
 
-    <div class="flex w-[250px] flex-col items-stretch gap-2">
+    <div class="mb-20 flex w-[250px] flex-col items-stretch gap-2">
       <button class="rounded-md bg-black px-4 py-2 font-bold text-white">
         Start a New Game
       </button>

@@ -11,7 +11,6 @@
   }
 
   export function hideControls() {
-    console.log("Hide")
     open = false
     hidden = true
   }
@@ -24,7 +23,6 @@
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import { tweened, spring } from "svelte/motion"
-  import { cubicOut } from "svelte/easing"
   import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
   import { clickOutside } from "$lib/actions/clickOutside"
   import { capitalized } from "$lib/util"
@@ -52,7 +50,6 @@
 
   const routeLabel = $derived.by(() => {
     const path = $page.url.pathname
-    console.log($page.url)
     if (path === "/me") return "Dashboard | Home"
     if (path.includes("/game/select")) return "Dashboard | Select"
     if (path === "/game/wordle/practice") return "Wordle | Practice"
@@ -63,8 +60,9 @@
   const SIZE_OPEN = 600
 
   const size = spring(SIZE_CLOSED, {
-    damping: 0.37,
-    stiffness: 0.09,
+    damping: 0.49,
+    stiffness: 0.075,
+    precision: 0.001,
   })
 
   $effect(() => {

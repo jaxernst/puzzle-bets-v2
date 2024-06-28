@@ -18,7 +18,7 @@
 {/snippet}
 
 <div class="flex h-full flex-col items-center justify-center gap-6">
-  <h1>Choose your Game.</h1>
+  <div class="font-angkor text-2xl">Choose your Game.</div>
 
   <div class="flex w-full flex-wrap items-center justify-center gap-4">
     {@render card("Wordle", false)}
