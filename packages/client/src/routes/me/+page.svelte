@@ -67,7 +67,7 @@
 >
   <!-- Welcome -->
   <div class="p-10">
-    <h1 class="font-angkor text-2xl font-bold">
+    <h1 class="font-angkor text-center text-xl font-bold">
       Welcome {user.address ? shortenAddress(user.address) : "Guest"}
     </h1>
 
@@ -79,7 +79,9 @@
   </div>
 
   <!-- Action Buttons -->
-  <div class="flex w-full flex-col items-center gap-6 self-start">
+  <div
+    class="flex w-full flex-col items-center gap-6 self-start text-sm sm:text-base"
+  >
     <div class="font-angkor text-2xl">Play Live</div>
 
     <div class="flex gap-3">

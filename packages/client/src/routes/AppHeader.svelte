@@ -25,14 +25,14 @@
           </div>
 
           <div
-            class="bg-pb-beige-1 flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
+            class=" flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black bg-white px-2 py-1"
           >
             <Wallet />
             {user.balance}
           </div>
 
           <div
-            class="bg-pb-beige-1 hidden items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1 sm:flex"
+            class=" hidden items-center gap-1 rounded-full border-b-2 border-r-2 border-black bg-white px-2 py-1 sm:flex"
           >
             0 Live Games
           </div>
