@@ -26,7 +26,7 @@
 <WalletConnector />
 
 <div
-  class="overflow-none fixed flex h-screen w-screen flex-col justify-between bg-yellow-400"
+  class="overflow-none bg-pb-yellow fixed flex h-screen w-screen flex-col justify-between"
 >
   {#if !isHomePage}
     <AppHeader />
