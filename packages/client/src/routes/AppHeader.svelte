@@ -9,7 +9,7 @@
 </script>
 
 <div
-  class="bg-pb-beige-2 mx-2 flex items-center justify-between rounded-b-md border-x-2 border-b-2 border-black px-4 py-2 font-bold sm:mx-4"
+  class=" border-b-1 mx-2 flex items-center justify-between border-black/20 py-2 font-bold sm:mx-4"
 >
   {#if $page.route.id !== "/"}
     <a href="/" class="">
