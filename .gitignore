@@ -5,7 +5,6 @@ packages/contracts/cache/
 packages/contracts/broadcast/
 
 
-pnpm-lock.yaml
 .vscode
 
 NOTES.md
