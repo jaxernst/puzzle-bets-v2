@@ -84,7 +84,7 @@
   </button>
 {/snippet}
 
-<div style={`height: ${SIZE_CLOSED}`}></div>
+<div style={`height: ${SIZE_CLOSED}px`}></div>
 
 <div
   class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} px-2 transition-transform sm:px-4`}
@@ -109,6 +109,12 @@
       <PuzzlePiece class="h-6 w-6" />
 
       {routeLabel}
+
+      <div
+        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs"
+      >
+        0 Live Games
+      </div>
 
       <div class="flex flex-grow justify-end">
         <AnimatedArrow
