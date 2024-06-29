@@ -94,7 +94,7 @@
         {/if}
       </button>
 
-      <a href="/game/select" class="rounded border-2 border-black px-3 py-2">
+      <a href="/me" class="rounded border-2 border-black px-3 py-2">
         Play a Practice Game
       </a>
 

@@ -8,22 +8,25 @@
 
 <div class="flex w-full justify-center">
   <div class="flex max-w-[1000px] flex-grow justify-between">
-    <div class="flex items-center">
-      <AnimatedArrow class="h-6 w-6" direction={"left"} />
+    <button
+      class="group flex items-center hover:underline"
+      onclick={() => window.history.back()}
+    >
+      <AnimatedArrow
+        class=" h-6 w-6 transition-transform group-hover:scale-125"
+        direction={"left"}
+      />
 
       {#if gameId}
-        <button
-          onclick={() => window.history.back()}
-          class="font-bold hover:underline">{capitalized(puzzle)} | Live</button
-        >
+        <div class="font-bold">
+          {capitalized(puzzle)} | Live
+        </div>
       {:else}
-        <button
-          onclick={() => window.history.back()}
-          class="font-bold hover:underline"
-          >Practice {capitalized(puzzle)}</button
-        >
+        <div class="font-bold">
+          Practice {capitalized(puzzle)}
+        </div>
       {/if}
-    </div>
+    </button>
 
     <div class="flex items-center gap-1 text-sm">
       <div class="rounded-full bg-black px-1.5 py-0.5 text-white">$0 Wager</div>
