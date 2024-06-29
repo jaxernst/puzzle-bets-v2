@@ -2,10 +2,6 @@
   "name": "v2-client",
   "version": "0.0.1",
   "private": true,
-  "engines": {
-    "node": "v20.8.1",
-    "pnpm": "8.7.5"
-  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
