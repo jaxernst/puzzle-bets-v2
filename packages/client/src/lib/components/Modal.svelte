@@ -12,7 +12,7 @@
     children,
     class: className = "sm:min-h-[500px] sm:w-[500px]",
   } = $props<{
-    show: Boolean
+    show: boolean
     title?: string
     description?: string
     children: any
