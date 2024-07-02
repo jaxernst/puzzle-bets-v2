@@ -19,6 +19,7 @@ export default {
         "pb-gray-1": "#CCCCCC",
         "pb-beige-1": "#FEECC8",
         "pb-beige-2": "#CDC1A8",
+        "pb-blue": "#97b5c2",
       },
     },
   },

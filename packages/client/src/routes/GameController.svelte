@@ -101,7 +101,7 @@
       },
     }}
     tabindex="0"
-    class="bg-pb-beige-2 flex flex-col gap-6 rounded-t-md border-x-2 border-t-2 border-black p-4"
+    class="bg-pb-blue flex flex-col gap-6 rounded-t-md border-x-2 border-t-2 border-black p-4"
     role="button"
     style={`height: ${$size}px;`}
   >
