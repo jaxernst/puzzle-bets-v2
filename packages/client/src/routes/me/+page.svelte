@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import type { PuzzleType } from "$lib/types"
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
@@ -87,15 +88,19 @@
 
     <div class="flex gap-3">
       <button
-        onclick={() => openNewGameModal()}
         class="rounded-lg bg-black px-4 py-2 font-bold text-white"
+        onclick={async () => {
+          if (!user.address) await promptConnectWallet()
+          openNewGameModal()
+        }}
       >
         Start a New Game
       </button>
 
       <button
-        onclick={(e) => {
+        onclick={async (e) => {
           e.stopImmediatePropagation()
+          if (!user.address) await promptConnectWallet()
           openControls("lobby")
         }}
         class="rounded-md border-2 border-black p-4 font-bold"
