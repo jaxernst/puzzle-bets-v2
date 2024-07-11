@@ -25,7 +25,7 @@
           </div>
 
           <div
-            class=" bg-pb-silver flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
+            class=" bg-pb-beige-1 flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
           >
             <Wallet />
             {user.balance}
@@ -33,7 +33,7 @@
         </div>
       {:else}
         <button
-          class="bg-pb-silver flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
+          class="bg-pb-beige-1 flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
           onclick={promptConnectWallet}
         >
           Connect
