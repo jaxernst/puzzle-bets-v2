@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import Lock from "$lib/icons/Lock.svelte"
   import Smiley from "$lib/icons/Smiley.svelte"
@@ -15,6 +16,12 @@
   let puzzleType: PuzzleType = $state("wordle")
 
   let visibility: "public" | "private" = $state("public")
+
+  let usdValue = 2
+  let selectedCurrency = $state<"USD" | "ETH">("USD")
+  let selectedCurrencySymbol = $derived(
+    { USD: "$", ETH: "E" }[selectedCurrency],
+  )
 </script>
 
 <Modal bind:show>
@@ -60,17 +67,57 @@
       </div>
     </div>
 
+    <!-- Game Name -->
     <div class="">
       <div class="mb-2 text-[11px]">
         Game Name <span class="font-bold">(optional)</span>
       </div>
 
-      <div
-        class="flex w-full items-center gap-2 rounded bg-[#E7E1D2] p-3 font-bold"
-      >
+      <div class="flex w-full items-center rounded bg-[#E7E1D2] pl-3 font-bold">
         Wordle
-        <div>|</div>
-        <input class="flex-grow bg-transparent" placeholder="Game Name" />
+        <div class="ml-2">|</div>
+        <input
+          class="flex-grow bg-transparent px-2 py-3"
+          placeholder="Game Name"
+        />
+      </div>
+    </div>
+
+    <!-- Game Wager -->
+    <div>
+      <div class="mb-2 text-[11px]">Wager</div>
+
+      <div class="flex gap-2">
+        <div
+          class="flex w-full items-center rounded bg-[#E7E1D2] pl-3 font-bold"
+        >
+          {selectedCurrencySymbol}
+          <div class="ml-2">|</div>
+          <input
+            class="flex-grow bg-transparent px-2 py-3"
+            placeholder="Game Name"
+            type="number"
+            value="2.00"
+          />
+        </div>
+
+        <button
+          class="flex items-center gap-1 whitespace-nowrap rounded border-2 border-black p-3 text-sm font-bold leading-none"
+          onclick={() => {
+            if (selectedCurrency === "USD") {
+              selectedCurrency = "ETH"
+            } else {
+              selectedCurrency = "USD"
+            }
+          }}
+        >
+          {selectedCurrency} ({selectedCurrencySymbol})
+
+          <AnimatedArrow
+            direction={selectedCurrency === "USD" ? "down" : "up"}
+            class="h-4 w-4"
+          />
+        </button>
       </div>
     </div>
   </div>
