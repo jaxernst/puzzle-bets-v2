@@ -12,6 +12,7 @@ export default {
         base: ["14px", "15.4px"],
       },
       colors: {
+        "pb-off-white": "#FEFAF0",
         "pb-yellow": "#FFC700",
         "pb-green": "#2FB163",
         "pb-orange": "#E17E22",
