@@ -5,7 +5,7 @@
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
   import { openControls, showControls } from "../GameController.svelte"
-  import { openNewGameModal } from "../NewGameModal.svelte"
+  import { toggleNewGameModal } from "../NewGameModal.svelte"
 
   $effect(showControls)
 
@@ -74,16 +74,14 @@
     </h1>
 
     <div class=" flex justify-center p-4">
-      <button class="rounded-full border border-black px-3 py-1 text-sm"
+      <button class="rounded-full border border-black px-3 py-1"
         >Set display name</button
       >
     </div>
   </div>
 
   <!-- Action Buttons -->
-  <div
-    class="flex w-full flex-col items-center gap-6 self-start text-sm sm:text-base"
-  >
+  <div class="flex w-full flex-col items-center gap-6 self-start text-base">
     <div class="font-angkor text-2xl">Play Live</div>
 
     <div class="flex gap-3">
@@ -91,7 +89,7 @@
         class="rounded-lg bg-black px-4 py-2 font-bold text-white"
         onclick={async () => {
           if (!user.address) await promptConnectWallet()
-          openNewGameModal()
+          toggleNewGameModal()
         }}
       >
         Start a New Game

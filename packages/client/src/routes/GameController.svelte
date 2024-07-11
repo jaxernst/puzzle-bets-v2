@@ -137,7 +137,7 @@
         {@render TabButton("top")}
       </div>
 
-      <div class="text-sm">{descriptions[tab]}</div>
+      <div class="text-xs">{descriptions[tab]}</div>
     </div>
   </div>
 </div>
