@@ -4,10 +4,12 @@
   import type { PuzzleType } from "$lib/types"
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
-  import { openControls, showControls } from "../GameController.svelte"
+  import {
+    hideControls,
+    openControls,
+    showControls,
+  } from "../GameController.svelte"
   import { openNewGameModal } from "../NewGameModal.svelte"
-
-  $effect(showControls)
 
   const gameInfo: Record<
     PuzzleType,
@@ -64,78 +66,16 @@
   </div>
 {/snippet}
 
-<div
-  class="start mx-auto flex min-h-[600px] w-full max-w-[850px] flex-col items-center px-4"
->
-  <!-- Welcome -->
-  <div class="p-10">
-    <h1 class="font-angkor text-center text-xl font-bold">
-      Welcome {user.address ? shortenAddress(user.address) : "Guest"}
-    </h1>
+<div class="flex h-full w-full flex-col overflow-visible">
+  <div class="relative h-[150px] w-full">
+    <img
+      class="h-full w-full object-cover"
+      src="/character2-spotlight.png"
+      alt="Background puzzle character"
+    />
 
-    <div class=" flex justify-center p-4">
-      <button class="rounded-full border border-black px-3 py-1 text-sm"
-        >Set display name</button
-      >
-    </div>
+    <div class="absolute top-0 h-full w-full bg-black/40"></div>
   </div>
 
-  <!-- Action Buttons -->
-  <div
-    class="flex w-full flex-col items-center gap-6 self-start text-sm sm:text-base"
-  >
-    <div class="font-angkor text-2xl">Play Live</div>
-
-    <div class="flex gap-3">
-      <button
-        class="rounded-lg bg-black px-4 py-2 font-bold text-white"
-        onclick={async () => {
-          if (!user.address) await promptConnectWallet()
-          openNewGameModal()
-        }}
-      >
-        Start a New Game
-      </button>
-
-      <button
-        onclick={async (e) => {
-          e.stopImmediatePropagation()
-          if (!user.address) await promptConnectWallet()
-          openControls("lobby")
-        }}
-        class="rounded-md border-2 border-black p-4 font-bold"
-      >
-        Join a Public Game
-      </button>
-    </div>
-  </div>
-
-  <!-- Choose Your Game -->
-  <div
-    class="flex h-full flex-col items-center justify-center gap-6 self-start pt-10"
-  >
-    <div class="font-angkor text-2xl">Practice</div>
-
-    <div
-      class="flex w-full max-w-[800px] flex-wrap items-center justify-center gap-4"
-    >
-      {@render card("wordle", false)}
-
-      {#each ["connections", "sudoku", "crossword"] as gameName}
-        {@render card(gameName as PuzzleType, true)}
-      {/each}
-    </div>
-  </div>
-
-  <!-- <div class="px-4 font-bold">
-      Start a Live Game
-
-      <div class="flex flex-wrap items-center justify-center gap-4 p-4">
-        {@render card("Wordle", false)}
-
-        {#each ["Connections", "Soduko", "Crossword"] as gameName}
-          {@render card(gameName, true)}
-        {/each}
-      </div>
-    </div> -->
+  <div class="z-10 -mt-2 flex-grow rounded-t-lg bg-white"></div>
 </div>

@@ -21,6 +21,10 @@
   $effect(() => void user.onWalletChange(walletStore))
 
   let isHomePage = $derived($page.url.pathname === "/")
+
+  let isGameControllerPage = $derived(
+    !isHomePage && $page.url.pathname !== "/me",
+  )
 </script>
 
 <Confetti />
@@ -38,7 +42,7 @@
     {@render children()}
   </div>
 
-  {#if !isHomePage}
+  {#if isGameControllerPage}
     <GameController />
   {/if}
 </div>
