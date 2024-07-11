@@ -67,7 +67,7 @@
     </div>
 
     <button
-      class="w-full rounded-md bg-black px-3 py-2 text-center text-sm font-bold text-white"
+      class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
       onclick={() => {
         walletStore.connect()
         showModal = false
