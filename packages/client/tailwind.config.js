@@ -9,7 +9,7 @@ export default {
       },
       fontSize: {
         angkor: ["14px", "15.4px"],
-        base: ["14px", "15.4px"],
+        base: ["14px", "14px"],
       },
       colors: {
         "pb-off-white": "#FEFAF0",

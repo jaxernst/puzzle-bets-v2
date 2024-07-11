@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-4 text-base">
+    <div class="flex flex-col gap-4 text-sm">
       <div style={"font-weight: 900"}>We're in Beta</div>
       <div>Basically it's all “play money” and not real until launch.</div>
 
@@ -67,7 +67,7 @@
     </div>
 
     <button
-      class="w-full rounded bg-black px-3 py-2 text-center text-sm font-bold text-white"
+      class="w-full rounded-md bg-black px-3 py-2 text-center text-sm font-bold text-white"
       onclick={() => {
         walletStore.connect()
         showModal = false
