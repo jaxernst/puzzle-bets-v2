@@ -85,7 +85,10 @@
     aria-describedby={description}
   >
     <div
-      class={twMerge("rounded-t-md bg-white p-6  sm:rounded-b-md", className)}
+      class={twMerge(
+        "w-full rounded-t-md bg-white p-6 sm:w-auto sm:rounded-b-md",
+        className,
+      )}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
     >
       {@render children()}
