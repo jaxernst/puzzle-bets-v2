@@ -13,19 +13,24 @@ export const supabase = createClient(
   PRIVATE_SUPA_SERVICE_KEY,
 )
 
-const [indexerServiceKey, indexerApiUrl] = (() => {
-  if (Number(PUBLIC_CHAIN_ID) === 4242)
-    return [PRIVATE_4242_INDEXER_SERVICE_KEY, PRIVATE_4242_INDEXER_API_URL]
+export const indexerClient = (() => {
+  let indexerApiUrl, indexerServiceKey
 
-  if (Number(PUBLIC_CHAIN_ID) === 84532)
-    return [PRIVATE_84532_INDEXER_SERVICE_KEY, PRIVATE_84532_INDEXER_API_URL]
+  if (Number(PUBLIC_CHAIN_ID) === 4242) {
+    indexerApiUrl = PRIVATE_4242_INDEXER_API_URL
+    indexerServiceKey = PRIVATE_4242_INDEXER_SERVICE_KEY
+  }
 
-  console.error("No indexer available for chain", PUBLIC_CHAIN_ID)
-  return ["", ""]
+  if (Number(PUBLIC_CHAIN_ID) === 84532) {
+    indexerApiUrl = PRIVATE_84532_INDEXER_API_URL
+    indexerServiceKey = PRIVATE_84532_INDEXER_SERVICE_KEY
+  }
+
+  if (!indexerApiUrl || !indexerServiceKey) return
+
+  return createClient(indexerApiUrl, indexerServiceKey, {
+    db: {
+      schema: "mud",
+    },
+  })
 })()
-
-export const indexerClient = createClient(indexerApiUrl, indexerServiceKey, {
-  db: {
-    schema: "mud",
-  },
-})
