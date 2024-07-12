@@ -10,6 +10,7 @@ import {
 } from "viem"
 
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+import { mount as mounDevTools } from "@latticexyz/dev-tools"
 import { networkConfig } from "./networkConfig"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import { type ContractWrite } from "@latticexyz/common"
