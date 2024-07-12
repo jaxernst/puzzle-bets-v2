@@ -1,5 +1,7 @@
 import type { Components } from "./mud/setupNetwork"
 import { type Component } from "@latticexyz/recs"
+import { mount as mountDevTools } from "@latticexyz/dev-tools"
+import { PUBLIC_CHAIN_ID } from "$env/static/public"
 
 import { setupNetwork, type Wallet } from "$lib/mud/setupNetwork"
 import { createSystemCalls } from "$lib/mud/createSystemCalls"
@@ -19,6 +21,8 @@ export const mud = (function createMudStore() {
   async function setup(wallet: Wallet) {
     const network = await setupNetwork(wallet)
     await waitForSync(network.components)
+
+    PUBLIC_CHAIN_ID === 31337 && mountDevTools(network as any)
 
     mudState = {
       synced: true,
