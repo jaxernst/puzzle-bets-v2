@@ -1,7 +1,10 @@
 <script context="module" lang="ts">
+  import { goto } from "$app/navigation"
   import HandUp from "$lib/assets/HandUp.svelte"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import DotLoader from "$lib/components/DotLoader.svelte"
   import Modal from "$lib/components/Modal.svelte"
+  import { prices } from "$lib/prices.svelte"
   import Clock from "$lib/icons/Clock.svelte"
   import Lock from "$lib/icons/Lock.svelte"
   import Smiley from "$lib/icons/Smiley.svelte"
@@ -9,21 +12,16 @@
   import Wallet from "$lib/icons/Wallet.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import type { PuzzleType } from "$lib/types"
-  import { capitalized } from "$lib/util"
+  import { capitalized, formatSigFig } from "$lib/util"
+  import { openControls } from "./GameController.svelte"
 
-  let show = $state(false)
+  let showCreate = $state(false)
   let showConfirm = $state(false)
+  let showCreated = $state(false)
 
   export const toggleNewGameModal = () => {
-    show = !show
+    showCreate = true
   }
-
-  const showConfirmModal = () => {
-    show = false
-    showConfirm = true
-  }
-
-  let ethPrice = 3000
 
   // Input params
   let puzzleType: PuzzleType = $state("wordle")
@@ -40,28 +38,33 @@
   let otherCurrency = $derived(selectedCurrency === "ETH" ? "USD" : "ETH")
   let otherCurrencyValue = $derived(
     otherCurrency === "ETH"
-      ? (Number(currencyInput) / ethPrice).toFixed(5)
-      : (ethPrice * Number(currencyInput)).toFixed(5),
+      ? formatSigFig(Number(currencyInput) / prices.eth, 4)
+      : (prices.eth * Number(currencyInput)).toFixed(2),
   )
 
   const toggleCurrency = (currentCurrency: string) => {
     if (currentCurrency === "USD") {
       // Convert to eth
-      currencyInput = (Number(currencyInput) / ethPrice).toFixed(5)
       selectedCurrency = "ETH"
+      currencyInput = String(
+        formatSigFig(Number(currencyInput) / prices.eth, 4),
+      )
     } else {
       // Convert to USD
-      currencyInput = (ethPrice * Number(currencyInput)).toFixed(5)
       selectedCurrency = "USD"
+      currencyInput = (prices.eth * Number(currencyInput)).toFixed(2)
     }
   }
 
-  let createGame = $derived(() => {
+  let createGameLoading = $state(false)
+  let createdGameId = 12
+
+  let createGame = $derived(async () => {
     let wagerEth = 0
     if (selectedCurrency === "ETH") {
       wagerEth = Number(currencyInput)
     } else {
-      wagerEth = Number(currencyInput) / ethPrice
+      wagerEth = Number(currencyInput) / prices.eth
     }
 
     const inviteExpirationMin = visibility === "public" ? 60 * 24 * 3 : 60 * 24
@@ -70,17 +73,26 @@
         ? undefined
         : Math.random().toString(36).substring(2)
 
-    mud.systemCalls?.newGame(
-      puzzleType,
-      wagerEth,
-      inputTimeLimit,
-      inviteExpirationMin,
-      password,
-    )
+    createGameLoading = true
+
+    try {
+      await mud.systemCalls?.newGame(
+        puzzleType,
+        wagerEth,
+        inputTimeLimit,
+        inviteExpirationMin,
+        password,
+      )
+
+      showConfirm = false
+      showCreated = true
+    } finally {
+      createGameLoading = false
+    }
   })
 </script>
 
-<Modal bind:show class="px-6 pb-0 pt-6">
+<Modal bind:show={showCreate} class="w-[375px] px-6 pb-0 pt-6">
   <div class="flex flex-col gap-4">
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
@@ -205,7 +217,10 @@
 
     <div class="flex w-full flex-col gap-2 font-bold">
       <button
-        onclick={showConfirmModal}
+        onclick={() => {
+          showCreate = false
+          showConfirm = true
+        }}
         class="rounded-md border-2 border-black bg-black py-2 text-white"
       >
         Create Game
@@ -227,8 +242,8 @@
   </div>
 </Modal>
 
-<Modal bind:show={showConfirm} class="px-6 pb-0 pt-6">
-  <div class="flex flex-col gap-5">
+<Modal bind:show={showConfirm} class="w-[375px] px-6 pb-0 pt-6">
+  <div class="flex flex-col gap-6">
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
       Confirm Create Game
@@ -270,21 +285,25 @@
       </div>
     </div>
 
-    <hr class="my-2" />
+    <hr class="my-1" />
 
     <div class="flex w-full flex-col gap-2 font-bold">
       <button
         onclick={createGame}
-        class="rounded-md border-2 border-black bg-black py-2 text-white"
+        class="flex justify-center rounded-md border-2 border-black bg-black py-2 text-white"
       >
-        Confirm
+        {#if !createGameLoading}
+          Confirm
+        {:else}
+          <DotLoader class="fill-white" />
+        {/if}
       </button>
 
       <button
         class="rounded-md border-2 border-black py-2"
         onclick={() => {
           showConfirm = false
-          show = true
+          showCreate = true
         }}
       >
         Edit Details
@@ -296,6 +315,71 @@
         This action will deposit your wager in the smart contract. You may
         cancel and withdraw up until your opponent joins.
       </div>
+    </div>
+
+    <div class="flex flex-grow items-end">
+      <HandUp />
+    </div>
+  </div>
+</Modal>
+
+<Modal bind:show={showCreated} class="max-w-[375px] px-6 pb-0 pt-6">
+  <div class="flex flex-col gap-5">
+    <div class="flex items-center gap-2 text-sm font-extrabold">
+      <Stars />
+      Success
+    </div>
+
+    <div>
+      <div class="mb-3 font-extrabold">Game Created!</div>
+
+      <div class="leading-tight">
+        Your wager has been deposited in the smart contract and your game has
+        been created.
+      </div>
+    </div>
+
+    <div>
+      <div class="mb-3 font-extrabold">What now?</div>
+
+      <div class="mb-3 leading-tight">
+        Go to your game room, copy your invite link, and share with a friend.
+      </div>
+
+      <div class="leading-tight">
+        If you have notifications enabled, you'll get notified as soon as
+        someone joins your game. <span class="underline"
+          >Once your opponent joins, you'll have 12 hours to start your turn</span
+        >
+      </div>
+    </div>
+
+    <hr class="my-1" />
+
+    <div class="text-center font-extrabold">
+      {capitalized(puzzleType)} | {gameName}
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <button
+        onclick={() => {
+          showCreated = false
+          goto(`/game/wordle/${createdGameId}`)
+        }}
+        class="rounded-md border-2 border-black bg-black py-2 text-white"
+      >
+        Go To Game Room
+      </button>
+
+      <button
+        class="rounded-md border-2 border-black py-2"
+        onclick={() => {
+          showCreated = false
+          openControls("lobby")
+        }}
+      >
+        Back To Lobby
+      </button>
     </div>
 
     <div class="flex flex-grow items-end">
