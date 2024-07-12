@@ -20,7 +20,7 @@ const [indexerServiceKey, indexerApiUrl] = (() => {
   if (Number(PUBLIC_CHAIN_ID) === 84532)
     return [PRIVATE_84532_INDEXER_SERVICE_KEY, PRIVATE_84532_INDEXER_API_URL]
 
-  console.error("Not indexer available for chain", PUBLIC_CHAIN_ID)
+  console.error("No indexer available for chain", PUBLIC_CHAIN_ID)
   return ["", ""]
 })()
 

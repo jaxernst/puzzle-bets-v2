@@ -7,6 +7,8 @@ import { env } from "$env/dynamic/public"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
+const DEFAULT_PLAYBACK_WINDOW = 60 * 60 * 24 // 1 Day
+
 /*
  * Create the system calls that the client can use to ask
  * for changes in the World state (using the System contracts).
@@ -34,6 +36,7 @@ export function createSystemCalls({
       [
         gameTypeToNumber[gameType],
         submissionWindowMinutes * 60,
+        DEFAULT_PLAYBACK_WINDOW,
         inviteExpirationTimestamp,
         env.PUBLIC_PUZZLE_MASTER_ADDRESS as EvmAddress,
         passwordHash,
