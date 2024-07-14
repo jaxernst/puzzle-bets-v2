@@ -56,11 +56,14 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-4 text-sm">
+    <div class="flex flex-col gap-4">
       <div style={"font-weight: 900"}>We're in Beta</div>
-      <div>Basically it's all “play money” and not real until launch.</div>
 
-      <div>
+      <div class="text-sm">
+        Basically it's all “play money” and not real until launch.
+      </div>
+
+      <div class="text-sm">
         Connecting and playing games will NOT use your real ETH. We will give
         you a temporary wallet auto-funded with testnet Ethereum.
       </div>
