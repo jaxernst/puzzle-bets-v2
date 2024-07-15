@@ -1,7 +1,7 @@
+import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import type { Components } from "./mud/setupNetwork"
 import { type Component } from "@latticexyz/recs"
 import { mount as mountDevTools } from "@latticexyz/dev-tools"
-import { PUBLIC_CHAIN_ID } from "$env/static/public"
 
 import { setupNetwork, type Wallet } from "$lib/mud/setupNetwork"
 import { createSystemCalls } from "$lib/mud/createSystemCalls"
@@ -37,8 +37,13 @@ export const mud = (function createMudStore() {
       ([componentName, component]) => {
         return (component as Component).update$.subscribe((update) => {
           if ("components" in mudState) {
-            ;(mudState.components as Record<string, Component>)[componentName] =
-              update.component
+            mudState = {
+              ...mudState,
+              components: {
+                ...mudState.components,
+                [componentName]: update.component,
+              } as Components,
+            }
           }
         })
       },

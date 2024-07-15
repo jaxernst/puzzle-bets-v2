@@ -33,6 +33,9 @@
   import Book from "$lib/icons/Book.svelte"
   import Crown from "$lib/icons/Crown.svelte"
   import { page } from "$app/stores"
+  import { user } from "$lib/userStore.svelte"
+  import { mud } from "$lib/mudStore.svelte"
+  import { getPlayerGames } from "$lib/gameQueries"
 
   const descriptions: Record<Tab, string> = {
     active: "Your active onchain games.",
@@ -72,6 +75,8 @@
       $size = SIZE_CLOSED
     }
   })
+
+  let numGames = $derived(getPlayerGames(user.address, mud).length)
 </script>
 
 {#snippet TabButton(name: Tab)}
@@ -113,7 +118,7 @@
       <div
         class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs"
       >
-        0 Live Games
+        {numGames} Live Games
       </div>
 
       <div class="flex flex-grow justify-end">
