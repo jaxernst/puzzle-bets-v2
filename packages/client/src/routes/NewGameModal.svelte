@@ -169,6 +169,7 @@
             class="flex-grow bg-transparent px-2 py-3"
             placeholder="Game Name"
             type="number"
+            step={selectedCurrency === "USD" ? "1" : ".001"}
             min="0"
             bind:value={currencyInput}
           />
