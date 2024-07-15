@@ -8,7 +8,12 @@ import {
   getComponentValue,
   type Entity,
 } from "@latticexyz/recs"
-import { GameStatus, gameNumberToType, type EvmAddress } from "$lib/types"
+import {
+  GameStatus,
+  gameNumberToType,
+  type EvmAddress,
+  type Game,
+} from "$lib/types"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 import { type SetupNetworkResult } from "./mud/setupNetwork"
 import { PUBLIC_PUZZLE_MASTER_ADDRESS } from "$env/static/public"
@@ -40,6 +45,7 @@ export function getPlayerGames(
 
     return {
       ...game,
+      ...playerFields(game, player),
       opponent: player === game.p1 ? game.p2 : game.p1,
     }
   })
@@ -47,7 +53,7 @@ export function getPlayerGames(
 
 // Util //
 
-const gameIdToGame = (
+export const gameIdToGame = (
   gameId: Entity,
   mudComponents: SetupNetworkResult["components"],
 ) => {
@@ -68,11 +74,6 @@ const gameIdToGame = (
 
   const buyInAmount =
     getComponentValue(mudComponents.BuyIn, gameId)?.value ?? 0n
-
-  const startTime = getComponentValue(
-    mudComponents.GameStartTime,
-    gameId,
-  )?.value
 
   const submissionWindow = getComponentValueStrict(
     mudComponents.SubmissionWindow,
@@ -95,6 +96,15 @@ const gameIdToGame = (
       { gameId: "bytes32", player: "address" },
       { gameId: gameId as `0x${string}`, player: p2 as `0x${string}` },
     )
+
+  const p1StartTime = getComponentValue(
+    mudComponents.GamePlayerStartTime,
+    p1GameKey,
+  )?.value
+
+  const p2StartTime =
+    p2GameKey &&
+    getComponentValue(mudComponents.GamePlayerStartTime, p2GameKey)?.value
 
   const p1Balance =
     getComponentValue(mudComponents.Balance, p1GameKey)?.value ?? 0n
@@ -123,11 +133,28 @@ const gameIdToGame = (
     buyInAmount,
     p1Balance,
     p2Balance,
-    startTime,
+    p1StartTime,
+    p2StartTime,
     submissionWindow,
     inviteExpiration,
     p1Rematch,
     p2Rematch,
     rematchCount,
+  }
+}
+
+export const playerFields = (game: Game, player: EvmAddress) => {
+  const isP1 = game.p1 === player.toLowerCase()
+
+  if (isP1) {
+    return {
+      myBalance: game.p1Balance,
+      myStartTime: game.p1StartTime,
+    }
+  } else {
+    return {
+      myBalance: game.p2Balance,
+      myStartTime: game.p2StartTime,
+    }
   }
 }

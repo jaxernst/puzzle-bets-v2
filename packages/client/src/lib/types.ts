@@ -1,4 +1,5 @@
 import type { Entity } from "@latticexyz/recs"
+import type { getPlayerGames } from "./gameQueries"
 
 export type EvmAddress = `0x${string}`
 
@@ -6,13 +7,18 @@ export type Game = {
   id: Entity
   type: PuzzleType
   status: GameStatus
+  betAmount?: bigint
   p1: EvmAddress
   p2?: EvmAddress
-  betAmount?: bigint
-  startTime?: bigint
+  p1Balance: bigint
+  p2Balance?: bigint
+  p1StartTime?: bigint
+  p2StartTime?: bigint
   submissionWindow: number
   inviteExpiration: bigint
 }
+
+export type PlayerGame = ReturnType<typeof getPlayerGames>
 
 export type StartedGame = {
   id: Entity
