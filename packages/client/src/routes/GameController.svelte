@@ -22,7 +22,7 @@
 
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
-  import { tweened, spring } from "svelte/motion"
+  import { spring } from "svelte/motion"
   import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
   import { clickOutside } from "$lib/actions/clickOutside"
   import { capitalized } from "$lib/util"

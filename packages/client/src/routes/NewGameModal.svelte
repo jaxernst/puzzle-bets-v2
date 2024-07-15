@@ -374,7 +374,8 @@
 
       <button
         class="rounded-md border-2 border-black py-2"
-        onclick={() => {
+        onclick={(e) => {
+          e.stopPropagation()
           showCreated = false
           openControls("lobby")
         }}
