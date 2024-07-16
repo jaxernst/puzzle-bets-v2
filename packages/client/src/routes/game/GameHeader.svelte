@@ -28,7 +28,7 @@
       {/if}
     </button>
 
-    <div class="flex items-center gap-1 text-sm">
+    <div class="flex items-center gap-1">
       <div class="rounded-full bg-black px-1.5 py-0.5 text-white">$0 Wager</div>
       <div class="rounded-full bg-black px-1.5 py-0.5 text-white">
         No time limit

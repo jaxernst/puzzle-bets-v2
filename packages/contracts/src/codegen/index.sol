@@ -8,7 +8,6 @@ import { GameStatus } from "./tables/GameStatus.sol";
 import { BuyIn } from "./tables/BuyIn.sol";
 import { SubmissionWindow } from "./tables/SubmissionWindow.sol";
 import { InviteExpiration } from "./tables/InviteExpiration.sol";
-import { GameStartTime } from "./tables/GameStartTime.sol";
 import { GamePasswordHash } from "./tables/GamePasswordHash.sol";
 import { PuzzleMasterEoa } from "./tables/PuzzleMasterEoa.sol";
 import { Player1 } from "./tables/Player1.sol";

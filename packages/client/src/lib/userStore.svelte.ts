@@ -48,11 +48,8 @@ export const user = (() => {
 
   const balanceSync = makeBalanceSync((balance: string) => {
     // Only update store when balance has changed
-    if (balance !== balance) {
-      userState = {
-        ...userState,
-        balance,
-      }
+    if (balance !== userState.balance) {
+      userState.balance = balance
     }
   })
 

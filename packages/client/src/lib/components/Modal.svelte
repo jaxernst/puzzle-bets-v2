@@ -84,9 +84,14 @@
     aria-labelledby={title}
     aria-describedby={description}
   >
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
-      class={twMerge("rounded-t-md bg-white p-6  sm:rounded-b-md", className)}
+      class={twMerge(
+        "bg-pb-off-white w-full rounded-t-md p-6 sm:w-auto sm:rounded-b-md",
+        className,
+      )}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
+      onclick={(e) => e.stopPropagation()}
     >
       {@render children()}
     </div>

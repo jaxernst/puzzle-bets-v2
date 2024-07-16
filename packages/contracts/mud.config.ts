@@ -12,7 +12,6 @@ export default defineWorld({
     BuyIn: "uint256",
     SubmissionWindow: "uint32",
     InviteExpiration: "uint256",
-    GameStartTime: "uint256",
     GamePasswordHash: "bytes32",
     PuzzleMasterEoa: "address",
     Player1: "address",

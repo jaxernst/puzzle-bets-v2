@@ -9,9 +9,13 @@ export default {
       },
       fontSize: {
         angkor: ["14px", "15.4px"],
-        base: ["14px", "15.4px"],
+        base: ["14px", "14px"],
+        "base-lead": ["14", "15.4"],
+        sm: ["12px", "12px"],
+        xs: ["11px", "11px"],
       },
       colors: {
+        "pb-off-white": "#FEFAF0",
         "pb-yellow": "#FFC700",
         "pb-green": "#2FB163",
         "pb-orange": "#E17E22",

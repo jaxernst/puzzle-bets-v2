@@ -10,6 +10,7 @@ import {
 } from "viem"
 
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+import { mount as mounDevTools } from "@latticexyz/dev-tools"
 import { networkConfig } from "./networkConfig"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import { type ContractWrite } from "@latticexyz/common"
@@ -82,7 +83,10 @@ export async function setupNetwork(wallet: Wallet) {
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     // Only running an indexer on 4242 currently
-    indexerUrl: browser ? window.location.origin : undefined,
+    indexerUrl:
+      browser && networkConfig.chainId !== 31337
+        ? window.location.origin
+        : undefined,
   })
 
   /* if (networkConfig.faucetServiceUrl) {

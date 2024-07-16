@@ -68,6 +68,37 @@ export function formatTime(timeInSeconds: number) {
   }
 }
 
+export function formatTimeAbbr(timeInSeconds: number) {
+  const MINUTE_IN_SECONDS = 60
+  const HOUR_IN_SECONDS = MINUTE_IN_SECONDS * 60
+  const DAY_IN_SECONDS = HOUR_IN_SECONDS * 24
+  const WEEK_IN_SECONDS = DAY_IN_SECONDS * 7
+
+  if (timeInSeconds < MINUTE_IN_SECONDS) {
+    return `${timeInSeconds} s`
+  } else if (timeInSeconds < HOUR_IN_SECONDS) {
+    const minutes = Math.floor(timeInSeconds / MINUTE_IN_SECONDS)
+    const seconds = timeInSeconds % MINUTE_IN_SECONDS
+    return `${minutes} m ${seconds} s`
+  } else if (timeInSeconds < DAY_IN_SECONDS) {
+    const hours = Math.floor(timeInSeconds / HOUR_IN_SECONDS)
+    const minutes = Math.floor(
+      (timeInSeconds % HOUR_IN_SECONDS) / MINUTE_IN_SECONDS,
+    )
+    return `${hours} h, ${minutes} m`
+  } else if (timeInSeconds < WEEK_IN_SECONDS) {
+    const days = Math.floor(timeInSeconds / DAY_IN_SECONDS)
+    const hours = Math.floor((timeInSeconds % DAY_IN_SECONDS) / HOUR_IN_SECONDS)
+    return `${days} day${days === 1 ? "" : "s"}, ${hours} hr`
+  } else {
+    const weeks = Math.floor(timeInSeconds / WEEK_IN_SECONDS)
+    const days = Math.floor((timeInSeconds % WEEK_IN_SECONDS) / DAY_IN_SECONDS)
+    return `${weeks} week${weeks === 1 ? "" : "s"}, ${days} day${
+      days === 1 ? "" : "s"
+    }`
+  }
+}
+
 export function timeString(secondsAfterMidnight: number) {
   let hours = Math.floor(secondsAfterMidnight / 3600)
   const minutes = Math.floor((secondsAfterMidnight % 3600) / 60)

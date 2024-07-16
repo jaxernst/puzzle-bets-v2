@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { shortenAddress } from "$lib/util"
+  import { formatAsDollar, formatSigFig, shortenAddress } from "$lib/util"
   import { page } from "$app/stores"
   import { user } from "$lib/userStore.svelte"
   import PuzzleBetsSmall from "$lib/assets/PuzzleBetsSmall.svelte"
   import Avatar1 from "$lib/assets/Avatar1.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import { prices } from "$lib/prices.svelte"
 </script>
 
 <div
@@ -16,24 +17,24 @@
       <PuzzleBetsSmall />
     </a>
 
-    <div>
+    <div class="">
       {#if user.address}
-        <div class="flex gap-2 text-sm">
+        <div class="flex gap-2">
           <div class="flex items-center gap-1 px-1 text-sm">
             <Avatar1 />
             {shortenAddress(user.address)}
           </div>
 
           <div
-            class=" bg-pb-silver flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
+            class=" bg-pb-beige-1 flex items-center gap-1 rounded-full p-2 text-xs"
           >
             <Wallet />
-            {user.balance}
+            {formatAsDollar(Number(user.balance) * prices.eth)}
           </div>
         </div>
       {:else}
         <button
-          class="bg-pb-silver flex items-center gap-1 rounded-full border-b-2 border-r-2 border-black px-2 py-1"
+          class="bg-pb-beige-1 flex items-center gap-1 rounded-full p-2 text-sm"
           onclick={promptConnectWallet}
         >
           Connect
