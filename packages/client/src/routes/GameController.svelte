@@ -2,7 +2,7 @@
   type Tab = "lobby" | "active" | "history" | "top"
   let tab = $state<Tab>("active")
   let open = $state(false)
-  let hidden = $state(false)
+  let hidden = $state(true)
 
   export function openControls(_tab?: Tab) {
     if (_tab) tab = _tab
@@ -39,10 +39,7 @@
   import { toggleNewGameModal } from "./NewGameModal.svelte"
   import { goto } from "$app/navigation"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import { type Entity } from "@latticexyz/recs"
   import { type Game, GameStatus } from "$lib/types"
-  import Avatar2 from "$lib/assets/Avatar2.svelte"
-  import Avatar1 from "$lib/assets/Avatar1.svelte"
   import { flip } from "svelte/animate"
   import GamePreviewCard from "./GamePreviewCard.svelte"
 
@@ -52,6 +49,8 @@
     history: "Your previous games and results.",
     top: "The top players and their records.",
   }
+
+  $inspect(open)
 
   const logos: Record<Tab, Component> = {
     active: Clock,
@@ -97,8 +96,6 @@
     {capitalized(name)}
   </button>
 {/snippet}
-
-<div class="bg-white" style={`height: ${SIZE_CLOSED}px`}></div>
 
 <div
   class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} px-2 transition-transform sm:px-4`}

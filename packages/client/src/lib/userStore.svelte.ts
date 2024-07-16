@@ -44,6 +44,7 @@ export const user = (() => {
     address: EvmAddress | undefined
     authenticated: boolean
     balance: string
+    displayName?: string
   }>(initialState)
 
   const balanceSync = makeBalanceSync((balance: string) => {
@@ -85,6 +86,9 @@ export const user = (() => {
     },
     get authenticated() {
       return userState.authenticated
+    },
+    get displayName() {
+      return userState.displayName
     },
     get balance() {
       return userState.balance

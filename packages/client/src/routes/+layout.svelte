@@ -9,6 +9,7 @@
   import Confetti from "$lib/components/Confetti.svelte"
   import WalletConnector from "$lib/components/WalletConnector.svelte"
   import NewGameModal from "./NewGameModal.svelte"
+  import AboutModal from "./AboutModal.svelte"
 
   let { children } = $props()
 
@@ -21,15 +22,12 @@
   $effect(() => void user.onWalletChange(walletStore))
 
   let isHomePage = $derived($page.url.pathname === "/")
-
-  let isGameControllerPage = $derived(
-    !isHomePage && $page.url.pathname !== "/dashboard",
-  )
 </script>
 
 <Confetti />
 <WalletConnector />
 <NewGameModal />
+<AboutModal />
 
 <div
   class="overflow-none bg-pb-yellow fixed flex h-screen w-screen flex-col justify-between"
@@ -42,7 +40,7 @@
     {@render children()}
   </div>
 
-  {#if isGameControllerPage}
+  {#if !isHomePage && user.address}
     <GameController />
   {/if}
 </div>

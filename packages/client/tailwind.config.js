@@ -11,6 +11,7 @@ export default {
         angkor: ["14px", "15.4px"],
         base: ["14px", "14px"],
         "base-lead": ["14", "15.4"],
+        md: ["13px", "13px"],
         sm: ["12px", "12px"],
         xs: ["11px", "11px"],
       },
