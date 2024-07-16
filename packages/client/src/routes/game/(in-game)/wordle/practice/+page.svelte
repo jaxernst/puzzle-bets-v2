@@ -20,7 +20,6 @@
   })
 
   const enterGuess = async (guess: string) => {
-    console.log("Guess")
     await wordleGameStates.enterGuess(gameId, guess, true)
     const puzzleState = $wordleGameStates.get(gameId)
     if (puzzleState?.solved) {
