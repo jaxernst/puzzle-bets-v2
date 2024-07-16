@@ -240,7 +240,7 @@
 
 {#snippet comingSoonPlaceholder(label)}
   <div
-    class="flex items-center justify-center gap-2 rounded-md bg-[#AAA8A1] p-3 font-bold"
+    class="flex items-center justify-center gap-2 rounded-md bg-[#AAA8A1] p-3 font-bold opacity-70"
     style="box-shadow: 0px 5px 0px 0px #838076;"
   >
     {label}
