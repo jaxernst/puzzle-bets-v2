@@ -20,7 +20,7 @@
   let showCreated = $state(false)
 
   export const toggleNewGameModal = () => {
-    showCreate = true
+    showCreate = !showCreate
   }
 
   // Input params
@@ -92,7 +92,7 @@
   })
 </script>
 
-<Modal bind:show={showCreate} class="w-[375px] px-6 pb-0 pt-6">
+<Modal bind:show={showCreate} class="px-6 pb-0 pt-6 sm:w-[450px]">
   <div class="flex flex-col gap-4">
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
@@ -229,7 +229,10 @@
 
       <button
         class="rounded-md border-2 border-black py-2"
-        onclick={toggleNewGameModal}
+        onclick={(e) => {
+          e.stopPropagation()
+          toggleNewGameModal()
+        }}
       >
         Cancel
       </button>
@@ -243,7 +246,7 @@
   </div>
 </Modal>
 
-<Modal bind:show={showConfirm} class="w-[375px] px-6 pb-0 pt-6">
+<Modal bind:show={showConfirm} class="px-6 pb-0 pt-6 sm:w-[450px]">
   <div class="flex flex-col gap-6">
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
@@ -324,7 +327,7 @@
   </div>
 </Modal>
 
-<Modal bind:show={showCreated} class="max-w-[375px] px-6 pb-0 pt-6">
+<Modal bind:show={showCreated} class="px-6 pb-0 pt-6 sm:w-[450px]">
   <div class="flex flex-col gap-5">
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
