@@ -62,8 +62,7 @@
 
   const routeLabel = $derived.by(() => {
     const path = $page.url.pathname
-    if (path === "/me") return "Dashboard | Home"
-    if (path.includes("/game/select")) return "Dashboard | Select"
+    if (path === "/me") return "Dashboard"
     if (path === "/game/wordle/practice") return "Wordle | Practice"
     return ""
   })
@@ -99,7 +98,7 @@
   </button>
 {/snippet}
 
-<div style={`height: ${SIZE_CLOSED}px`}></div>
+<div class="bg-white" style={`height: ${SIZE_CLOSED}px`}></div>
 
 <div
   class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} px-2 transition-transform sm:px-4`}
@@ -131,12 +130,17 @@
         {numGames} Live Games
       </div>
 
-      <div class="flex flex-grow justify-end">
+      <button
+        onclick={() => {
+          if (open) open = false
+        }}
+        class="flex flex-grow justify-end"
+      >
         <AnimatedArrow
           class="h-6 w-6 font-bold"
           direction={open ? "down" : "up"}
         />
-      </div>
+      </button>
     </div>
 
     <div class="flex flex-col items-center justify-center gap-2">
