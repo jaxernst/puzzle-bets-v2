@@ -84,7 +84,7 @@
 {#snippet actionButton()}
   {#if status === GameStatus.Pending}
     <div
-      class="bg-pb-gray-1 w-full rounded-md py-3 text-center text-base font-bold text-white"
+      class="bg-pb-gray-1 w-full rounded py-3 text-center text-base font-bold text-white"
     >
       Waiting for Opponent to Join
     </div>
@@ -110,7 +110,7 @@
 {/snippet}
 
 <div
-  class="flex w-[343px] flex-col gap-[10px] rounded bg-white p-4 text-[13px] leading-none"
+  class="flex w-[343px] flex-col gap-[10px] rounded-md bg-white p-4 text-[13px] leading-none"
   style={"box-shadow: 0px 5px 0px 0px #E3DDCD;"}
 >
   <div class="flex justify-between">
