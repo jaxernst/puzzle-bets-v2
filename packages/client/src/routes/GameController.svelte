@@ -128,8 +128,11 @@
       </div>
 
       <button
-        onclick={() => {
-          if (open) open = false
+        onclick={(e) => {
+          if (open) {
+            e.stopPropagation()
+            open = false
+          }
         }}
         class="flex flex-grow justify-end"
       >
