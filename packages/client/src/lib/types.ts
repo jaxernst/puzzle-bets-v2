@@ -18,7 +18,7 @@ export type Game = {
   inviteExpiration: bigint
 }
 
-export type PlayerGame = ReturnType<typeof getPlayerGames>
+export type PlayerGame = ReturnType<typeof getPlayerGames>[number]
 
 export type StartedGame = {
   id: Entity

@@ -25,7 +25,7 @@
   import { spring } from "svelte/motion"
   import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
   import { clickOutside } from "$lib/actions/clickOutside"
-  import { capitalized } from "$lib/util"
+  import { capitalized, entityToInt, shortenAddress } from "$lib/util"
   import type { Component } from "svelte"
 
   import Smiley from "$lib/icons/Smiley.svelte"
@@ -36,6 +36,15 @@
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import { getPlayerGames } from "$lib/gameQueries"
+  import { toggleNewGameModal } from "./NewGameModal.svelte"
+  import { goto } from "$app/navigation"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import { type Entity } from "@latticexyz/recs"
+  import { type Game, GameStatus } from "$lib/types"
+  import Avatar2 from "$lib/assets/Avatar2.svelte"
+  import Avatar1 from "$lib/assets/Avatar1.svelte"
+  import { flip } from "svelte/animate"
+  import GamePreviewCard from "./GamePreviewCard.svelte"
 
   const descriptions: Record<Tab, string> = {
     active: "Your active onchain games.",
@@ -76,7 +85,8 @@
     }
   })
 
-  let numGames = $derived(getPlayerGames(user.address, mud).length)
+  let playerGames = $derived(getPlayerGames(user.address, mud))
+  let numGames = $derived(playerGames.length)
 </script>
 
 {#snippet TabButton(name: Tab)}
@@ -144,5 +154,86 @@
 
       <div class="text-xs">{descriptions[tab]}</div>
     </div>
+
+    <div class="flex gap-2 self-center">
+      <button
+        class="bg-pb-yellow w-[167px] rounded-md p-3 text-center text-base font-bold"
+        style={"box-shadow: 0px 6px 0px 0px #DDAC00;"}
+        onclick={() => {
+          if (!user.address) {
+            promptConnectWallet()
+          } else {
+            toggleNewGameModal()
+          }
+        }}
+      >
+        {#if !user.address}
+          Connect to Play Live
+        {:else}
+          Create Game
+        {/if}
+      </button>
+      <button
+        class="bg-pb-off-white w-[167px] rounded-md p-3 text-center text-base font-bold"
+        style={"box-shadow: 0px 6px 0px 0px #E3DDCD;"}
+        onclick={() => goto("/game/wordle/practice")}
+      >
+        Practice Game
+      </button>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-3">
+      {#each playerGames as game (game.id)}
+        <div animate:flip>
+          <GamePreviewCard {game} />
+        </div>
+      {/each}
+    </div>
   </div>
 </div>
+
+{#snippet publicGameCard(game: Game)}
+  <div
+    class="flex w-[343px] flex-col gap-[10px] rounded bg-white p-4 text-[13px] leading-none"
+    style={"box-shadow: 0px 5px 0px 0px #E3DDCD;"}
+  >
+    <div class="flex justify-between">
+      <div>
+        #{entityToInt(game.id)}
+        <div class="font-bold">Wordle</div>
+      </div>
+
+      <div
+        class="bg-pb-yellow rounded-full px-[7px] py-[5px] text-[10px] font-bold leading-none"
+      >
+        Open
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="self-end text-xs text-[#757575]">Amount to Bet</div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex gap-1">
+          <img
+            alt="Player Avatar"
+            src={"/character1.png"}
+            class="h-[20px] w-[20px]"
+          />
+          <div>0x123...456</div>
+        </div>
+
+        <div class=" flex gap-1 font-bold">
+          <div>$5.00</div>
+          <div class="text-[#8F8F8F]">(.00128 ETH)</div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      class="self-stretch rounded bg-black p-3 text-center text-base text-white"
+    >
+      Join
+    </button>
+  </div>
+{/snippet}
