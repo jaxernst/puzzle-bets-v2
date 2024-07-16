@@ -32,11 +32,11 @@
   >
     <div class="overflow-none flex items-center gap-14 sm:hidden">
       <img
-        class="w-[162px] -translate-x-4"
+        class="w-[142px] -translate-x-4"
         src="/character2.png"
         alt="Puzzle Character 2"
       />
-      <img class="w-[230px]" src="/character1.png" alt="Puzzle Character 1" />
+      <img class="w-[200px]" src="/character1.png" alt="Puzzle Character 1" />
     </div>
 
     <div class="flex flex-col items-center gap-4">

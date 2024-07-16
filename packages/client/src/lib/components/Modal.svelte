@@ -87,7 +87,7 @@
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       class={twMerge(
-        "bg-pb-off-white w-full rounded-t-md p-6 sm:w-auto sm:rounded-b-md",
+        "bg-pb-off-white max-h-full w-full overflow-y-auto rounded-t-md p-6 sm:w-auto sm:rounded-b-md",
         className,
       )}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}

@@ -120,7 +120,7 @@
       <div class="flex flex-col items-start gap-2">
         <div class="text-sm text-[#3f3f3f]">Wallet Balance</div>
         <div
-          class="bg-pb-gray-1 text-md flex items-center gap-2 rounded-full px-3 py-2"
+          class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2"
         >
           <Wallet class="h-[20px] w-[20px]" />
 
@@ -138,7 +138,7 @@
       <div class="flex flex-col items-start gap-2">
         <div class="text-sm text-[#3f3f3f]">Win / Loss / Tied</div>
         <div
-          class="bg-pb-gray-1 text-md flex items-center gap-2 rounded-full px-3 py-2 font-bold"
+          class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
           <Trophy class="h-[21px] w-[20px]" />
 
@@ -155,7 +155,7 @@
       <div class="flex flex-col items-start gap-2">
         <div class="text-sm text-[#3f3f3f]">Active Wagers / Games</div>
         <div
-          class="bg-pb-gray-1 text-md flex items-center gap-2 rounded-full px-3 py-2 font-bold"
+          class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
           <Clock class="h-[20px] w-[21px]" />
 
@@ -172,7 +172,7 @@
       <div class="flex flex-col items-start gap-2">
         <div class="text-sm text-[#3f3f3f]">Total Bet / Won</div>
         <div
-          class="bg-pb-gray-1 text-md flex items-center gap-2 rounded-full px-3 py-2 font-bold"
+          class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
           <Coins class="h-[21px] w-[20px]" />
 

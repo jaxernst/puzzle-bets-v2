@@ -98,7 +98,7 @@
 {/snippet}
 
 <div
-  class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} px-2 transition-transform sm:px-4`}
+  class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} transition-transform sm:px-4`}
 >
   <div
     onclick={() => openControls()}
