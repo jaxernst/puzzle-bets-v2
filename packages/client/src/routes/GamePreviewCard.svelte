@@ -121,7 +121,7 @@
 
     <div>
       <div
-        class="bg-pb-yellow rounded-full px-[7px] py-[5px] text-[10px] font-bold"
+        class="bg-pb-yellow rounded-full px-[7px] py-[5px] text-[10px] font-bold leading-[10px]"
       >
         {@render statusLabel()}
       </div>
