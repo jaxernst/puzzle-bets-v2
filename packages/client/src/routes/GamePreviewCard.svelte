@@ -86,7 +86,7 @@
     <div
       class="bg-pb-gray-1 w-full rounded py-3 text-center text-base font-bold text-white"
     >
-      Waiting for Opponent to Join
+      View Game Page
     </div>
   {:else if status === GameStatus.Active && !turnStartTime}
     <button

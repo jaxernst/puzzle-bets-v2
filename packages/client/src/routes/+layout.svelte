@@ -23,7 +23,7 @@
   let isHomePage = $derived($page.url.pathname === "/")
 
   let isGameControllerPage = $derived(
-    !isHomePage && $page.url.pathname !== "/me",
+    !isHomePage && $page.url.pathname !== "/dashboard",
   )
 </script>
 

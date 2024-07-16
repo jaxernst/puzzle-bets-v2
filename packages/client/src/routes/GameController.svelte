@@ -62,7 +62,7 @@
 
   const routeLabel = $derived.by(() => {
     const path = $page.url.pathname
-    if (path === "/me") return "Dashboard"
+    if (path === "/dashboard") return "Dashboard"
     if (path === "/game/wordle/practice") return "Wordle | Practice"
     return ""
   })

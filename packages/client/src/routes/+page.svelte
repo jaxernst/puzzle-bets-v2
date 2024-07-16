@@ -10,7 +10,7 @@
   const connect = async () => {
     try {
       await promptConnectWallet()
-      goto("/me")
+      goto("/dashboard")
     } catch {}
   }
 </script>
@@ -94,7 +94,7 @@
         {/if}
       </button>
 
-      <a href="/me" class="rounded border-2 border-black px-3 py-2">
+      <a href="/dashboard" class="rounded border-2 border-black px-3 py-2">
         Play a Practice Game
       </a>
 
