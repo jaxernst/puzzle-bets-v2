@@ -1,5 +1,5 @@
 <script>
-  import { hideControls } from "../../GameController.svelte"
+  import { hideControls } from "../../game-controller/GameController.svelte"
 
   $effect(hideControls)
 </script>

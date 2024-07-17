@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation"
   import type { PuzzleType } from "$lib/types"
   import { capitalized } from "$lib/util"
-  import { showControls } from "../../GameController.svelte"
+  import { showControls } from "../../game-controller/GameController.svelte"
 
   $effect(showControls)
 
