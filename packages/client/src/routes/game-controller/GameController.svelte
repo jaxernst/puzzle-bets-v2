@@ -45,7 +45,7 @@
   import PublicGamePreviewCard from "./PublicGamePreviewCard.svelte"
   import LobbyGames from "./LobbyGames.svelte"
   import TabActiveGames from "./TabActiveGames.svelte"
-  import TabLobbyGames from "./TabLobbyGames.svelte"
+  import TabLobbyGames from "./TabLobby.svelte"
   import TabGameHistory from "./TabGameHistory.svelte"
   import TabLeaderboard from "./TabLeaderboard.svelte"
 

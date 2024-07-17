@@ -29,8 +29,8 @@
     </button>
 
     <div class="flex items-center gap-1">
-      <div class="rounded-full bg-black px-1.5 py-0.5 text-white">$0 Wager</div>
-      <div class="rounded-full bg-black px-1.5 py-0.5 text-white">
+      <div class="rounded-full bg-black p-2 text-base text-white">$0 Wager</div>
+      <div class="rounded-full bg-black p-2 text-base text-white">
         No time limit
       </div>
     </div>

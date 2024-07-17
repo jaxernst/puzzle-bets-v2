@@ -83,11 +83,12 @@
 
 {#snippet actionButton()}
   {#if status === GameStatus.Pending}
-    <div
+    <a
       class="bg-pb-gray-1 w-full rounded py-3 text-center text-base font-bold text-white"
+      href={`/game/${game.id}`}
     >
       View Game Page
-    </div>
+    </a>
   {:else if status === GameStatus.Active && !turnStartTime}
     <button
       class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
