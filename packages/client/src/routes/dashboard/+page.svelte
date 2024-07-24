@@ -89,7 +89,7 @@
   </div>
 
   <div
-    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-4 md:mx-auto md:mt-2 md:rounded-xl"
+    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-4 md:mx-auto md:mt-6 md:rounded-xl"
   >
     <div class="flex items-center gap-2">
       <Star />
@@ -99,7 +99,7 @@
 
         {#if !user.address}
           <div class="text-sm font-normal">
-            Connect your wallet to play live games with friends.
+            Connect your wallet to play live wagered games with friends.
           </div>
         {/if}
       </div>
