@@ -22,7 +22,7 @@ export default {
         "pb-orange": "#E17E22",
         "pb-silver": "#E2E4F4",
         "pb-gray-1": "#CCCCCC",
-        "pb-beige-1": "#fff2d7",
+        "pb-beige-1": "#FEECC8",
         "pb-beige-2": "#CDC1A8",
         "pb-blue": "#97b5c2",
       },

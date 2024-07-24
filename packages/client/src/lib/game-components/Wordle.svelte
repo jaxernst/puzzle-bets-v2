@@ -251,7 +251,7 @@
   }
 
   .grid {
-    --width: min(100vw, 40vh, 380px);
+    --width: min(100vw, 30vh, 380px);
     max-width: var(--width);
     align-self: center;
     justify-self: center;
@@ -259,13 +259,14 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    gap: 8px;
   }
 
   .grid .row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: 0.2rem;
     margin: 0 0 0.2rem 0;
+    gap: 4px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -287,28 +288,29 @@
     text-align: center;
     box-sizing: border-box;
     text-transform: lowercase;
-    font-size: calc(0.08 * var(--width));
-    border-radius: 4px;
-    background: white;
     margin: 0;
-    color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 5px 0px 0px #e3ddcd;
+    @apply bg-pb-off-white rounded-md text-[32px] font-extrabold leading-none;
   }
 
   .letter.missing {
-    background: rgba(255, 255, 255, 0.5);
-    color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 5px 0px 0px #a7abcb;
+    @apply bg-pb-silver;
   }
 
   .letter.exact {
-    @apply bg-green-600 text-white;
+    box-shadow: 0px 5px 0px 0px #1b994e;
+    @apply bg-pb-green text-white;
   }
 
   .letter.close {
-    @apply bg-orange-600 text-white;
+    box-shadow: 0px 5px 0px 0px #b85d09;
+    @apply bg-pb-orange text-white;
   }
 
   .selected {
-    @apply border-x border-b-4 border-t border-black;
+    box-shadow: 0px 5px 0px 0px #000;
+    @apply border-2 border-black;
   }
 
   .controls {
@@ -321,7 +323,7 @@
   }
 
   .keyboard {
-    --gap: 0.2rem;
+    --gap: 6px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -332,31 +334,30 @@
   .keyboard .row {
     display: flex;
     justify-content: center;
-    gap: 0.2rem;
+    gap: 4px;
     flex: 1;
   }
 
   .keyboard button,
   .keyboard button:disabled {
     --size: min(8vw, 4vh, 40px);
-    background-color: white;
     color: black;
     width: var(--size);
-    border-radius: 2px;
     font-size: calc(var(--size) * 0.5);
     margin: 0;
+    @apply bg-pb-off-white rounded font-extrabold uppercase leading-none;
   }
 
   .keyboard button.exact {
-    @apply bg-green-600 text-white;
+    @apply bg-pb-green text-white;
   }
 
   .keyboard button.missing {
-    opacity: 0.5;
+    @apply bg-pb-silver text-gray-500;
   }
 
   .keyboard button.close {
-    @apply border-2 border-orange-600;
+    @apply bg-pb-orange border-2;
   }
 
   .keyboard button:focus {
