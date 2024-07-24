@@ -201,6 +201,7 @@
             disabled={!submittable}>enter</button
           >
 
+          <!-- Back -->
           <button
             onclick={(e) => {
               e.preventDefault()
@@ -209,8 +210,28 @@
             data-key="backspace"
             name="key"
             value="backspace"
+            class="flex items-center justify-center"
           >
-            back
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 21 21"
+              fill="none"
+            >
+              <path
+                d="M14.6562 10.5H5.90625M5.90625 10.5L8.3125 12.9063M5.90625 10.5L8.3125 8.09375"
+                stroke="black"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M1.75 13.125V7.875C1.75 5.942 3.317 4.375 5.25 4.375H15.75C17.683 4.375 19.25 5.942 19.25 7.875V13.125C19.25 15.058 17.683 16.625 15.75 16.625H5.25C3.317 16.625 1.75 15.058 1.75 13.125Z"
+                stroke="black"
+                stroke-width="1.5"
+              />
+            </svg>
           </button>
 
           {#each ["qwertyuiop", "asdfghjkl", "zxcvbnm"] as row}
@@ -357,7 +378,7 @@
   }
 
   .keyboard button.close {
-    @apply bg-pb-orange border-2;
+    @apply bg-pb-orange text-white;
   }
 
   .keyboard button:focus {
@@ -370,6 +391,7 @@
   .keyboard button[data-key="backspace"] {
     position: absolute;
     bottom: 0;
+    margin: 0 4px;
     width: calc(1.5 * var(--size));
     height: calc(1 / 3 * (100% - 2 * var(--gap)));
     text-transform: uppercase;
