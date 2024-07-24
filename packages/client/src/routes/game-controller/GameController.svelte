@@ -35,13 +35,19 @@
   import { page } from "$app/stores"
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
-  import { getPlayerGames } from "$lib/gameQueries"
-  import { toggleNewGameModal } from "./NewGameModal.svelte"
+  import { getPlayerGames, getPublicGames } from "$lib/gameQueries"
+  import { toggleNewGameModal } from "../NewGameModal.svelte"
   import { goto } from "$app/navigation"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { type Game, GameStatus } from "$lib/types"
   import { flip } from "svelte/animate"
   import GamePreviewCard from "./GamePreviewCard.svelte"
+  import PublicGamePreviewCard from "./PublicGamePreviewCard.svelte"
+  import LobbyGames from "./LobbyGames.svelte"
+  import TabActiveGames from "./TabActiveGames.svelte"
+  import TabLobbyGames from "./TabLobby.svelte"
+  import TabGameHistory from "./TabGameHistory.svelte"
+  import TabLeaderboard from "./TabLeaderboard.svelte"
 
   const descriptions: Record<Tab, string> = {
     active: "Your active onchain games.",
@@ -83,8 +89,7 @@
     }
   })
 
-  let playerGames = $derived(getPlayerGames(user.address, mud))
-  let numGames = $derived(playerGames.length)
+  let numGames = $derived(getPlayerGames(user.address, mud).length)
 </script>
 
 {#snippet TabButton(name: Tab)}
@@ -186,58 +191,14 @@
       </button>
     </div>
 
-    <div class="flex flex-wrap justify-center gap-3">
-      {#each playerGames as game (game.id)}
-        <div animate:flip>
-          <GamePreviewCard {game} />
-        </div>
-      {/each}
-    </div>
+    {#if tab === "lobby"}
+      <TabLobbyGames />
+    {:else if tab === "active"}
+      <TabActiveGames />
+    {:else if tab === "history"}
+      <TabGameHistory />
+    {:else if tab === "top"}
+      <TabLeaderboard />
+    {/if}
   </div>
 </div>
-
-{#snippet publicGameCard(game: Game)}
-  <div
-    class="flex w-[343px] flex-col gap-[10px] rounded bg-white p-4 text-[13px] leading-none"
-    style={"box-shadow: 0px 5px 0px 0px #E3DDCD;"}
-  >
-    <div class="flex justify-between">
-      <div>
-        #{entityToInt(game.id)}
-        <div class="font-bold">Wordle</div>
-      </div>
-
-      <div
-        class="bg-pb-yellow rounded-full px-[7px] py-[5px] text-[10px] font-bold leading-none"
-      >
-        Open
-      </div>
-    </div>
-
-    <div class="flex flex-col">
-      <div class="self-end text-xs text-[#757575]">Amount to Bet</div>
-
-      <div class="flex items-center justify-between">
-        <div class="flex gap-1">
-          <img
-            alt="Player Avatar"
-            src={"/character1.png"}
-            class="h-[20px] w-[20px]"
-          />
-          <div>0x123...456</div>
-        </div>
-
-        <div class=" flex gap-1 font-bold">
-          <div>$5.00</div>
-          <div class="text-[#8F8F8F]">(.00128 ETH)</div>
-        </div>
-      </div>
-    </div>
-
-    <button
-      class="self-stretch rounded bg-black p-3 text-center text-base text-white"
-    >
-      Join
-    </button>
-  </div>
-{/snippet}

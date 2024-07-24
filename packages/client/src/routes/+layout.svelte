@@ -4,7 +4,7 @@
   import { walletStore } from "$lib/walletStore.svelte"
   import { user } from "$lib/userStore.svelte"
   import { page } from "$app/stores"
-  import GameController from "./GameController.svelte"
+  import GameController from "./game-controller/GameController.svelte"
   import AppHeader from "./AppHeader.svelte"
   import Confetti from "$lib/components/Confetti.svelte"
   import WalletConnector from "$lib/components/WalletConnector.svelte"

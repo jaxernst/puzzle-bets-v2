@@ -51,6 +51,10 @@ export function getPlayerGames(
   })
 }
 
+export function getPublicGames() {
+  return []
+}
+
 // Util //
 
 export const gameIdToGame = (

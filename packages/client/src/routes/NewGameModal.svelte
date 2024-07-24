@@ -13,7 +13,7 @@
   import { mud } from "$lib/mudStore.svelte"
   import type { PuzzleType } from "$lib/types"
   import { capitalized, formatSigFig } from "$lib/util"
-  import { openControls } from "./GameController.svelte"
+  import { openControls } from "./game-controller/GameController.svelte"
 
   let showCreate = $state(false)
   let showConfirm = $state(false)

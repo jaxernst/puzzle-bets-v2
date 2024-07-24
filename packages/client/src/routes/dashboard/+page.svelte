@@ -15,7 +15,7 @@
     hideControls,
     openControls,
     showControls,
-  } from "../GameController.svelte"
+  } from "../game-controller/GameController.svelte"
   import { toggleNewGameModal } from "../NewGameModal.svelte"
 
   $effect(() => {
