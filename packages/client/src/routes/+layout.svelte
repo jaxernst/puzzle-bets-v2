@@ -40,7 +40,7 @@
     {@render children()}
   </div>
 
-  {#if !isHomePage && user.address}
+  {#if !isHomePage}
     <GameController />
   {/if}
 </div>

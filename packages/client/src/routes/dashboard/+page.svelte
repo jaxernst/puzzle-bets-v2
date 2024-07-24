@@ -61,8 +61,8 @@
   let totalWonUsd = "$90.00"
 </script>
 
-<div class="flex h-full w-full flex-col overflow-visible">
-  <div class="relative -z-10 h-[150px] w-full">
+<div class="flex h-full w-full flex-col overflow-visible md:h-auto">
+  <div class="relative -z-10 h-[150px] w-full md:hidden">
     <img
       class="h-full w-full object-cover"
       src="/character2-spotlight.png"
@@ -72,7 +72,7 @@
     <div
       class="absolute top-0 flex h-full w-full flex-col gap-2 bg-black/50 p-4 pb-6"
     >
-      <div class="font-angkor text-xl font-extrabold text-white">
+      <!-- <div class="font-angkor text-xl font-extrabold text-white">
         Update 0.1
       </div>
 
@@ -84,23 +84,31 @@
       <div class="flex items-center gap-1 text-xs text-white">
         Release Notes
         <AnimatedArrow direction="right" class="h-3 w-3 fill-white" />
-      </div>
+      </div> -->
     </div>
   </div>
 
   <div
-    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-4 md:rounded-t-xl"
+    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-4 md:mx-auto md:mt-2 md:rounded-xl"
   >
     <div class="flex items-center gap-2">
       <Star />
 
-      <div class="font-extrabold">Welcome {displayName}</div>
+      <div class="font-extrabold">
+        Welcome {displayName}
+
+        {#if !user.address}
+          <div class="text-sm font-normal">
+            Connect your wallet to play live games with friends.
+          </div>
+        {/if}
+      </div>
 
       {#if canSetDisplayName}
         <div class="flex flex-grow justify-end">
           <button
             onclick={() => {}}
-            class="rounded-full border border-black/60 p-2 text-sm text-black/60"
+            class="rounded-full border border-black/60 px-2 py-1.5 text-sm text-black/60"
           >
             Set Display Name
           </button>
@@ -108,15 +116,8 @@
       {/if}
     </div>
 
-    {#if !user.address}
-      <div class="mb-1 text-base leading-tight">
-        Connect your wallet to play live games with friends. Otherwise, you can
-        sharpen your puzzle skills by playing solo practice games.
-      </div>
-    {/if}
-
     <!-- User Stats -->
-    <div class="flex flex-wrap gap-6 gap-y-3 md:gap-8">
+    <div class="flex flex-wrap gap-6 gap-y-3 px-6 md:gap-8">
       <div class="flex flex-col items-start gap-2">
         <div class="text-sm text-[#3f3f3f]">Wallet Balance</div>
         <div
@@ -187,21 +188,21 @@
       </div>
     </div>
 
-    <hr class="my-1" />
+    <hr class="mx-4 my-1" />
 
     <div class="w-full max-w-[400px] self-center">
       <div class="flex max-w-[400px] flex-col items-stretch gap-4 self-stretch">
         {#if user.address}
           <div class="mb-2 flex justify-center gap-3">
             <button
-              class="bg-pb-yellow rounded-md px-4 py-3 text-center font-bold"
+              class="bg-pb-yellow w-1/2 rounded-md px-4 py-3 text-center font-bold"
               style="box-shadow: 0px 5px 0px 0px #DDAC00;"
               onclick={() => {
                 toggleNewGameModal()
               }}>Create Game</button
             >
             <button
-              class="bg-pb-yellow rounded-md px-4 py-3 text-center font-bold"
+              class="bg-pb-yellow w-1/2 rounded-md px-4 py-3 text-center font-bold"
               style="box-shadow: 0px 5px 0px 0px #DDAC00;"
               onclick={(e) => {
                 e.stopPropagation()
@@ -234,7 +235,7 @@
       </div>
     </div>
 
-    <div class="h-[60px]"></div>
+    <div class="h-[60px] md:h-10"></div>
   </div>
 </div>
 
