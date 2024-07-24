@@ -57,7 +57,7 @@
   }
 
   let createGameLoading = $state(false)
-  let createdGameId = 12
+  let createdGameId = 12 // Last game id
 
   let createGame = $derived(async () => {
     let wagerEth = 0
