@@ -58,34 +58,10 @@
 </script>
 
 <div class="flex h-full w-full flex-col overflow-visible md:h-auto">
-  <div class="relative -z-10 h-[150px] w-full md:hidden">
-    <img
-      class="h-full w-full object-cover"
-      src="/character2-spotlight.png"
-      alt="Background puzzle character"
-    />
-
-    <div
-      class="absolute top-0 flex h-full w-full flex-col gap-2 bg-black/50 p-4 pb-6"
-    >
-      <!-- <div class="font-angkor text-xl font-extrabold text-white">
-        Update 0.1
-      </div>
-
-      <div class="flex-grow text-sm text-white">
-        We've overhauled everything to be smoother, simpler, and introduced a
-        new design!
-      </div>
-
-      <div class="flex items-center gap-1 text-xs text-white">
-        Release Notes
-        <AnimatedArrow direction="right" class="h-3 w-3 fill-white" />
-      </div> -->
-    </div>
-  </div>
+  <div class=" relative -z-10 h-[90px] w-full md:hidden"></div>
 
   <div
-    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-6 md:mx-auto md:mt-6 md:rounded-xl"
+    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-xl p-6 md:mx-auto md:mt-6 md:rounded-xl"
   >
     <div class="flex items-center gap-2">
       <Star />
@@ -104,9 +80,9 @@
         <div class="flex flex-grow justify-end">
           <button
             onclick={() => {}}
-            class=" border-pb-blue text-pb-blue flex items-center gap-1 rounded-full border px-1.5 py-1 text-sm"
+            class="flex items-center gap-1 rounded-full border bg-[#ccccccbf] px-1.5 py-1 text-sm font-bold"
           >
-            <Edit class="stroke-pb-blue" />
+            <Edit class="stroke-black" />
             Set Display Name
           </button>
         </div>
