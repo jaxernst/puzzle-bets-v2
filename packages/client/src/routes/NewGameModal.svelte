@@ -314,7 +314,7 @@
       </button>
 
       <div
-        class="max-w-[340px] text-center text-[12px] font-normal leading-tight"
+        class="max-w-[340px] self-center text-center text-[12px] font-normal leading-tight"
       >
         This action will deposit your wager in the smart contract. You may
         cancel and withdraw up until your opponent joins.
