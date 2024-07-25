@@ -272,7 +272,7 @@
   }
 
   .grid {
-    --width: min(100vw, 30vh, 380px);
+    --width: min(100vw, 40vh, 580px);
     max-width: var(--width);
     align-self: center;
     justify-self: center;
