@@ -1,9 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation"
-  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import Clock from "$lib/icons/Clock.svelte"
   import Coins from "$lib/icons/Coins.svelte"
+  import Edit from "$lib/icons/Edit.svelte"
   import Star from "$lib/icons/Star.svelte"
   import Stars from "$lib/icons/Stars.svelte"
   import Trophy from "$lib/icons/Trophy.svelte"
@@ -12,15 +11,12 @@
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
   import GameController, {
-    hideControls,
     openControls,
     showControls,
   } from "../game-controller/GameController.svelte"
   import { toggleNewGameModal } from "../NewGameModal.svelte"
 
-  $effect(() => {
-    showControls()
-  })
+  $effect(showControls)
 
   const gameInfo: Record<
     PuzzleType,
@@ -89,7 +85,7 @@
   </div>
 
   <div
-    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-4 md:mx-auto md:mt-6 md:rounded-xl"
+    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-lg p-6 md:mx-auto md:mt-6 md:rounded-xl"
   >
     <div class="flex items-center gap-2">
       <Star />
@@ -108,8 +104,9 @@
         <div class="flex flex-grow justify-end">
           <button
             onclick={() => {}}
-            class="rounded-full border border-black/60 px-2 py-1.5 text-sm text-black/60"
+            class=" border-pb-blue text-pb-blue flex items-center gap-1 rounded-full border px-1.5 py-1 text-sm"
           >
+            <Edit class="stroke-pb-blue" />
             Set Display Name
           </button>
         </div>
@@ -117,8 +114,8 @@
     </div>
 
     <!-- User Stats -->
-    <div class="flex flex-wrap gap-6 gap-y-3 px-6 md:gap-8">
-      <div class="flex flex-col items-start gap-2">
+    <div class="flex flex-wrap gap-4 gap-y-3 md:gap-4">
+      <div class="flex flex-col items-center gap-2">
         <div class="text-sm text-[#3f3f3f]">Wallet Balance</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2"
@@ -136,8 +133,8 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-start gap-2">
-        <div class="text-sm text-[#3f3f3f]">Win / Loss / Tied</div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="text-xs text-[#3f3f3f]">Win / Loss / Tied</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
@@ -153,8 +150,8 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-start gap-2">
-        <div class="text-sm text-[#3f3f3f]">Active Wagers / Games</div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="text-xs text-[#3f3f3f]">Active Wagers / Games</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
@@ -170,8 +167,8 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-start gap-2">
-        <div class="text-sm text-[#3f3f3f]">Total Bet / Won</div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="text-xs text-[#3f3f3f]">Total Bet / Won</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
