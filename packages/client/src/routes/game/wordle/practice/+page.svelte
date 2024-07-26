@@ -13,7 +13,7 @@
     localStorage.setItem("wordleDemoGameId", gameId)
   }
 
-  let game = $derived($wordleGameStates.get(gameId)!)
+  let game = $derived(wordleGameStates.get(gameId)!)
 
   $effect(() => {
     if (!game) wordleGameStates.getOrCreate(gameId, true)
@@ -21,7 +21,7 @@
 
   const enterGuess = async (guess: string) => {
     await wordleGameStates.enterGuess(gameId, guess, true)
-    const puzzleState = $wordleGameStates.get(gameId)
+    const puzzleState = wordleGameStates.get(gameId)
     if (puzzleState?.solved) {
       launchConfetti()
     }

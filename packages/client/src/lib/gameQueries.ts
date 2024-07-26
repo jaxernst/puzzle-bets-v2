@@ -55,6 +55,29 @@ export function getPublicGames() {
   return []
 }
 
+export function getPlayerSolutionState(
+  player: EvmAddress,
+  gameId: Entity,
+  { synced, components: c }: typeof mud,
+) {
+  if (!synced || !c) {
+    return { submitted: false, score: 0 }
+  }
+
+  const userGameKey = encodeEntity(
+    { gameId: "bytes32", player: "address" },
+    { gameId: gameId as `0x${string}`, player: player },
+  )
+
+  const submitted = getComponentValue(c.Submitted, userGameKey)
+  const score = getComponentValue(c.Score, userGameKey)
+
+  return {
+    submitted: submitted?.value ?? false,
+    score: score?.value ?? 0,
+  }
+}
+
 // Util //
 
 export const gameIdToGame = (

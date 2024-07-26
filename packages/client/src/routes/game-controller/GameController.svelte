@@ -56,8 +56,6 @@
     top: "The top players and their records.",
   }
 
-  $inspect(open)
-
   const logos: Record<Tab, Component> = {
     active: Clock,
     lobby: Smiley,
@@ -105,6 +103,8 @@
 <div
   class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} transition-transform sm:px-4`}
 >
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div
     onclick={() => openControls()}
     onkeydown={(event) => {
@@ -118,7 +118,6 @@
     }}
     tabindex="0"
     class=" bg-pb-beige-2 flex flex-col gap-6 rounded-t-xl border-x-2 border-t-2 border-black p-4"
-    role="button"
     style={`height: ${$size}px;`}
   >
     <div class="flex items-center gap-2 font-extrabold">

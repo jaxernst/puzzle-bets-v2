@@ -12,8 +12,10 @@
   import Wallet from "$lib/icons/Wallet.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import type { PuzzleType } from "$lib/types"
-  import { capitalized, formatSigFig } from "$lib/util"
+  import { capitalized, entityToInt, formatSigFig } from "$lib/util"
   import { openControls } from "./game-controller/GameController.svelte"
+  import { defineUpdateQuery, HasValue, runQuery } from "@latticexyz/recs"
+  import { user } from "$lib/userStore.svelte"
 
   let showCreate = $state(false)
   let showConfirm = $state(false)
@@ -57,7 +59,19 @@
   }
 
   let createGameLoading = $state(false)
-  let createdGameId = 12 // Last game id
+  let createdGameId = $derived.by(() => {
+    if (!showCreated) return
+
+    const entities = runQuery([
+      HasValue(mud.components.Player1, { value: user.address }),
+    ])
+
+    const sorted = Array.from(entities).sort(
+      (a, b) => parseInt(a, 16) - parseInt(b, 16),
+    )
+
+    return sorted[sorted.length - 1]
+  })
 
   let createGame = $derived(async () => {
     let wagerEth = 0
@@ -360,32 +374,34 @@
 
     <hr class="my-1" />
 
-    <div class="text-center font-extrabold">
-      {capitalized(puzzleType)} | {gameName}
-    </div>
+    {#if createdGameId}
+      <div class="text-center font-extrabold">
+        {capitalized(puzzleType)} #{entityToInt(createdGameId)}
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <button
-        onclick={() => {
-          showCreated = false
-          goto(`/game/wordle/${createdGameId}`)
-        }}
-        class="rounded-md border-2 border-black bg-black py-2 text-white"
-      >
-        Go To Game Room
-      </button>
+      <div class="flex flex-col gap-2">
+        <a
+          href={`/game/wordle/${entityToInt(createdGameId)}`}
+          onclick={() => {
+            showCreated = false
+          }}
+          class="rounded-md border-2 border-black bg-black py-2 text-center text-white"
+        >
+          Go To Game Room
+        </a>
 
-      <button
-        class="rounded-md border-2 border-black py-2"
-        onclick={(e) => {
-          e.stopPropagation()
-          showCreated = false
-          openControls("lobby")
-        }}
-      >
-        Back To Lobby
-      </button>
-    </div>
+        <button
+          class="rounded-md border-2 border-black py-2"
+          onclick={(e) => {
+            e.stopPropagation()
+            showCreated = false
+            openControls("lobby")
+          }}
+        >
+          Back To Lobby
+        </button>
+      </div>
+    {/if}
 
     <div class="flex flex-grow items-end">
       <HandUp />

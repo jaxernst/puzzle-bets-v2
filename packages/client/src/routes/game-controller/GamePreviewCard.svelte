@@ -82,32 +82,20 @@
 {/snippet}
 
 {#snippet actionButton()}
-  {#if status === GameStatus.Pending}
-    <a
-      class="bg-pb-gray-1 w-full rounded py-3 text-center text-base font-bold text-white"
-      href={`/game/${game.id}`}
-    >
+  <a
+    class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
+    href={`/game/${game.type}/${entityToInt(game.id)}`}
+  >
+    {#if status === GameStatus.Pending}
       View Game Page
-    </a>
-  {:else if status === GameStatus.Active && !turnStartTime}
-    <button
-      class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
-    >
+    {:else if status === GameStatus.Active && !turnStartTime}
       Start Turn
-    </button>
-  {:else if status === GameStatus.Active && turnStartTime}
-    <button
-      class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
-    >
+    {:else if status === GameStatus.Active && turnStartTime}
       Rejoin
-    </button>
-  {:else if status === GameStatus.Complete}
-    <button
-      class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
-    >
+    {:else if status === GameStatus.Complete}
       ShowResults
-    </button>
-  {/if}
+    {/if}
+  </a>
 {/snippet}
 
 <div
