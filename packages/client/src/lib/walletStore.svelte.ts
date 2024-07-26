@@ -4,6 +4,8 @@ import { createWalletClient } from "viem"
 import { networkConfig } from "./mud/networkConfig"
 import { type Wallet } from "./mud/setupNetwork"
 
+// cursed
+
 export const chain = networkConfig.chain
 
 export const walletStore = (() => {
