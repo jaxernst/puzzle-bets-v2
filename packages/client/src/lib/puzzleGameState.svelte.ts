@@ -1,8 +1,12 @@
 import { user } from "$lib/userStore.svelte"
+import { mud } from "./mudStore.svelte"
 import type { EvmAddress, PuzzleType } from "$lib/types"
 import { intToEntity } from "$lib/util"
+import { Map } from "svelte/reactivity"
 
 import { derived, get, writable, type Readable } from "svelte/store"
+import { gameIdToGame } from "./gameQueries"
+import type { Entity } from "@latticexyz/recs"
 
 export interface PuzzleState {
   solved: boolean
@@ -29,7 +33,7 @@ const emptyWordleState: WordleGameState = {
 }
 
 export const wordleGameStates = (() => {
-  const store = writable<Map<GameId, WordleGameState>>(new Map())
+  const store = $state(new Map<GameId, WordleGameState>())
 
   // Opponent is temporary, and will eventually be retrieved in the backend
   let getOrCreateLoading = false
@@ -51,7 +55,7 @@ export const wordleGameStates = (() => {
       if (!res.ok) return
 
       const gameState = (await res.json()) as WordleGameState
-      store.update((s) => s.set(gameId, gameState!))
+      store.set(gameId, gameState!)
     } finally {
       getOrCreateLoading = false
     }
@@ -79,29 +83,28 @@ export const wordleGameStates = (() => {
         "resetCount"
       >
 
-      store.update((s) => {
-        let resetCount = s.get(gameId)?.resetCount
-        return s.set(gameId, { ...gameState!, resetCount })
-      })
+      const resetCount = store.get(gameId)?.resetCount
+      store.set(gameId, { ...gameState!, resetCount })
     } finally {
       guessEntering = false
     }
   }
 
-  const getGame = (_: any) => undefined
-
   let resetLoading = false
   const reset = async (gameId: GameId, isDemo: boolean) => {
-    if (resetLoading) return
+    if (resetLoading || !mud.components) return
 
-    const game = isDemo ? undefined : getGame(intToEntity(gameId, true))
+    const game = isDemo
+      ? undefined
+      : gameIdToGame(intToEntity(gameId, true), mud.components)
+
     const opponent = game
       ? user.address === game.p1
         ? game.p2
         : game.p1
       : undefined
 
-    const currentState = get(store).get(gameId)
+    const currentState = store.get(gameId)
 
     // Prevent resetting offchain puzzle state more than onchain rematch count
     if (game && (currentState?.resetCount ?? Infinity) >= game?.rematchCount) {
@@ -111,12 +114,10 @@ export const wordleGameStates = (() => {
     resetLoading = true
     try {
       // Clear the current game state while maintaining reset count
-      store.update((s) =>
-        s.set(gameId, {
-          ...emptyWordleState,
-          resetCount: (currentState?.resetCount ?? 0) + 1,
-        }),
-      )
+      store.set(gameId, {
+        ...emptyWordleState,
+        resetCount: (currentState?.resetCount ?? 0) + 1,
+      })
 
       const res = await fetch("/api/wordle/reset-game", {
         method: "POST",
@@ -135,28 +136,25 @@ export const wordleGameStates = (() => {
       }
 
       const gameState = (await res.json()) as WordleGameState
-      store.update((s) => s.set(gameId, gameState))
+      store.set(gameId, gameState)
     } finally {
       resetLoading = false
     }
   }
 
   return {
-    ...store,
+    get(gameId: Entity) {
+      return store.get(gameId)
+    },
     getOrCreate,
     enterGuess,
     reset,
   }
 })()
 
-export const puzzleStores = derived(
-  [wordleGameStates],
-  ([$wordleGameStates]) => {
-    return {
-      wordle: $wordleGameStates,
-      connections: new Map(),
-      crossword: new Map(),
-      sudoku: new Map(),
-    }
-  },
-) as Readable<Record<PuzzleType, Map<GameId, PuzzleState>>>
+export const puzzleStores = {
+  wordle: wordleGameStates,
+  connections: new Map(),
+  crossword: new Map(),
+  sudoku: new Map(),
+} as const
