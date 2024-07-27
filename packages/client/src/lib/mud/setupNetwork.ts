@@ -10,7 +10,6 @@ import {
 } from "viem"
 
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
-import { mount as mounDevTools } from "@latticexyz/dev-tools"
 import { networkConfig } from "./networkConfig"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import { type ContractWrite } from "@latticexyz/common"
@@ -27,6 +26,7 @@ export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 export type Components = SetupNetworkResult["components"]
 export type Wallet = WalletClient<Transport, Chain, Account>
 
+// @ts-ignore
 export const publicClient = createPublicClient({
   ...networkConfig,
   pollingInterval: 1000,
