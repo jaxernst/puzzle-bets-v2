@@ -91,6 +91,7 @@ export const networkConfig = (() => {
     worldAddress,
     initialBlockNumber,
     connectMode: (chainConnectMethod as any)[chainId],
+    // @ts-ignore
     transport: transportObserver(fallback([http()])),
   }
 })()
