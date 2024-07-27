@@ -25,7 +25,7 @@
 </script>
 
 <Confetti />
-<WalletConnector />
+<WalletConnector autoconnect />
 <NewGameModal />
 <AboutModal />
 

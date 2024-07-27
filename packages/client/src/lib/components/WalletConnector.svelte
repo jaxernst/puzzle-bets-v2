@@ -21,7 +21,15 @@
   }
 </script>
 
-<script>
+<script lang="ts">
+  let { autoconnect } = $props<{ autoconnect?: boolean }>()
+
+  $effect(() => {
+    if (autoconnect) {
+      walletStore.autoConnect()
+    }
+  })
+
   let showModalPrev = false
   $effect(() => {
     const wasClosed = !showModal && showModalPrev
