@@ -1,8 +1,8 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common"
-import { derived, writable } from "svelte/store"
 import { createWalletClient, http, webSocket, type Account } from "viem"
 import { networkConfig } from "./mud/networkConfig"
 import { type Wallet } from "./mud/setupNetwork"
+import { browser, version } from "$app/environment"
 import {
   connect,
   createConfig,
@@ -11,9 +11,8 @@ import {
   reconnect,
 } from "@wagmi/core"
 import { coinbaseWallet } from "@wagmi/connectors"
-import { browser } from "$app/environment"
 
-if (browser) window.process = { env: {} } as any
+if (browser) window.process = { env: {}, version } as any
 
 export const wagmiConfig = createConfig({
   chains: [networkConfig.chain],

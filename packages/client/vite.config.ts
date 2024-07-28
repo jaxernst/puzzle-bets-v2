@@ -3,5 +3,9 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [sveltekit()],
+  resolve: {
+    alias: { stream: "stream-browserify" },
+  },
+
   cacheDir: "./.vite-cache",
 })
