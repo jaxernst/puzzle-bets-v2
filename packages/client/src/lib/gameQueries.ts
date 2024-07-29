@@ -55,6 +55,18 @@ export function getPublicGames() {
   return []
 }
 
+export function isGamePlayer(
+  player: EvmAddress,
+  gameId: Entity,
+  { components: c, synced }: typeof mud,
+) {
+  if (!synced || !c) return
+  const p1 = getComponentValue(c.Player1, gameId)?.value
+  const p2 = getComponentValue(c.Player2, gameId)?.value
+
+  return p1 === player || p2 === player
+}
+
 export function getPlayerSolutionState(
   player: EvmAddress,
   gameId: Entity,
