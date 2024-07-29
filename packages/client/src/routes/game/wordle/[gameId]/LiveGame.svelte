@@ -83,9 +83,11 @@
   }
 </script>
 
-<div class="mx-auto flex w-full max-w-[1000px] flex-col items-center gap-4">
+<div
+  class="mx-auto flex w-full max-w-[1000px] flex-col items-center gap-4 px-4"
+>
   <GameHeader gameId={game.id} puzzle="wordle" />
-  <OpponentDisplay {opponent} />
+  <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
   {#if game.status === GameStatus.Pending}
     <div
@@ -94,7 +96,7 @@
       <div class="font-extrabold">
         The Puzzle will be ready to reveal once your opponent joins.
       </div>
-      <div>The puzzle timer will not start until you reveal.</div>
+      <div>The puzzle timer will not start until you choose to reveal.</div>
     </div>
   {:else if puzzleState}
     <Wordle
