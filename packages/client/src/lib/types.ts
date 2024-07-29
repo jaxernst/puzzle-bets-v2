@@ -7,7 +7,7 @@ export type Game = {
   id: Entity
   type: PuzzleType
   status: GameStatus
-  betAmount?: bigint
+  buyInAmount?: bigint
   p1: EvmAddress
   p2?: EvmAddress
   p1Balance: bigint

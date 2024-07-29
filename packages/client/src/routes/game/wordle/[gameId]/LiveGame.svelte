@@ -4,7 +4,12 @@
   import { gameIdToGame, getPlayerSolutionState } from "$lib/gameQueries"
   import { user as userStore } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
-  import { intToEntity } from "$lib/util"
+  import {
+    formatTimeAbbr,
+    intToEntity,
+    systemTimestamp,
+    timeRemaining,
+  } from "$lib/util"
   import { wordleGameStates } from "$lib/puzzleGameState.svelte"
   import { exportWordleBoard } from "../exportBoard"
   import { launchConfetti } from "$lib/components/Confetti.svelte"
@@ -15,6 +20,7 @@
   import { type Components } from "$lib/mud/setupNetwork"
   import GameHeader from "../../GameHeader.svelte"
   import OpponentDisplay from "../../OpponentDisplay.svelte"
+  import Modal from "$lib/components/Modal.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -67,6 +73,24 @@
     game && getPlayerSolutionState(user, gameId, mud).submitted,
   )
 
+  let inviteTimeLeft: number | undefined = $state()
+  let inviteExpTimer: NodeJS.Timer
+  $effect(() => {
+    if (game.status === GameStatus.Pending && !inviteExpTimer) {
+      inviteExpTimer = setInterval(() => {
+        inviteTimeLeft = timeRemaining(game.inviteExpiration)
+      }, 1000)
+    }
+
+    if (game.status !== GameStatus.Pending && inviteExpTimer) {
+      clearInterval(inviteExpTimer)
+    }
+
+    return () => {
+      if (inviteExpTimer) clearInterval(inviteExpTimer)
+    }
+  })
+
   let expired = false
 
   let copied = $state(false)
@@ -81,28 +105,50 @@
       console.error("Failed to copy: ", err)
     }
   }
+
+  let showCancelGame = $state(false)
 </script>
 
 <div
   class="mx-auto flex w-full max-w-[1000px] flex-col items-center gap-4 px-4"
 >
-  <GameHeader gameId={game.id} puzzle="wordle" />
+  <GameHeader {game} puzzle="wordle" />
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
-  {#if game.status === GameStatus.Pending}
+  {#if game.status === GameStatus.Pending && inviteTimeLeft !== undefined}
     <div
-      class="mx-auto flex w-full flex-col items-center gap-4 rounded-xl border-2 border-black py-20"
+      class="mx-auto flex w-full flex-col items-center gap-6 rounded-xl border-2 border-black py-20 text-center text-base"
     >
       <div class="font-extrabold">
         The Puzzle will be ready to reveal once your opponent joins.
       </div>
-      <div>The puzzle timer will not start until you choose to reveal.</div>
+
+      <div
+        class="rounded-full bg-black px-2 py-2 text-sm font-semibold text-white"
+      >
+        Invite expires {formatTimeAbbr(inviteTimeLeft)}
+      </div>
+
+      <div class="w-full max-w-[375px] text-base">
+        <button
+          class="w-full rounded border-[1.5px] border-black bg-black p-2 font-bold text-white"
+        >
+          Copy Invite Link
+        </button>
+
+        <button
+          class="mt-2 w-full rounded-md border-[1.5px] border-black p-2 font-bold"
+          onclick={() => (showCancelGame = true)}
+        >
+          Cancel Game
+        </button>
+      </div>
     </div>
   {:else if puzzleState}
     <Wordle
       {...puzzleState}
       paused={Boolean(
-        gameOver || submitted || expired || game?.status !== GameStatus.Active,
+        gameOver || submitted || game?.status !== GameStatus.Active,
       )}
       onSubmitGuess={enterGuess}
       onGameOver={() => {}}
@@ -140,7 +186,9 @@
     {/if}
   {:else if !puzzleState}
     <div class="flex h-[200px] items-center justify-center self-center">
-      <DotLoader class="fill-pb-gray-1 h-10 w-10" />
+      <DotLoader class="h-10 w-10 fill-black" />
     </div>
   {/if}
 </div>
+
+<Modal bind:show={showCancelGame}>Cancel gameeee</Modal>
