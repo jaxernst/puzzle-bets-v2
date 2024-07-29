@@ -40,10 +40,6 @@
   import { goto } from "$app/navigation"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { type Game, GameStatus } from "$lib/types"
-  import { flip } from "svelte/animate"
-  import GamePreviewCard from "./GamePreviewCard.svelte"
-  import PublicGamePreviewCard from "./PublicGamePreviewCard.svelte"
-  import LobbyGames from "./LobbyGames.svelte"
   import TabActiveGames from "./TabActiveGames.svelte"
   import TabLobbyGames from "./TabLobby.svelte"
   import TabGameHistory from "./TabGameHistory.svelte"
@@ -74,9 +70,9 @@
   const SIZE_OPEN = 600
 
   const size = spring(SIZE_CLOSED, {
-    damping: 0.49,
+    damping: 0.5,
     stiffness: 0.075,
-    precision: 0.001,
+    precision: 0.005,
   })
 
   $effect(() => {
