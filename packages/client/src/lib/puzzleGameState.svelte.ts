@@ -143,7 +143,7 @@ export const wordleGameStates = (() => {
   }
 
   return {
-    get(gameId: Entity) {
+    get(gameId: string) {
       return store.get(gameId)
     },
     getOrCreate,
