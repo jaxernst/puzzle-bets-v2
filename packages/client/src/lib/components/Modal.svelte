@@ -10,12 +10,14 @@
     title,
     description,
     children,
+    stopPropagation = true,
     class: className = "sm:min-h-[500px] sm:w-[500px]",
   } = $props<{
     show: boolean
     title?: string
     description?: string
     children: any
+    stopPropagation?: boolean
     class?: string
   }>()
 
@@ -91,7 +93,7 @@
         className,
       )}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
-      onclick={(e) => e.stopPropagation()}
+      onclick={(e) => stopPropagation || e.stopPropagation()}
     >
       {@render children()}
     </div>

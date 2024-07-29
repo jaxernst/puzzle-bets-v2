@@ -341,7 +341,11 @@
   </div>
 </Modal>
 
-<Modal bind:show={showCreated} class="px-6 pb-0 pt-6 sm:w-[450px]">
+<Modal
+  bind:show={showCreated}
+  class="px-6 pb-0 pt-6 sm:w-[450px]"
+  stopPropagation={true}
+>
   <div class="flex flex-col gap-5">
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
