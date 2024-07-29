@@ -190,14 +190,16 @@
       </button>
     </div>
 
-    {#if tab === "lobby"}
-      <TabLobbyGames />
-    {:else if tab === "active"}
-      <TabActiveGames />
-    {:else if tab === "history"}
-      <TabGameHistory />
-    {:else if tab === "top"}
-      <TabLeaderboard />
-    {/if}
+    <div class="overflow-y-auto">
+      {#if tab === "lobby"}
+        <TabLobbyGames />
+      {:else if tab === "active"}
+        <TabActiveGames />
+      {:else if tab === "history"}
+        <TabGameHistory />
+      {:else if tab === "top"}
+        <TabLeaderboard />
+      {/if}
+    </div>
   </div>
 </div>
