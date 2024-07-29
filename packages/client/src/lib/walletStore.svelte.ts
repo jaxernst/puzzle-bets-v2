@@ -75,13 +75,17 @@ export const walletStore = (() => {
     },
 
     autoConnect: async () => {
-      const [account] = await reconnect(wagmiConfig, {
-        connectors: [cbWalletConnector],
-      })
+      if (networkConfig.chainId === 31337) {
+        return connectBurner()
+      } else {
+        const [account] = await reconnect(wagmiConfig, {
+          connectors: [cbWalletConnector],
+        })
 
-      if (account) {
-        const walletClient = await getWalletClient(wagmiConfig)
-        wallet = walletClient
+        if (account) {
+          const walletClient = await getWalletClient(wagmiConfig)
+          wallet = walletClient
+        }
       }
     },
     disconnect: async () => {
