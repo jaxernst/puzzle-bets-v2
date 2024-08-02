@@ -10,6 +10,7 @@
   import type { PuzzleType } from "$lib/types"
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
+  import { toggleAboutModal } from "../AboutModal.svelte"
   import GameController, {
     openControls,
     showControls,
@@ -202,6 +203,7 @@
         <button
           class="rounded-md bg-[#E7E1D2] p-3 text-center font-bold"
           style="box-shadow: 0px 5px 0px 0px #CCC3AC;"
+          onclick={toggleAboutModal}
         >
           What is Puzzle Bets?
         </button>
@@ -212,7 +214,7 @@
   </div>
 </div>
 
-{#snippet comingSoonPlaceholder(label)}
+{#snippet comingSoonPlaceholder(label: string)}
   <div
     class="flex items-center justify-center gap-2 rounded-md bg-[#AAA8A1] p-3 font-bold opacity-70"
     style="box-shadow: 0px 5px 0px 0px #838076;"

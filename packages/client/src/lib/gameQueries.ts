@@ -7,6 +7,7 @@ import {
   getComponentValueStrict,
   getComponentValue,
   type Entity,
+  Not,
 } from "@latticexyz/recs"
 import {
   GameStatus,
@@ -16,6 +17,7 @@ import {
 } from "$lib/types"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 import { type SetupNetworkResult } from "./mud/setupNetwork"
+import { systemTimestamp } from "$lib/util"
 import { PUBLIC_PUZZLE_MASTER_ADDRESS } from "$env/static/public"
 
 export function getPlayerGames(
@@ -51,8 +53,27 @@ export function getPlayerGames(
   })
 }
 
-export function getPublicGames() {
-  return []
+export function getPublicGames({ synced, components: c }: typeof mud) {
+  if (!c || !synced) return []
+
+  const publicGames = runQuery([
+    HasValue(c.GameStatus, { value: GameStatus.Pending }),
+    HasValue(c.PuzzleMasterEoa, {
+      value: PUBLIC_PUZZLE_MASTER_ADDRESS,
+    }),
+    Not(c.GamePasswordHash),
+  ])
+
+  const now = systemTimestamp()
+
+  return Array.from([...publicGames])
+    .map((gameId) => {
+      return {
+        ...gameIdToGame(gameId, c!),
+        public: true,
+      }
+    })
+    .filter((game) => Number(game.inviteExpiration) > now)
 }
 
 export function isGamePlayer(
