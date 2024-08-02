@@ -59,10 +59,10 @@
 </script>
 
 <div class="flex h-full w-full flex-col overflow-visible md:h-auto">
-  <div class=" relative -z-10 h-[90px] w-full md:hidden"></div>
+  <div class="relative -z-10 h-[90px] w-full md:hidden"></div>
 
   <div
-    class="bg-pb-off-white -mt-2 flex flex-grow flex-col gap-5 rounded-t-xl p-6 md:mx-auto md:mt-6 md:rounded-xl"
+    class="bg-pb-off-white flex flex-grow flex-col gap-5 rounded-t-xl px-3 py-5 sm:p-6 md:mx-auto md:mt-6 md:rounded-xl"
   >
     <div class="flex items-center gap-2">
       <Star />
@@ -81,7 +81,7 @@
         <div class="flex flex-grow justify-end">
           <button
             onclick={() => {}}
-            class="flex items-center gap-1 rounded-full border bg-[#ccccccbf] px-1.5 py-1 text-sm font-bold"
+            class="flex items-center gap-1 rounded-full border bg-[#E7E1D2] px-1.5 py-1 text-xs font-bold sm:text-sm"
           >
             <Edit class="stroke-black" />
             Set Display Name
@@ -92,7 +92,7 @@
 
     <!-- User Stats -->
     <div class="flex flex-wrap gap-4 gap-y-3 md:gap-4">
-      <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col items-start gap-2 sm:items-center">
         <div class="text-sm text-[#3f3f3f]">Wallet Balance</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2"
@@ -110,7 +110,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col items-start gap-2 sm:items-center">
         <div class="text-xs text-[#3f3f3f]">Win / Loss / Tied</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
@@ -127,7 +127,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col items-start gap-2 sm:items-center">
         <div class="text-xs text-[#3f3f3f]">Active Wagers / Games</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
@@ -144,7 +144,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col items-start gap-2 sm:items-center">
         <div class="text-xs text-[#3f3f3f]">Total Bet / Won</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
