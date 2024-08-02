@@ -14,7 +14,7 @@
   import type { PuzzleType } from "$lib/types"
   import { capitalized, entityToInt, formatSigFig } from "$lib/util"
   import { openControls } from "./game-controller/GameController.svelte"
-  import { defineUpdateQuery, HasValue, runQuery } from "@latticexyz/recs"
+  import { HasValue, runQuery } from "@latticexyz/recs"
   import { user } from "$lib/userStore.svelte"
 
   let showCreate = $state(false)
@@ -27,11 +27,10 @@
 
   // Input params
   let puzzleType: PuzzleType = $state("wordle")
-  let gameName = $state("Game #123")
   let visibility: "public" | "private" = $state("public")
   let currencyInput = $state("2.00")
   let selectedCurrency = $state<"USD" | "ETH">("USD")
-  let inputTimeLimit = $state(10)
+  let inputTimeLimit = $state(8)
 
   let selectedCurrencySymbol = $derived(
     { USD: "$", ETH: "Ξ" }[selectedCurrency],
@@ -153,7 +152,7 @@
     </div>
 
     <!-- Game Name -->
-    <div class="">
+    <!-- <div class="">
       <div class="mb-2 text-[11px]">
         Game Name <span class="font-bold">(optional)</span>
       </div>
@@ -169,7 +168,7 @@
           bind:value={gameName}
         />
       </div>
-    </div>
+    </div> -->
 
     <!-- Game Wager -->
     <div>
@@ -215,7 +214,7 @@
       <div class="mb-2 text-[11px]">Puzzle Time Limit</div>
 
       <div class="flex gap-2">
-        {#each [10, 20, 30, 45] as timeLimit}
+        {#each [5, 8, 12, 17] as timeLimit}
           {@const isSelected = inputTimeLimit === timeLimit}
 
           <button
@@ -269,7 +268,7 @@
   {/snippet}
 
   <div class="flex flex-col gap-6">
-    <div class="font-extrabold">New {capitalized(puzzleType)} | {gameName}</div>
+    <div class="font-extrabold">New {capitalized(puzzleType)} Game</div>
 
     <div class="flex flex-grow gap-6">
       <div class="flex flex-col gap-2">
