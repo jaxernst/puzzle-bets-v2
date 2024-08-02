@@ -1,9 +1,9 @@
 <script lang="ts">
-  let { class: className } = $props<{ class: string }>()
+  let { class: className } = $props<{ class?: string }>()
 </script>
 
 <svg
-  class={className}
+  class={className ?? ""}
   width="24"
   height="24"
   viewBox="0 0 24 24"

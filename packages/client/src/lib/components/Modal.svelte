@@ -1,20 +1,22 @@
 <script lang="ts">
   import { browser } from "$app/environment"
-  import { onMount } from "svelte"
+  import { onMount, type Snippet } from "svelte"
   import { cubicInOut, cubicOut } from "svelte/easing"
   import { fade, fly } from "svelte/transition"
   import { twMerge } from "tailwind-merge"
+  import AnimatedArrow from "./AnimatedArrow.svelte"
+  import HandUp from "$lib/assets/HandUp.svelte"
 
   let {
     show = $bindable(),
-    title,
+    header,
     description,
     children,
     stopPropagation = true,
-    class: className = "sm:min-h-[500px] sm:w-[500px]",
+    class: className,
   } = $props<{
     show: boolean
-    title?: string
+    header: Snippet
     description?: string
     children: any
     stopPropagation?: boolean
@@ -83,19 +85,32 @@
     onclick={clickOutside}
     aria-modal="true"
     role="dialog"
-    aria-labelledby={title}
     aria-describedby={description}
   >
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       class={twMerge(
-        "bg-pb-off-white max-h-full w-full overflow-y-auto rounded-t-md p-6 sm:w-auto sm:rounded-b-md",
+        "bg-pb-off-white flex max-h-full w-full flex-col gap-6 overflow-y-auto rounded-t-md px-4 pt-4 sm:max-w-[500px] sm:rounded-b-md",
         className,
       )}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
       onclick={(e) => stopPropagation || e.stopPropagation()}
     >
+      <div class="flex items-center justify-between text-sm font-black">
+        {@render header()}
+        <button onclick={() => (show = false)}>
+          <AnimatedArrow
+            class="h-[22px] w-[24px] stroke-2"
+            direction={show ? "down" : "up"}
+          />
+        </button>
+      </div>
+
       {@render children()}
+
+      <div class="flex flex-grow items-end">
+        <HandUp />
+      </div>
     </div>
   </div>
 {/if}

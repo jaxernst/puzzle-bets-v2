@@ -5,9 +5,10 @@
   import { user as userStore } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import {
+    formatAsDollar,
+    formatSigFig,
     formatTimeAbbr,
     intToEntity,
-    systemTimestamp,
     timeRemaining,
   } from "$lib/util"
   import { wordleGameStates } from "$lib/puzzleGameState.svelte"
@@ -21,6 +22,10 @@
   import GameHeader from "../../GameHeader.svelte"
   import OpponentDisplay from "../../OpponentDisplay.svelte"
   import Modal from "$lib/components/Modal.svelte"
+  import Stars from "$lib/icons/Stars.svelte"
+  import Wallet from "$lib/icons/Wallet.svelte"
+  import { formatEther } from "viem"
+  import { prices } from "$lib/prices.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -107,6 +112,9 @@
   }
 
   let showCancelGame = $state(false)
+
+  let wagerEth = Number(formatEther(game.buyInAmount))
+  let wagerUsd = $derived(formatAsDollar(wagerEth * prices.eth))
 </script>
 
 <div
@@ -191,4 +199,51 @@
   {/if}
 </div>
 
-<Modal bind:show={showCancelGame}>Cancel gameeee</Modal>
+<Modal bind:show={showCancelGame}>
+  {#snippet header()}
+    <div class="flex gap-1">
+      <Stars />
+      Cancel Game
+    </div>
+  {/snippet}
+
+  <div class="flex flex-col gap-6">
+    <div class="font-black leading-none">Are you sure you want to cancel?</div>
+
+    <div class="text-base leading-tight">
+      This will end the game and refund your original creation wager you
+      selected. If nobody joins your game or the invite link expires, your wager
+      will still be refunded all the same.
+    </div>
+
+    <div class="flex flex-col items-start gap-2">
+      <div class="text-sm text-[#3f3f3f]">Your Wager</div>
+      <div
+        class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-2 py-1"
+      >
+        <Wallet class="h-[20px] w-[20px]" />
+
+        <div>
+          <span class="font-bold">{wagerUsd}</span>
+          <span>/ {formatSigFig(wagerEth, 5)} ETH</span>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="flex flex-col items-stretch gap-2">
+      <button
+        class="rounded bg-black p-3 text-center text-base font-bold text-white"
+      >
+        Cancel the Game
+      </button>
+
+      <button
+        class="rounded border-2 border-black bg-white p-3 text-center text-base font-bold"
+      >
+        Go back to game
+      </button>
+    </div>
+  </div>
+</Modal>

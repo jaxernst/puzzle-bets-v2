@@ -60,7 +60,7 @@
 
   let createGameLoading = $state(false)
   let createdGameId = $derived.by(() => {
-    if (!showCreated) return
+    if (!showCreated || !mud.components) return
 
     const entities = runQuery([
       HasValue(mud.components.Player1, { value: user.address }),
@@ -107,12 +107,14 @@
 </script>
 
 <Modal bind:show={showCreate} class="px-6 pb-0 pt-6 sm:w-[450px]">
-  <div class="flex flex-col gap-4">
-    <div class="flex items-center gap-2 text-sm font-extrabold">
+  {#snippet header()}
+    <div class="flex items-center gap-2">
       <Stars />
       Create Game
     </div>
+  {/snippet}
 
+  <div class="flex flex-col gap-4">
     <div class="font-extrabold">New {capitalized(puzzleType)} Game</div>
 
     <!-- Game Visibility -->
@@ -255,18 +257,18 @@
         A 2.5% procotol fee will be applied to the winner's payout
       </div>
     </div>
-
-    <HandUp />
   </div>
 </Modal>
 
 <Modal bind:show={showConfirm} class="px-6 pb-0 pt-6 sm:w-[450px]">
-  <div class="flex flex-col gap-6">
+  {#snippet header()}
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
       Confirm Create Game
     </div>
+  {/snippet}
 
+  <div class="flex flex-col gap-6">
     <div class="font-extrabold">New {capitalized(puzzleType)} | {gameName}</div>
 
     <div class="flex flex-grow gap-6">
@@ -334,10 +336,6 @@
         cancel and withdraw up until your opponent joins.
       </div>
     </div>
-
-    <div class="flex flex-grow items-end">
-      <HandUp />
-    </div>
   </div>
 </Modal>
 
@@ -346,12 +344,14 @@
   class="px-6 pb-0 pt-6 sm:w-[450px]"
   stopPropagation={true}
 >
-  <div class="flex flex-col gap-5">
+  {#snippet header()}
     <div class="flex items-center gap-2 text-sm font-extrabold">
       <Stars />
       Success
     </div>
+  {/snippet}
 
+  <div class="flex flex-col gap-5">
     <div>
       <div class="mb-3 font-extrabold">Game Created!</div>
 
@@ -406,9 +406,5 @@
         </button>
       </div>
     {/if}
-
-    <div class="flex flex-grow items-end">
-      <HandUp />
-    </div>
   </div>
 </Modal>
