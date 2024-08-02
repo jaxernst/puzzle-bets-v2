@@ -5,6 +5,7 @@
   import { user as userStore } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import {
+    entityToInt,
     formatAsDollar,
     formatSigFig,
     formatTimeAbbr,
@@ -18,7 +19,6 @@
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
   import DotLoader from "$lib/components/DotLoader.svelte"
-  import { type Components } from "$lib/mud/setupNetwork"
   import GameHeader from "../../GameHeader.svelte"
   import OpponentDisplay from "../../OpponentDisplay.svelte"
   import Modal from "$lib/components/Modal.svelte"
@@ -27,6 +27,8 @@
   import { formatEther } from "viem"
   import { prices } from "$lib/prices.svelte"
   import { goto } from "$app/navigation"
+  import { gameInviteUrls } from "$lib/inviteUrls"
+  import type { Entity } from "@latticexyz/recs"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -112,6 +114,28 @@
     }
   }
 
+  let inviteCopied = $state(false)
+  let inviteCopyError: string | null = $state(null)
+  async function copyInviteUrl(gameId: Entity) {
+    const inviteUrl = gameInviteUrls.getOrLoadInviteUrl(
+      Number(entityToInt(gameId)),
+    )
+
+    if (!inviteUrl) {
+      inviteCopyError =
+        "No invite link found. Please create a new game to generate a new link."
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(inviteUrl)
+      inviteCopied = true
+      setTimeout(() => (inviteCopied = false), 1800)
+    } catch (err) {
+      console.error("Failed to copy: ", err)
+    }
+  }
+
   let wagerEth = Number(formatEther(game.buyInAmount))
   let wagerUsd = $derived(formatAsDollar(wagerEth * prices.eth))
 
@@ -159,8 +183,13 @@
       <div class="w-full max-w-[375px] text-base">
         <button
           class="w-full rounded border-black bg-black p-3 font-bold text-white"
+          onclick={() => copyInviteUrl(game.id)}
         >
-          Copy Invite Link
+          {#if inviteCopied}
+            Invite Copied!
+          {:else}
+            Copy Invite Link
+          {/if}
         </button>
 
         <button
@@ -169,6 +198,10 @@
         >
           Cancel Game
         </button>
+
+        {#if inviteCopyError}
+          <p class="mt-2 text-red-600">{inviteCopyError}</p>
+        {/if}
       </div>
     </div>
   {:else if puzzleState}
