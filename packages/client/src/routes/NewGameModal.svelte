@@ -31,6 +31,7 @@
   let currencyInput = $state("2.00")
   let selectedCurrency = $state<"USD" | "ETH">("USD")
   let inputTimeLimit = $state(8)
+  let inviteExpirationMin = $state(30)
 
   let selectedCurrencySymbol = $derived(
     { USD: "$", ETH: "Ξ" }[selectedCurrency],
@@ -80,7 +81,9 @@
       wagerEth = Number(currencyInput) / prices.eth
     }
 
-    const inviteExpirationMin = visibility === "public" ? 60 * 24 * 3 : 60 * 24
+    const _inviteExpirationMin =
+      visibility === "public" ? 60 * 24 * 3 : inviteExpirationMin
+
     const password =
       visibility === "public"
         ? undefined
@@ -93,7 +96,7 @@
         puzzleType,
         wagerEth,
         inputTimeLimit,
-        inviteExpirationMin,
+        _inviteExpirationMin,
         password,
       )
 
@@ -228,6 +231,28 @@
         {/each}
       </div>
     </div>
+
+    <!-- Invite Expiration  -->
+    {#if visibility === "private"}
+      <div>
+        <div class="mb-2 text-[11px]">Invite Expires</div>
+
+        <div class="flex gap-2">
+          {#each [[30, "30 min"], [60, "1 hour"], [60 * 24, "1 day"], [60 * 24 * 3, "3 days"]] as [expTime, label]}
+            {@const isSelected = inviteExpirationMin === expTime}
+
+            <button
+              class={`rounded-md border-2 border-black p-3 py-2 font-bold
+             ${isSelected ? "bg-black text-white" : "bg-white text-black"}
+            `}
+              onclick={() => (inviteExpirationMin = Number(expTime))}
+            >
+              {label}
+            </button>
+          {/each}
+        </div>
+      </div>
+    {/if}
 
     <hr class="my-2" />
 
