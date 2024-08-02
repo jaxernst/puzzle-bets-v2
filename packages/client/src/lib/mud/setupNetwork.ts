@@ -1,7 +1,6 @@
 import {
   createPublicClient,
   type Hex,
-  parseEther,
   type WalletClient,
   type Transport,
   type Account,
@@ -9,7 +8,7 @@ import {
   getContract,
 } from "viem"
 
-import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+import { syncToRecs } from "@latticexyz/store-sync/recs"
 import { networkConfig } from "./networkConfig"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import { type ContractWrite } from "@latticexyz/common"
