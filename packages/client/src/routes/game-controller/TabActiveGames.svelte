@@ -4,8 +4,18 @@
   import { user } from "$lib/userStore.svelte"
   import { flip } from "svelte/animate"
   import GamePreviewCard from "./GamePreviewCard.svelte"
+  import { GameStatus } from "$lib/types"
+  import { getComponentValueStrict } from "@latticexyz/recs"
 
-  let playerGames = $derived(getPlayerGames(user.address, mud))
+  let playerGames = $derived(
+    getPlayerGames(user.address, mud).filter((g) => {
+      const status = getComponentValueStrict(
+        mud.components!.GameStatus,
+        g.id,
+      ).value
+      return status === GameStatus.Pending || status === GameStatus.Active
+    }),
+  )
 </script>
 
 <div class="flex flex-wrap justify-center gap-3">

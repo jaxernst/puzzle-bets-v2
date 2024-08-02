@@ -78,24 +78,28 @@
     {:else if !turnStartTime}
       Opponent Started
     {/if}
+  {:else if status === GameStatus.Inactive}
+    Game Cancelled
   {/if}
 {/snippet}
 
 {#snippet actionButton()}
-  <a
-    class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
-    href={`/game/${game.type}/${entityToInt(game.id)}`}
-  >
-    {#if status === GameStatus.Pending}
-      View Game Page
-    {:else if status === GameStatus.Active && !turnStartTime}
-      Start Turn
-    {:else if status === GameStatus.Active && turnStartTime}
-      Rejoin
-    {:else if status === GameStatus.Complete}
-      ShowResults
-    {/if}
-  </a>
+  {#if game.status !== GameStatus.Inactive}
+    <a
+      class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
+      href={`/game/${game.type}/${entityToInt(game.id)}`}
+    >
+      {#if status === GameStatus.Pending}
+        View Game Page
+      {:else if status === GameStatus.Active && !turnStartTime}
+        Start Turn
+      {:else if status === GameStatus.Active && turnStartTime}
+        Rejoin
+      {:else if status === GameStatus.Complete}
+        ShowResults
+      {/if}
+    </a>
+  {/if}
 {/snippet}
 
 <div
