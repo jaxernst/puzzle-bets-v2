@@ -16,6 +16,7 @@
   import { openControls } from "./game-controller/GameController.svelte"
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { user } from "$lib/userStore.svelte"
+  import { gameInviteUrls } from "$lib/inviteUrls"
 
   let showCreate = $state(false)
   let showConfirm = $state(false)
@@ -24,7 +25,9 @@
   export const toggleNewGameModal = () => {
     showCreate = !showCreate
   }
+</script>
 
+<script lang="ts">
   // Input params
   let puzzleType: PuzzleType = $state("wordle")
   let visibility: "public" | "private" = $state("public")
@@ -73,6 +76,22 @@
     return sorted[sorted.length - 1]
   })
 
+  let gamePassword: string | undefined = undefined
+
+  $effect(() => {
+    if (createdGameId) {
+      gameInviteUrls.create({
+        puzzleType,
+        gameId: Number(entityToInt(createdGameId)),
+        inviteName: user.displayName,
+        gameWagerUsd: Number(
+          selectedCurrency === "USD" ? currencyInput : otherCurrencyValue,
+        ),
+        password: gamePassword,
+      })
+    }
+  })
+
   let createGame = $derived(async () => {
     let wagerEth = 0
     if (selectedCurrency === "ETH") {
@@ -84,7 +103,7 @@
     const _inviteExpirationMin =
       visibility === "public" ? 60 * 24 * 3 : inviteExpirationMin
 
-    const password =
+    gamePassword =
       visibility === "public"
         ? undefined
         : Math.random().toString(36).substring(2)
@@ -97,7 +116,7 @@
         wagerEth,
         inputTimeLimit,
         _inviteExpirationMin,
-        password,
+        gamePassword,
       )
 
       showConfirm = false
