@@ -12,8 +12,9 @@
     header,
     description,
     children,
-    stopPropagation = true,
     class: className,
+    stopPropagation = true,
+    onClose = () => {},
   } = $props<{
     show: boolean
     header: Snippet
@@ -21,6 +22,7 @@
     children: any
     stopPropagation?: boolean
     class?: string
+    onClose?: () => void
   }>()
 
   let modal = $state<HTMLElement>()
@@ -46,6 +48,7 @@
   function clickOutside(event: MouseEvent) {
     if (event.target === modal) {
       show = false
+      onClose()
     }
   }
 
@@ -98,7 +101,12 @@
     >
       <div class="flex items-center justify-between text-sm font-black">
         {@render header()}
-        <button onclick={() => (show = false)}>
+        <button
+          onclick={() => {
+            show = false
+            onClose()
+          }}
+        >
           <AnimatedArrow
             class="h-[22px] w-[24px] stroke-2"
             direction={show ? "down" : "up"}

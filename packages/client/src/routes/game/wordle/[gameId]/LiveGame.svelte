@@ -26,6 +26,7 @@
   import Wallet from "$lib/icons/Wallet.svelte"
   import { formatEther } from "viem"
   import { prices } from "$lib/prices.svelte"
+  import { goto } from "$app/navigation"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -111,10 +112,28 @@
     }
   }
 
-  let showCancelGame = $state(false)
-
   let wagerEth = Number(formatEther(game.buyInAmount))
   let wagerUsd = $derived(formatAsDollar(wagerEth * prices.eth))
+
+  let showCancelGame = $state(false)
+  let showCancelGameSuccess = $state(false)
+  let cancelGameState = $state<"loading" | "error" | null>(null)
+
+  const cancelGame = async () => {
+    if (cancelGameState === "loading") return
+
+    cancelGameState = "loading"
+    try {
+      await mud.systemCalls?.cancelPendingGame(game.id)
+      showCancelGame = false
+      showCancelGameSuccess = true
+    } catch {
+      cancelGameState = "error"
+      return
+    }
+
+    cancelGameState = null
+  }
 </script>
 
 <div
@@ -139,13 +158,13 @@
 
       <div class="w-full max-w-[375px] text-base">
         <button
-          class="w-full rounded border-black bg-black p-2 font-bold text-white"
+          class="w-full rounded border-black bg-black p-3 font-bold text-white"
         >
           Copy Invite Link
         </button>
 
         <button
-          class="mt-2 w-full rounded border-[1.5px] border-black p-2 font-bold"
+          class="mt-2 w-full rounded border-[1.5px] border-black p-3 font-bold"
           onclick={() => (showCancelGame = true)}
         >
           Cancel Game
@@ -192,6 +211,8 @@
         </button>
       </div>
     {/if}
+  {:else if game.status === GameStatus.Inactive}
+    <p class="py-4 font-bold">Game Canceled</p>
   {:else if !puzzleState}
     <div class="flex h-[200px] items-center justify-center self-center">
       <DotLoader class="h-10 w-10 fill-black" />
@@ -199,7 +220,7 @@
   {/if}
 </div>
 
-<Modal bind:show={showCancelGame}>
+<Modal bind:show={showCancelGame} class="sm:w-[375px]">
   {#snippet header()}
     <div class="flex gap-1">
       <Stars />
@@ -234,16 +255,72 @@
 
     <div class="flex flex-col items-stretch gap-2">
       <button
-        class="rounded bg-black p-3 text-center text-base font-bold text-white"
+        class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
+        onclick={cancelGame}
       >
-        Cancel the Game
+        {#if cancelGameState === "loading"}
+          <DotLoader class="fill-white " />
+        {:else}
+          Cancel the Game
+        {/if}
       </button>
 
       <button
         class="rounded border-2 border-black bg-white p-3 text-center text-base font-bold"
+        onclick={() => (showCancelGame = false)}
       >
         Go back to game
       </button>
+
+      {#if cancelGameState === "error"}
+        <p class="italic text-red-500">
+          Error canceling game. Please try again
+        </p>
+      {/if}
     </div>
+  </div>
+</Modal>
+
+<Modal
+  bind:show={showCancelGameSuccess}
+  onClose={() => goto("/dashboard")}
+  class="sm:w-[375px]"
+>
+  {#snippet header()}
+    <div class="flex gap-1">
+      <Stars />
+      Cancel Sucess
+    </div>
+  {/snippet}
+
+  <div class="flex flex-col gap-6">
+    <div class="font-black leading-none">Game Canceled!?</div>
+
+    <div class="text-base leading-tight">
+      Your wager is been refunded to your wallet
+    </div>
+
+    <div class="flex flex-col items-start gap-2">
+      <div class="text-sm text-[#3f3f3f]">Your Wager</div>
+      <div
+        class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-2 py-1"
+      >
+        <Wallet class="h-[20px] w-[20px]" />
+
+        <div>
+          <span class="font-bold">{wagerUsd}</span>
+          <span>/ {formatSigFig(wagerEth, 5)} ETH</span>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <a
+      class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
+      href="/dashboard"
+    >
+      Back to Dashboard
+    </a>
   </div>
 </Modal>
