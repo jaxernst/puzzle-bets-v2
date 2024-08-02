@@ -182,7 +182,7 @@
 
       <div class="w-full max-w-[375px] text-base">
         <button
-          class="w-full rounded border-black bg-black p-3 font-bold text-white"
+          class="w-full rounded border-2 border-black bg-black p-3 font-bold text-white"
           onclick={() => copyInviteUrl(game.id)}
         >
           {#if inviteCopied}
@@ -193,7 +193,7 @@
         </button>
 
         <button
-          class="mt-2 w-full rounded border-[1.5px] border-black p-3 font-bold"
+          class="mt-2 w-full rounded border-2 border-black p-3 font-bold"
           onclick={() => (showCancelGame = true)}
         >
           Cancel Game
