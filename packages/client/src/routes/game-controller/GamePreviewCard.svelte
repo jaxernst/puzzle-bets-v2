@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { GameStatus, type PlayerGame } from "$lib/types"
+  import { GameStatus, type Game, type PlayerGame } from "$lib/types"
   import {
     entityToInt,
     formatTime,
@@ -103,8 +103,8 @@
 {/snippet}
 
 <div
-  class="flex w-[343px] flex-col gap-[10px] rounded-md bg-white p-4 text-[13px] leading-none"
-  style={"box-shadow: 0px 5px 0px 0px #E3DDCD;"}
+  class="bg-pb-off-white mb-[5px] flex w-[343px] flex-col gap-6 rounded-md p-4 text-[13px] leading-none"
+  style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
 >
   <div class="flex justify-between">
     <div>
@@ -143,7 +143,9 @@
         ({formatSigFig(buyInEth, 5)} ETH)
       </div>
     </div>
-  </div>
 
-  {@render actionButton()}
+    <div></div>
+
+    {@render actionButton()}
+  </div>
 </div>
