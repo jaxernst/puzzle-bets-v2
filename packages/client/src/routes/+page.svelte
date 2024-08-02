@@ -53,16 +53,15 @@
     </div>
 
     <div class="flex flex-col gap-1.5 text-center font-bold">
-      <button
-        onclick={connect}
-        class="rounded border-white bg-black px-3 py-2 text-white"
-      >
-        {#if !user.address}
-          Connect and Play
-        {:else}
+      {#if !user.address}
+        <button onclick={connect} class="rounded bg-black px-3 py-2 text-white">
+        </button>
+        Connect and Play
+      {:else}
+        <a class="rounded bg-black px-2 py-2 text-white" href="/dashboard">
           Enter
-        {/if}
-      </button>
+        </a>
+      {/if}
 
       <a href="/dashboard" class="rounded border-2 border-black px-3 py-2">
         Play a Practice Game
