@@ -1,4 +1,5 @@
 <script lang="ts">
+  let { class: className } = $props<{ class?: string }>()
   import { formatAsDollar, formatSigFig, shortenAddress } from "$lib/util"
   import { page } from "$app/stores"
   import { user } from "$lib/userStore.svelte"
@@ -7,6 +8,10 @@
   import Wallet from "$lib/icons/Wallet.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { prices } from "$lib/prices.svelte"
+  import Modal from "$lib/components/Modal.svelte"
+  import { walletStore } from "$lib/walletStore.svelte"
+
+  let showAccountModal = $state(false)
 </script>
 
 <div
@@ -19,7 +24,10 @@
 
     <div class="">
       {#if user.address}
-        <div class="flex gap-2">
+        <button
+          onclick={() => (showAccountModal = true)}
+          class="flex items-center gap-2"
+        >
           <div class="flex items-center gap-1 px-1 text-sm">
             <Avatar1 />
             {shortenAddress(user.address)}
@@ -31,7 +39,7 @@
             <Wallet />
             {formatAsDollar(Number(user.balance) * prices.eth)}
           </div>
-        </div>
+        </button>
       {:else}
         <button
           class="bg-pb-beige-1 flex items-center gap-1 rounded-full p-2 text-sm"
@@ -43,3 +51,54 @@
     </div>
   {/if}
 </div>
+
+<Modal bind:show={showAccountModal} class="sm:w-[400px]">
+  {#snippet header()}
+    <div class="flex items-center gap-2">
+      <Wallet />
+      Account
+    </div>
+  {/snippet}
+
+  <div class="flex flex-col">
+    <div class="flex gap-3">
+      <img
+        src="/avatar1.png"
+        class="h-[50px] w-[50px] flex-shrink-0"
+        alt="Avatar"
+      />
+
+      <div class="flex flex-col gap-3 text-sm">
+        <div>
+          <div class="mb-1 text-sm text-[#3f3f3f]">Your Wallet Address</div>
+          <div class="font-bold">{user.address}</div>
+        </div>
+
+        {#if user.displayName}
+          <div>
+            <div class="mb-1 text-sm text-[#3f3f3f]">Your Display Name</div>
+            <div class="font-bold">{user.displayName}</div>
+          </div>
+        {:else}
+          <button class=" bg-pb-yellow self-start rounded-full p-1.5 font-bold">
+            Set Display Name
+          </button>
+        {/if}
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="flex flex-col gap-2">
+    <button
+      onclick={() => {
+        walletStore.disconnect()
+        showAccountModal = false
+      }}
+      class="rounded border-2 border-black p-3 text-center text-base font-bold"
+    >
+      Disconnect
+    </button>
+  </div>
+</Modal>
