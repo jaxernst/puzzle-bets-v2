@@ -125,7 +125,7 @@
 
   {#if game.status === GameStatus.Pending && inviteTimeLeft !== undefined}
     <div
-      class="mx-auto flex w-full flex-col items-center gap-6 rounded-xl border-2 border-black py-20 text-center text-base"
+      class="mx-auto flex min-h-72 w-full flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
     >
       <div class="font-extrabold">
         The Puzzle will be ready to reveal once your opponent joins.
@@ -139,13 +139,13 @@
 
       <div class="w-full max-w-[375px] text-base">
         <button
-          class="w-full rounded border-[1.5px] border-black bg-black p-2 font-bold text-white"
+          class="w-full rounded border-black bg-black p-2 font-bold text-white"
         >
           Copy Invite Link
         </button>
 
         <button
-          class="mt-2 w-full rounded-md border-[1.5px] border-black p-2 font-bold"
+          class="mt-2 w-full rounded border-[1.5px] border-black p-2 font-bold"
           onclick={() => (showCancelGame = true)}
         >
           Cancel Game
