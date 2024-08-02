@@ -2,31 +2,7 @@
   import Avatar1 from "$lib/assets/Avatar1.svelte"
   import Avatar2 from "$lib/assets/Avatar2.svelte"
   import { type EvmAddress } from "$lib/types"
-  import { Map } from "svelte/reactivity"
-
-  const displayNameStore = (() => {
-    let store = $state(new Map())
-
-    const fetchName = async (user: EvmAddress) => {
-      const names = ["Murph", "jaxernst", "w3sker"]
-      const i = Math.floor(Math.random() * names.length)
-      const name = names[i]
-
-      setTimeout(() => {
-        store.set(user, name)
-      }, 100)
-    }
-
-    return {
-      get: (user: EvmAddress) => {
-        const name = store.get(user)
-        if (!name) {
-          fetchName(user)
-        }
-        return name ?? user
-      },
-    }
-  })()
+  import { displayNameStore } from "$lib/displayNameStore.svelte"
 
   let { opponent, pending } = $props<{
     opponent: EvmAddress | null
