@@ -55,8 +55,8 @@
     <div class="flex flex-col gap-1.5 text-center font-bold">
       {#if !user.address}
         <button onclick={connect} class="rounded bg-black px-3 py-2 text-white">
+          Connect and Play
         </button>
-        Connect and Play
       {:else}
         <a class="rounded bg-black px-2 py-2 text-white" href="/dashboard">
           Enter
