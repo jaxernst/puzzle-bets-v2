@@ -22,13 +22,15 @@
 <div class="flex w-full justify-center">
   <div class="flex max-w-[1000px] flex-grow justify-between">
     <button
-      class="flex w-full items-center text-base font-semibold"
+      class="flex w-full items-center gap-4 text-base font-semibold"
       onclick={() => window.history.back()}
     >
-      <AnimatedArrow
-        class="h-6 w-6 transition-transform group-hover:scale-125"
-        direction={"left"}
-      />
+      <div class="p-.5 bg-pb-beige-1 rounded-md">
+        <AnimatedArrow
+          class="h-6 w-6 transition-transform group-hover:scale-125"
+          direction={"left"}
+        />
+      </div>
 
       {#if game}
         <div class="font-bold md:text-xl">
