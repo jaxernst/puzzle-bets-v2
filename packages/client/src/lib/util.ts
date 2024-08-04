@@ -42,8 +42,8 @@ export function formatTime(timeInSeconds: number) {
   } else if (timeInSeconds < HOUR_IN_SECONDS) {
     const minutes = Math.floor(timeInSeconds / MINUTE_IN_SECONDS)
     const seconds = timeInSeconds % MINUTE_IN_SECONDS
-    return `${minutes} minute${minutes === 1 ? "" : "s"} and ${seconds} second${
-      seconds === 1 ? "" : "s"
+    return `${minutes} minute${minutes === 1 ? "" : "s"}${
+      seconds > 0 ? ` and ${seconds} second${seconds === 1 ? "" : "s"}` : ""
     }`
   } else if (timeInSeconds < DAY_IN_SECONDS) {
     const hours = Math.floor(timeInSeconds / HOUR_IN_SECONDS)

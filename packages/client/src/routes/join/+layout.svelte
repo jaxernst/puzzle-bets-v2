@@ -11,6 +11,7 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import JoinGame from "./JoinGame.svelte"
   import { getComponentValue } from "@latticexyz/recs"
+  import { goto } from "$app/navigation"
 
   let { children } = $props()
   let showJoin = $state(false)
@@ -99,7 +100,11 @@
   </Modal>
 {/if}
 
-<Modal bind:show={showJoin} class="sm:w-[375px]">
+<Modal
+  bind:show={showJoin}
+  onClose={() => goto("/dashboard")}
+  class="sm:w-[375px]"
+>
   {#snippet header()}
     <div class="flex items-center gap-2">
       <Stars />

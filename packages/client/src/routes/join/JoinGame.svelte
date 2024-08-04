@@ -7,51 +7,55 @@
     formatSigFig,
     formatTime,
     formatTimeAbbr,
+    intToEntity,
     shortenAddress,
   } from "$lib/util"
   import { formatEther } from "viem"
-  import type { Game } from "$lib/types"
+  import { gameNumberToType, type Game } from "$lib/types"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import type { EvmAddress } from "$lib"
   import Clock from "$lib/icons/Clock.svelte"
+  import { prices } from "$lib/prices.svelte"
+  import { goto } from "$app/navigation"
+  import DotLoader from "$lib/components/DotLoader.svelte"
 
   let { game, inviteTimeRemaining } = $props<{
     game: Game
     inviteTimeRemaining: number
   }>()
+
   let gameType = $derived(game?.type)
+  $inspect(gameType)
 
-  let joinGameLoading = false
+  let joinGameLoading = $state(false)
   const joinGame = async () => {
-    if (!game || !$mud.systemCalls) return
+    if (!mud.systemCalls) return
 
-    const pw =
-      new URLSearchParams(window.location.search).get("pw") ?? undefined
+    const pw = new URLSearchParams(window.location.search).get("pw")
 
     // TODO: Display proper error when password is incorrect
     joinGameLoading = true
     try {
-      await $mud.systemCalls.joinGame(
+      await mud.systemCalls.joinGame(
         game.id,
         Number(formatEther(game?.buyInAmount)),
-        pw,
+        pw ?? undefined,
       )
 
       fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
         method: "POST",
       })
+
+      goto(`/game/${game.type}/${entityToInt(game.id)}`)
     } finally {
       joinGameLoading = false
     }
   }
 
-  let buyIn = Number(formatEther(game?.buyInAmount ?? 0n))
-  let inviteTimeLeft = 0
-
+  let gameWagerEth = $state(Number(formatEther(game?.buyInAmount ?? 0n)))
+  let gameWagerUsd = $derived(gameWagerEth * prices.eth)
   let creatorAddress = shortenAddress(game.p1) as EvmAddress
-  let creatorName = $derived(
-    null && displayNameStore.get(creatorAddress, false),
-  )
+  let creatorName = $derived(displayNameStore.get(creatorAddress, false))
 </script>
 
 {#if game && gameType}
@@ -59,16 +63,18 @@
     {capitalized(gameType)} Game #{entityToInt(game.id)}
   </div>
 
+  <div class="text-base font-medium">
+    Solve the Wordle in the fewest attempts to win.
+  </div>
+
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 text-base">
       <img src={"/avatar1.png"} class="h-[28px] w-[28px]" alt="Avatar" />
 
       {#if creatorName}
         <div>
-          <div>
-            With <span class="font-bold">{creatorName}</span>
-          </div>
-          {creatorAddress}
+          With <span class="font-bold">{creatorName}</span>
+          <div class="leading-normal">{creatorAddress}</div>
         </div>
       {:else}
         With <span class="font-bold">{creatorAddress}</span>
@@ -77,14 +83,19 @@
 
     <div class="flex flex-col">
       <div class="self-end text-sm">Wager to match</div>
-      <div><span class="font-bold">$5.00</span> / .001 eth</div>
+      <div class="text-base leading-normal">
+        <span class="font-bold">{formatAsDollar(gameWagerUsd)}</span> / {formatSigFig(
+          gameWagerEth,
+          2,
+        )} eth
+      </div>
     </div>
   </div>
 
   <div class="flex items-center gap-2">
-    <div class="font-black">Puzzle Due in</div>
+    <div class="text-base font-black">Puzzle Due in</div>
     <div
-      class="bg-pb-yellow flex items-center gap-1 rounded-full px-2 py-1 font-bold"
+      class="bg-pb-yellow flex items-center gap-1 rounded-full px-2 py-1 text-sm font-bold"
     >
       <Clock />
       {formatTime(game.submissionWindow)}
@@ -94,13 +105,24 @@
   <hr />
 
   <div class="flex flex-col gap-2">
-    <button class="rounded bg-black p-2 font-bold text-white">
-      Join and Match Wager
+    <button
+      onclick={joinGame}
+      disabled={joinGameLoading}
+      class="rounded bg-black p-2 font-bold text-white"
+    >
+      {#if joinGameLoading}
+        <DotLoader class="fill-white" />
+      {:else}
+        Join and Match Wager
+      {/if}
     </button>
 
-    <button class="rounded border-2 border-black p-2 font-bold">
+    <a
+      href="/dashboard"
+      class="rounded border-2 border-black p-2 text-center font-bold"
+    >
       Cancel
-    </button>
+    </a>
 
     <div class="text-center text-sm">
       This action will deposit your wager into a smart contract. You can't
