@@ -1,27 +1,25 @@
 <script lang="ts">
-  import DotLoader from "$lib/components/DotLoader.svelte"
-  import { getGame, liveGameStatus } from "$lib/gameStores"
-  import { mud } from "$lib/mud/mudStore"
-  import { ethPrice } from "$lib/ethPrice"
+  import { mud } from "$lib/mudStore.svelte"
   import {
     capitalized,
+    entityToInt,
     formatAsDollar,
     formatSigFig,
     formatTime,
+    formatTimeAbbr,
     shortenAddress,
   } from "$lib/util"
-  import { type Entity } from "@latticexyz/recs"
-  import { createEventDispatcher, onMount } from "svelte"
-  import { slide } from "svelte/transition"
-  import { cubicInOut } from "svelte/easing"
   import { formatEther } from "viem"
+  import type { Game } from "$lib/types"
+  import { displayNameStore } from "$lib/displayNameStore.svelte"
+  import type { EvmAddress } from "$lib"
+  import Clock from "$lib/icons/Clock.svelte"
 
-  export let gameId: Entity
-
-  $: game = $getGame(gameId)
-  $: gameType = game?.type
-
-  const dispatch = createEventDispatcher()
+  let { game, inviteTimeRemaining } = $props<{
+    game: Game
+    inviteTimeRemaining: number
+  }>()
+  let gameType = $derived(game?.type)
 
   let joinGameLoading = false
   const joinGame = async () => {
@@ -34,12 +32,10 @@
     joinGameLoading = true
     try {
       await $mud.systemCalls.joinGame(
-        gameId,
+        game.id,
         Number(formatEther(game?.buyInAmount)),
         pw,
       )
-
-      dispatch("joined")
 
       fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
         method: "POST",
@@ -49,19 +45,78 @@
     }
   }
 
-  $: liveStatus = liveGameStatus(gameId)
-  $: buyIn = Number(formatEther(game?.buyInAmount ?? 0n))
+  let buyIn = Number(formatEther(game?.buyInAmount ?? 0n))
+  let inviteTimeLeft = 0
+
+  let creatorAddress = shortenAddress(game.p1) as EvmAddress
+  let creatorName = $derived(
+    null && displayNameStore.get(creatorAddress, false),
+  )
 </script>
 
 {#if game && gameType}
-  <div class="flex max-w-[450px] flex-col">
-    <div class="font-semibold">
-      Join <span class="text-lime-500">{capitalized(gameType)}</span> Game #{parseInt(
-        gameId,
-        16,
-      )}
+  <div class="font-bold">
+    {capitalized(gameType)} Game #{entityToInt(game.id)}
+  </div>
+
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <img src={"/avatar1.png"} class="h-[28px] w-[28px]" alt="Avatar" />
+
+      {#if creatorName}
+        <div>
+          <div>
+            With <span class="font-bold">{creatorName}</span>
+          </div>
+          {creatorAddress}
+        </div>
+      {:else}
+        With <span class="font-bold">{creatorAddress}</span>
+      {/if}
     </div>
 
+    <div class="flex flex-col">
+      <div class="self-end text-sm">Wager to match</div>
+      <div><span class="font-bold">$5.00</span> / .001 eth</div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <div class="font-black">Puzzle Due in</div>
+    <div
+      class="bg-pb-yellow flex items-center gap-1 rounded-full px-2 py-1 font-bold"
+    >
+      <Clock />
+      {formatTime(game.submissionWindow)}
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="flex flex-col gap-2">
+    <button class="rounded bg-black p-2 font-bold text-white">
+      Join and Match Wager
+    </button>
+
+    <button class="rounded border-2 border-black p-2 font-bold">
+      Cancel
+    </button>
+
+    <div class="text-center text-sm">
+      This action will deposit your wager into a smart contract. You can't
+      cancel or withdraw until the game is completed.
+    </div>
+
+    <div class="text-center text-sm">
+      Invite expires in {formatTime(inviteTimeRemaining)}
+    </div>
+
+    <div class="text-center text-sm">
+      A 2.5% protocol fee will be applied to the winner's payout.
+    </div>
+  </div>
+
+  <!-- <div class="flex max-w-[450px] flex-col">
     {#if $liveStatus?.inviteTimeLeft !== undefined}
       <div
         class="min-w-[270px] whitespace-nowrap italic text-neutral-400"
@@ -118,5 +173,5 @@
         </button>
       {/key}
     </div>
-  </div>
+  </div> -->
 {/if}

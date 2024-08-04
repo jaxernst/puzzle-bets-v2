@@ -9,7 +9,10 @@
   import Stars from "$lib/icons/Stars.svelte"
   import { gameIdToGame } from "$lib/gameQueries"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import JoinGame from "./JoinGame.svelte"
+  import { getComponentValue } from "@latticexyz/recs"
 
+  let { children } = $props()
   let showJoin = $state(false)
   let showNoUser = $state(false)
 
@@ -29,19 +32,26 @@
       : intToEntity($page.params.joinGameId, true)
   })
 
-  let game = $derived(
-    mud.synced && mud.components && gameId
-      ? gameIdToGame(gameId, mud.components!)
-      : null,
+  let game = $derived.by(() => {
+    if (!mud.synced || !mud.components || !gameId) return
+
+    const isGame =
+      getComponentValue(mud.components.PuzzleType, gameId) !== undefined
+    if (!isGame) return
+
+    return gameIdToGame(gameId, mud.components!)
+  })
+
+  let userIsEligible = $derived(
+    true || (user.address && user.address !== game?.p1),
   )
-  let userIsEligible = $derived(user.address && user.address !== game?.p1)
 
   let puzzleType = "wordle"
 
-  let inviteExpired = false
+  let inviteTimeRemaining = $state(-1)
   const checkInviteExpired = (inviteExpirationTime: bigint) => {
     const tDiff = Number(inviteExpirationTime) - systemTimestamp()
-    if (tDiff <= 0) inviteExpired = true
+    inviteTimeRemaining = Math.max(0, tDiff)
   }
 
   let intervalTimer: NodeJS.Timer
@@ -75,7 +85,7 @@
 
     <div class="font-bold">Sign in to Puzzle Bets to accept the invite</div>
 
-    <div class="text-base">
+    <div class="text-sm leading-tight">
       After signing in, you can view your invite, put down your wager, and play
       your opponent in a competitive {capitalized(puzzleType)} game.
     </div>
@@ -87,34 +97,44 @@
       class="rounded bg-black p-2 font-bold text-white">Continue</button
     >
   </Modal>
-{:else}
-  <Modal bind:show={showJoin}>
-    {#snippet header()}
-      <div class="flex gap-2">
-        <Stars />
-        Join Game
-      </div>
-    {/snippet}
-
-    {#if !mud.synced}
-      <div class="self-center">
-        <DotLoader class="fill-neutral-200" />
-      </div>
-      <div class="self-center text-xs text-neutral-400">
-        Syncing blockchain state...
-      </div>
-    {:else if !gameId || !game}
-      Game not found
-    {:else if !userIsEligible}
-      You are not elligible for this game
-    {:else if inviteExpired || game?.status === GameStatus.Inactive}
-      Game invite expired
-    {:else if game?.status === GameStatus.Active || game?.status === GameStatus.Complete}
-      Game already started!
-    {:else}
-      Join Game options
-    {/if}
-  </Modal>
 {/if}
 
-<slot />
+<Modal bind:show={showJoin} class="sm:w-[375px]">
+  {#snippet header()}
+    <div class="flex items-center gap-2">
+      <Stars />
+      Join Game
+    </div>
+  {/snippet}
+
+  {#if !mud.synced}
+    <div class="self-center">
+      <DotLoader class="fill-black" />
+    </div>
+    <div class="self-center text-sm font-bold">Syncing blockchain state...</div>
+  {:else if !gameId || !game}
+    {@render returnHomeMessage("Game not found")}
+  {:else if !userIsEligible}
+    {@render returnHomeMessage("You are not elligible for this game")}
+  {:else if inviteTimeRemaining === 0 || game?.status === GameStatus.Inactive}
+    {@render returnHomeMessage("Game invite expired")}
+  {:else if game?.status === GameStatus.Active || game?.status === GameStatus.Complete}
+    {@render returnHomeMessage("Game already started!")}
+  {:else}
+    <JoinGame {game} {inviteTimeRemaining} />
+  {/if}
+</Modal>
+
+{#snippet returnHomeMessage(msg: string)}
+  <div class="self-center font-bold">{msg}</div>
+  <hr />
+  {@render returnHomeButton()}
+{/snippet}
+
+{#snippet returnHomeButton()}
+  <a href="/" class="rounded bg-black p-2 text-center font-bold text-white">
+    Return Home
+  </a>
+{/snippet}
+
+{@render children()}
