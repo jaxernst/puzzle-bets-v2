@@ -25,7 +25,6 @@
   }>()
 
   let gameType = $derived(game?.type)
-  $inspect(gameType)
 
   let joinGameLoading = $state(false)
   const joinGame = async () => {
