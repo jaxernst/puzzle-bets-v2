@@ -177,7 +177,11 @@
       <div
         class="rounded-full bg-black px-2 py-2 text-sm font-semibold text-white"
       >
-        Invite expires {formatTimeAbbr(inviteTimeLeft)}
+        {#if inviteTimeLeft > 0}
+          Invite expires {formatTimeAbbr(inviteTimeLeft)}
+        {:else}
+          Invite Expired. Cancel Game to withdraw
+        {/if}
       </div>
 
       <div class="w-full max-w-[375px] text-base">

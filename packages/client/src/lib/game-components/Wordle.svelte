@@ -29,8 +29,6 @@
 
   let submittable = $derived(currentGuess?.length === 5)
 
-  $inspect(currentGuess, i)
-
   /**
    * A map of classnames for all letters that have been guessed,
    * used for styling the keyboard
