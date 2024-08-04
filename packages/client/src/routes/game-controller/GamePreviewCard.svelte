@@ -19,7 +19,7 @@
   let { game } = $props<{ game: PlayerGame }>()
 
   let status = $derived(game.status)
-  let turnStartTime = $derived(game?.myStartTime ?? 0)
+  let turnStartTime = $derived(Number(game?.myStartTime) ?? 0)
   let buyInEth = $derived(Number(formatEther(game.buyInAmount)))
   let buyInUsd = $derived(formatAsDollar(buyInEth * prices.eth))
 
