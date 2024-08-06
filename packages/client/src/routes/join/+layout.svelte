@@ -43,9 +43,7 @@
     return gameIdToGame(gameId, mud.components!)
   })
 
-  let userIsEligible = $derived(
-    true || (user.address && user.address !== game?.p1),
-  )
+  let userIsEligible = $derived(user.address && user.address !== game?.p1)
 
   let puzzleType = "wordle"
 
