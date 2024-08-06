@@ -1,6 +1,6 @@
 <script>
   import { page } from "$app/stores"
-  import { gameIdToGame, isGamePlayer } from "$lib/gameQueries"
+  import { gameIdToGame, isGamePlayer, playerFields } from "$lib/gameQueries"
   import { mud } from "$lib/mudStore.svelte"
   import { goto } from "$app/navigation"
   import { user } from "$lib/userStore.svelte"
@@ -28,7 +28,12 @@
       return
     }
 
-    return gameIdToGame(gameEntity, mud.components)
+    let game = gameIdToGame(gameEntity, mud.components)
+
+    return {
+      ...game,
+      ...playerFields(game, user.address),
+    }
   })
 </script>
 

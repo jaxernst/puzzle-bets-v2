@@ -147,6 +147,11 @@ export const gameIdToGame = (
     gameId,
   ).value
 
+  const playbackWindow = getComponentValueStrict(
+    mudComponents.PlaybackWindow,
+    gameId,
+  ).value
+
   const p1GameKey = encodeEntity(
     { gameId: "bytes32", player: "address" },
     { gameId: gameId as `0x${string}`, player: p1 as `0x${string}` },
@@ -199,6 +204,7 @@ export const gameIdToGame = (
     p2StartTime,
     submissionWindow,
     inviteExpiration,
+    playbackWindow,
     p1Rematch,
     p2Rematch,
     rematchCount,
@@ -206,17 +212,21 @@ export const gameIdToGame = (
 }
 
 export const playerFields = (game: Game, player: EvmAddress) => {
-  const isP1 = game.p1 === player.toLowerCase()
+  const isP1 = game.p1.toLowerCase() === player.toLowerCase()
 
   if (isP1) {
     return {
       myBalance: game.p1Balance,
       myStartTime: game.p1StartTime,
+      opponent: game.p2,
+      opponentStartTime: game.p2StartTime,
     }
   } else {
     return {
       myBalance: game.p2Balance,
       myStartTime: game.p2StartTime,
+      opponent: game.p1,
+      opponentStartTime: game.p1StartTime,
     }
   }
 }

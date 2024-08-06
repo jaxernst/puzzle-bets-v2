@@ -8,14 +8,20 @@
     entityToInt,
     formatAsDollar,
     formatSigFig,
+    formatTime,
     formatTimeAbbr,
-    intToEntity,
+    systemTimestamp,
     timeRemaining,
   } from "$lib/util"
   import { wordleGameStates } from "$lib/puzzleGameState.svelte"
   import { exportWordleBoard } from "../exportBoard"
   import { launchConfetti } from "$lib/components/Confetti.svelte"
-  import { GameStatus, type EvmAddress, type Game } from "$lib/types"
+  import {
+    GameStatus,
+    type EvmAddress,
+    type Game,
+    type PlayerGame,
+  } from "$lib/types"
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
   import DotLoader from "$lib/components/DotLoader.svelte"
@@ -32,13 +38,14 @@
 
   let { user, game } = $props<{
     user: EvmAddress
-    game: Game
+    game: PlayerGame
   }>()
 
-  let gameEntity = intToEntity($page.params.gameId)!
   let gameId = $derived(game.id)
-
   let userIsPlayer = $derived(user === game?.p1 || user === game?.p2)
+  let awaitingTurnStart = $derived(
+    game.status === GameStatus.Active && !game.myStartTime,
+  )
 
   $effect(() => {
     if (!userIsPlayer) history.back()
@@ -96,6 +103,40 @@
 
     return () => {
       if (inviteExpTimer) clearInterval(inviteExpTimer)
+    }
+  })
+
+  let playbackTimeLeft: number | undefined = $state()
+  let playbackTimer: NodeJS.Timer
+  $effect(() => {
+    if (awaitingTurnStart) {
+      playbackTimer = setInterval(() => {
+        playbackTimeLeft = Math.max(
+          Number(game.opponentStartTime) +
+            game.playbackWindow -
+            systemTimestamp(),
+          0,
+        )
+      }, 1000)
+    } else {
+      clearInterval(playbackTimer)
+    }
+
+    return () => {
+      clearInterval(playbackTimer)
+    }
+  })
+
+  let submissionTimeLeft: number | undefined = $state()
+  let submissionTimer: NodeJS.Timer
+  $effect(() => {
+    if (game.status === GameStatus.Active && !submissionTimer) {
+      submissionTimer = setInterval(() => {
+        submissionTimeLeft = Math.max(
+          Number(game.myStartTime) + game.submissionWindow - systemTimestamp(),
+          0,
+        )
+      })
     }
   })
 
@@ -207,6 +248,28 @@
           <p class="mt-2 text-red-600">{inviteCopyError}</p>
         {/if}
       </div>
+    </div>
+  {:else if awaitingTurnStart}
+    <div
+      class="mx-auto flex min-h-72 w-full flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
+    >
+      {#if playbackTimeLeft === 0}
+        You did not play your opponent back in time. Wager forfeited.
+      {:else if playbackTimeLeft}
+        <div class="font-bold">
+          Your opponent has joined and started their timer. Your have {formatTime(
+            playbackTimeLeft ?? 0,
+          )}
+          to start your turn.
+        </div>
+
+        <button
+          class="w-full max-w-[375px] rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
+          onclick={() => mud.systemCalls?.startTurn(gameId)}
+        >
+          Start Turn
+        </button>
+      {/if}
     </div>
   {:else if puzzleState}
     <Wordle

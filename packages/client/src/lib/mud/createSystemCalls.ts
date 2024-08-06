@@ -32,15 +32,6 @@ export function createSystemCalls({
       ? hashString(password)
       : padHex("0x0", { size: 32 })
 
-    console.log([
-      gameTypeToNumber[gameType],
-      submissionWindowMinutes * 60,
-      DEFAULT_PLAYBACK_WINDOW,
-      inviteExpirationTimestamp,
-      env.PUBLIC_PUZZLE_MASTER_ADDRESS as EvmAddress,
-      passwordHash,
-    ])
-
     const tx = await worldContract.write.v1__newGame(
       [
         gameTypeToNumber[gameType],
@@ -74,6 +65,14 @@ export function createSystemCalls({
         value: parseEther(wagerEth.toString()),
       })
     }
+
+    await waitForTransaction(tx)
+  }
+
+  const startTurn = async (gameId: Entity) => {
+    const tx = await worldContract.write.v1__startTurn([
+      gameId as `0x${string}`,
+    ])
 
     await waitForTransaction(tx)
   }
@@ -113,6 +112,7 @@ export function createSystemCalls({
   return {
     newGame,
     joinGame,
+    startTurn,
     submitSolution,
     claim,
     voteRematch,
