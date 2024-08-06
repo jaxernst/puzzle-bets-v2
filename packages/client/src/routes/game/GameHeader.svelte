@@ -1,12 +1,13 @@
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import { prices } from "$lib/prices.svelte"
-  import type { Game, PuzzleType } from "$lib/types"
+  import { GameStatus, type Game, type PuzzleType } from "$lib/types"
   import {
     capitalized,
     entityToInt,
     formatAsDollar,
     formatTimeAbbr,
+    systemTimestamp,
   } from "$lib/util"
   import { formatEther } from "viem"
 
@@ -16,7 +17,18 @@
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let timeLimit = game ? game.submissionWindow : 0
+  let submissionTimeLeft: number | undefined = $state(game.submissionWindow)
+  let submissionTimer: NodeJS.Timer
+  $effect(() => {
+    if (game.status === GameStatus.Active && !submissionTimer) {
+      submissionTimer = setInterval(() => {
+        submissionTimeLeft = Math.max(
+          Number(game.myStartTime) + game.submissionWindow - systemTimestamp(),
+          0,
+        )
+      })
+    }
+  })
 </script>
 
 <div class="flex w-full justify-center">
@@ -48,10 +60,10 @@
         {formatAsDollar(betAmountDollar)} Wager
       </div>
       <div class="rounded-full bg-black p-2 text-base text-white">
-        {#if timeLimit === 0}
+        {#if submissionTimeLeft === 0}
           No time limit
         {:else}
-          {formatTimeAbbr(timeLimit)}
+          {formatTimeAbbr(submissionTimeLeft)}
         {/if}
       </div>
     </div>
