@@ -107,7 +107,7 @@
     <button
       onclick={joinGame}
       disabled={joinGameLoading}
-      class="rounded bg-black p-2 font-bold text-white"
+      class="flex justify-center rounded bg-black p-2 font-bold text-white"
     >
       {#if joinGameLoading}
         <DotLoader class="fill-white" />
