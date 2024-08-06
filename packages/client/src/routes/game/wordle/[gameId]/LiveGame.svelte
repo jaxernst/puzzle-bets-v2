@@ -54,7 +54,7 @@
 
   $effect(() => {
     if (!puzzleState && user && opponent) {
-      wordleGameStates.getOrCreate(gameId, false, user)
+      wordleGameStates.getOrCreate(gameId, false, opponent)
     }
   })
 

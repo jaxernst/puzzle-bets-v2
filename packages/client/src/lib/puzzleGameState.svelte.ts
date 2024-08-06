@@ -1,7 +1,7 @@
 import { user } from "$lib/userStore.svelte"
 import { mud } from "./mudStore.svelte"
 import type { EvmAddress, PuzzleType } from "$lib/types"
-import { intToEntity } from "$lib/util"
+import { entityToInt } from "$lib/util"
 import { Map } from "svelte/reactivity"
 
 import { derived, get, writable, type Readable } from "svelte/store"
@@ -35,10 +35,9 @@ const emptyWordleState: WordleGameState = {
 export const wordleGameStates = (() => {
   const store = $state(new Map<GameId, WordleGameState>())
 
-  // Opponent is temporary, and will eventually be retrieved in the backend
   let getOrCreateLoading = false
   const getOrCreate = async (
-    gameId: GameId,
+    gameId: Entity,
     isDemo: boolean,
     opponent?: EvmAddress,
   ) => {
@@ -49,7 +48,7 @@ export const wordleGameStates = (() => {
     try {
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
-        body: JSON.stringify({ gameId, opponent, isDemo }),
+        body: JSON.stringify({ gameId: entityToInt(gameId), opponent, isDemo }),
       })
 
       if (!res.ok) return
@@ -62,7 +61,7 @@ export const wordleGameStates = (() => {
   }
 
   let guessEntering = false
-  const enterGuess = async (gameId: GameId, guess: string, isDemo: boolean) => {
+  const enterGuess = async (gameId: Entity, guess: string, isDemo: boolean) => {
     if (guessEntering) return
 
     guessEntering = true
@@ -70,8 +69,8 @@ export const wordleGameStates = (() => {
       const res = await fetch("/api/wordle/submit-guess", {
         method: "POST",
         body: JSON.stringify({
+          gameId: entityToInt(gameId),
           guess,
-          gameId,
           isDemo,
         }),
       })
@@ -91,12 +90,10 @@ export const wordleGameStates = (() => {
   }
 
   let resetLoading = false
-  const reset = async (gameId: GameId, isDemo: boolean) => {
+  const reset = async (gameId: Entity, isDemo: boolean) => {
     if (resetLoading || !mud.components) return
 
-    const game = isDemo
-      ? undefined
-      : gameIdToGame(intToEntity(gameId, true), mud.components)
+    const game = isDemo ? undefined : gameIdToGame(gameId, mud.components)
 
     const opponent = game
       ? user.address === game.p1
@@ -122,7 +119,7 @@ export const wordleGameStates = (() => {
       const res = await fetch("/api/wordle/reset-game", {
         method: "POST",
         body: JSON.stringify({
-          gameId,
+          gameId: entityToInt(gameId),
           otherPlayer: opponent,
           isDemo,
         }),

@@ -26,7 +26,7 @@
 
   $effect(() => {
     if (autoconnect) {
-      // walletStore.autoConnect()
+      walletStore.autoConnect()
     }
   })
 

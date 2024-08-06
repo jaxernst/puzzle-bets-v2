@@ -30,7 +30,7 @@ export const getOrCreateLiveGame = async (
   user: string,
   opponent: string,
 ) => {
-  // One call to get get -> returns the game state if it exists
+  // One call to get -> returns the game state if it exists
   let gameState = await supabaseGameStore.getGame("wordle", gameId, user)
   if (!gameState) {
     await supabaseGameStore.createDuelGame(
@@ -42,6 +42,7 @@ export const getOrCreateLiveGame = async (
     )
 
     gameState = await supabaseGameStore.getGame("wordle", gameId, user)
+
     if (!gameState) throw new Error("Game could not be created")
   }
 

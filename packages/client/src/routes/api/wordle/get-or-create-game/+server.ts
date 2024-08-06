@@ -8,9 +8,6 @@ import { verifyGameParticipants } from "$lib/server/onchainChecks"
 export const POST = async ({ request, cookies, locals }): Promise<Response> => {
   const { gameId, opponent, isDemo } = (await request.json()) as {
     gameId: string
-    // Temporarily get the opponent from the client as a param.
-    // TODO: Query the smart contracts to get opponent for security (client can't
-    // be trusted to provided the correct opponent)
     isDemo?: boolean
     opponent?: EvmAddress
   }
@@ -20,7 +17,7 @@ export const POST = async ({ request, cookies, locals }): Promise<Response> => {
   const user = locals.user
   if (!user && !isDemo) return new Response("No user", { status: 401 })
 
-  // For non-demo games, ensure that the onchain gameId matches
+  // For non-demo games, ensure that the gameId matches with the opponent and user address (onchain)
   if (!isDemo) {
     const inputParamsValid = await verifyGameParticipants(
       Number(gameId),
