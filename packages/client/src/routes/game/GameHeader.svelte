@@ -1,32 +1,41 @@
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import { prices } from "$lib/prices.svelte"
-  import { GameStatus, type Game, type PuzzleType } from "$lib/types"
+  import { GameStatus, type PlayerGame, type PuzzleType } from "$lib/types"
   import {
     capitalized,
     entityToInt,
     formatAsDollar,
     formatTimeAbbr,
-    systemTimestamp,
+    timeRemaining,
   } from "$lib/util"
   import { formatEther } from "viem"
 
-  let { game, puzzle } = $props<{ game?: Game; puzzle: PuzzleType }>()
+  let { game, puzzle } = $props<{ game?: PlayerGame; puzzle: PuzzleType }>()
 
   let betAmountDollar = game
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let submissionTimeLeft: number | undefined = $state(game.submissionWindow)
+  let submissionTimeLeft: number = $state(game.submissionWindow)
   let submissionTimer: NodeJS.Timer
   $effect(() => {
-    if (game.status === GameStatus.Active && !submissionTimer) {
+    if (
+      game.status === GameStatus.Active &&
+      game.myStartTime &&
+      !submissionTimer
+    ) {
       submissionTimer = setInterval(() => {
-        submissionTimeLeft = Math.max(
-          Number(game.myStartTime) + game.submissionWindow - systemTimestamp(),
-          0,
+        submissionTimeLeft = timeRemaining(
+          Number(game.myStartTime) + game.submissionWindow,
         )
-      })
+      }, 1000)
+    } else if (submissionTimer) {
+      clearInterval(submissionTimer)
+    }
+
+    return () => {
+      clearInterval(submissionTimer)
     }
   })
 </script>
