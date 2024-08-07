@@ -41,9 +41,9 @@
 </script>
 
 <div class="flex w-full justify-center">
-  <div class="flex max-w-[1000px] flex-grow justify-between">
+  <div class="flex max-w-[1000px] flex-grow items-center gap-4">
     <button
-      class="flex w-full items-center gap-4 text-base font-semibold"
+      class="flex items-center text-base font-semibold"
       onclick={() => window.history.back()}
     >
       <div class="p-.5 bg-pb-beige-1 rounded-md">
@@ -52,7 +52,11 @@
           direction={"left"}
         />
       </div>
+    </button>
 
+    <div
+      class="flex grow items-center justify-between gap-1 md:flex-col md:items-start"
+    >
       {#if game}
         <div class="font-bold md:text-xl">
           {capitalized(puzzle)} | #{entityToInt(game.id)}
@@ -62,19 +66,28 @@
           Practice {capitalized(puzzle)}
         </div>
       {/if}
-    </button>
 
-    <div class="flex items-center gap-1 whitespace-nowrap">
-      <div class="rounded-full bg-black p-2 text-base text-white">
-        {formatAsDollar(betAmountDollar)} Wager
+      <!-- Pill labels -->
+      <div
+        class="flex grow items-center justify-end gap-1 whitespace-nowrap md:justify-start"
+      >
+        <div class="rounded-full bg-black p-2 text-base text-white">
+          {formatAsDollar(betAmountDollar)} Wager
+        </div>
+        <div class="rounded-full bg-black p-2 text-base text-white">
+          {#if submissionTimeLeft === 0}
+            No time limit
+          {:else}
+            {formatTimeAbbr(submissionTimeLeft)}
+          {/if}
+        </div>
       </div>
-      <div class="rounded-full bg-black p-2 text-base text-white">
-        {#if submissionTimeLeft === 0}
-          No time limit
-        {:else}
-          {formatTimeAbbr(submissionTimeLeft)}
-        {/if}
-      </div>
+    </div>
+
+    <div class="hidden grow justify-end md:flex">
+      <button class="rounded bg-black px-6 py-2 font-bold text-white"
+        >Submit</button
+      >
     </div>
   </div>
 </div>
