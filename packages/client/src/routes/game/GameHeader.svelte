@@ -17,9 +17,11 @@
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let submissionTimeLeft: number = $state(game.submissionWindow)
+  let submissionTimeLeft: number | undefined = $state(game?.submissionWindow)
   let submissionTimer: NodeJS.Timer
   $effect(() => {
+    if (!game) return
+
     if (
       game.status === GameStatus.Active &&
       game.myStartTime &&
@@ -75,8 +77,10 @@
           {formatAsDollar(betAmountDollar)} Wager
         </div>
         <div class="rounded-full bg-black p-2 text-base text-white">
-          {#if submissionTimeLeft === 0}
+          {#if submissionTimeLeft === undefined}
             No time limit
+          {:else if submissionTimeLeft === 0}
+            Out of time
           {:else}
             {formatTimeAbbr(submissionTimeLeft)}
           {/if}
