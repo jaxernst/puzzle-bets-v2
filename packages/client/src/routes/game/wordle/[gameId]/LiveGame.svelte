@@ -127,19 +127,6 @@
     }
   })
 
-  let submissionTimeLeft: number | undefined = $state()
-  let submissionTimer: NodeJS.Timer
-  $effect(() => {
-    if (game.status === GameStatus.Active && !submissionTimer) {
-      submissionTimer = setInterval(() => {
-        submissionTimeLeft = Math.max(
-          Number(game.myStartTime) + game.submissionWindow - systemTimestamp(),
-          0,
-        )
-      })
-    }
-  })
-
   let expired = false
 
   let copied = $state(false)
