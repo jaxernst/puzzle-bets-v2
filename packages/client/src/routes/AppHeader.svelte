@@ -69,11 +69,6 @@
       />
 
       <div class="flex flex-col gap-3 text-sm">
-        <div>
-          <div class="mb-1 text-sm text-[#3f3f3f]">Your Wallet Address</div>
-          <div class="font-bold">{user.address}</div>
-        </div>
-
         {#if user.displayName}
           <div>
             <div class="mb-1 text-sm text-[#3f3f3f]">Your Display Name</div>
@@ -84,6 +79,11 @@
             Set Display Name
           </button>
         {/if}
+
+        <div>
+          <div class="mb-1 text-sm text-[#3f3f3f]">Your Wallet Address</div>
+          <div class="font-bold">{user.address}</div>
+        </div>
       </div>
     </div>
   </div>
