@@ -1,5 +1,6 @@
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import { gameTimers } from "$lib/gameTimers.svelte"
   import { prices } from "$lib/prices.svelte"
   import { GameStatus, type PlayerGame, type PuzzleType } from "$lib/types"
   import {
@@ -10,6 +11,8 @@
     timeRemaining,
   } from "$lib/util"
   import { formatEther } from "viem"
+  import GameSubmit from "./GameSubmit.svelte"
+  import { user } from "$lib/userStore.svelte"
 
   let { game, puzzle } = $props<{ game?: PlayerGame; puzzle: PuzzleType }>()
 
@@ -17,29 +20,8 @@
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let submissionTimeLeft: number | undefined = $state(game?.submissionWindow)
-  let submissionTimer: NodeJS.Timer
-  $effect(() => {
-    if (!game) return
-
-    if (
-      game.status === GameStatus.Active &&
-      game.myStartTime &&
-      !submissionTimer
-    ) {
-      submissionTimer = setInterval(() => {
-        submissionTimeLeft = timeRemaining(
-          Number(game.myStartTime) + game.submissionWindow,
-        )
-      }, 1000)
-    } else if (submissionTimer) {
-      clearInterval(submissionTimer)
-    }
-
-    return () => {
-      clearInterval(submissionTimer)
-    }
-  })
+  let timers = gameTimers(game)
+  let submissionTimeLeft = $derived(timers.submissionTimeLeft)
 </script>
 
 <div class="flex w-full justify-center">
@@ -89,9 +71,16 @@
     </div>
 
     <div class="hidden grow justify-end md:flex">
-      <button class="rounded bg-black px-6 py-2 font-bold text-white"
-        >Submit</button
-      >
+      {#if user.address && game}
+        <GameSubmit {game} user={user.address} />
+      {:else}
+        <button
+          class="disabled:opacity-4 rounded bg-black px-6 py-2 font-black text-white opacity-70"
+          disabled={true}
+        >
+          Submit Puzzle
+        </button>
+      {/if}
     </div>
   </div>
 </div>

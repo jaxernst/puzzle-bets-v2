@@ -35,6 +35,7 @@
   import { goto } from "$app/navigation"
   import { gameInviteUrls } from "$lib/inviteUrls"
   import type { Entity } from "@latticexyz/recs"
+  import GameSubmit from "../../GameSubmit.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -77,6 +78,7 @@
 
   let enterGuess = $derived(async (guess: string) => {
     await wordleGameStates.enterGuess(gameId, guess, false)
+
     const puzzleState = wordleGameStates.get(gameId)
     if (puzzleState?.solved) {
       launchConfetti()
@@ -189,7 +191,7 @@
 </script>
 
 <div
-  class="mx-auto flex w-full max-w-[1000px] flex-col items-center gap-4 px-4"
+  class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 px-4"
 >
   <GameHeader {game} puzzle="wordle" />
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
@@ -305,6 +307,10 @@
       <DotLoader class="h-10 w-10 fill-black" />
     </div>
   {/if}
+
+  <div class="flex w-full grow items-end pb-1 md:hidden">
+    <GameSubmit {game} {user} class="w-full" />
+  </div>
 </div>
 
 <Modal bind:show={showCancelGame} class="sm:w-[375px]">
