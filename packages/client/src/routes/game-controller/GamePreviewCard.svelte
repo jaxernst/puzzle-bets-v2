@@ -75,6 +75,8 @@
         <Clock class="h-[14px] w-[14px]" />
         {formatTimeAbbr(timeRemaining)}
       </div>
+    {:else if timeRemaining === 0}
+      Out of time
     {:else if !turnStartTime}
       Opponent Started
     {/if}
@@ -93,10 +95,10 @@
         View Game Page
       {:else if status === GameStatus.Active && !turnStartTime}
         Start Turn
-      {:else if status === GameStatus.Active && turnStartTime}
+      {:else if status === GameStatus.Active && turnStartTime && (timeRemaining ?? 0) > 0}
         Rejoin
-      {:else if status === GameStatus.Complete}
-        ShowResults
+      {:else if status === GameStatus.Complete || timeRemaining === 0}
+        Show Results
       {/if}
     </a>
   {/if}
