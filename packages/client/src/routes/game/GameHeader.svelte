@@ -20,7 +20,8 @@
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let timers = gameTimers(game)
+  let timers = $derived(gameTimers(game))
+
   let submissionTimeLeft = $derived(timers.submissionTimeLeft)
 </script>
 

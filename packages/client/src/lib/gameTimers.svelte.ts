@@ -3,9 +3,9 @@ import { GameStatus } from "./types"
 import { timeRemaining } from "./util"
 
 export function gameTimers(game: PlayerGame) {
-  let submissionTimeLeft = $state(game?.submissionWindow)
-
+  let submissionTimeLeft = $state(game.submissionWindow)
   let submissionTimer: NodeJS.Timer
+
   $effect(() => {
     if (!game) return
 
