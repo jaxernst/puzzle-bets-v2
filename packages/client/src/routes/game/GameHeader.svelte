@@ -11,8 +11,8 @@
     timeRemaining,
   } from "$lib/util"
   import { formatEther } from "viem"
-  import GameSubmit from "./GameSubmit.svelte"
   import { user } from "$lib/userStore.svelte"
+  import SubmitAndViewResult from "./SubmitAndViewResult.svelte"
 
   let { game, puzzle } = $props<{ game?: PlayerGame; puzzle: PuzzleType }>()
 
@@ -73,7 +73,7 @@
 
     <div class="hidden grow justify-end md:flex">
       {#if user.address && game}
-        <GameSubmit {game} user={user.address} />
+        <SubmitAndViewResult {game} user={user.address} />
       {:else}
         <button
           class="disabled:opacity-4 rounded bg-black px-6 py-2 font-black text-white opacity-70"

@@ -1,6 +1,5 @@
 <script lang="ts">
   import Wordle from "$lib/game-components/Wordle.svelte"
-  import { page } from "$app/stores"
   import { gameIdToGame, getPlayerSolutionState } from "$lib/gameQueries"
   import { user as userStore } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
@@ -35,7 +34,7 @@
   import { goto } from "$app/navigation"
   import { gameInviteUrls } from "$lib/inviteUrls"
   import type { Entity } from "@latticexyz/recs"
-  import GameSubmit from "../../GameSubmit.svelte"
+    import SubmitAndViewResult from "../../SubmitAndViewResult.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -309,7 +308,7 @@
   {/if}
 
   <div class="flex w-full grow items-end pb-1 md:hidden">
-    <GameSubmit {game} {user} class="w-full" />
+    <SubmitAndViewResult {game} {user} class="w-full" />
   </div>
 </div>
 

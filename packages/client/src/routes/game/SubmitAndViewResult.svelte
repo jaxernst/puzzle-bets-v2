@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { EvmAddress } from "$lib"
+  import Modal from "$lib/components/Modal.svelte"
   import { getPlayerSolutionState } from "$lib/gameQueries"
   import { gameTimers } from "$lib/gameTimers.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import { GameStatus, type PlayerGame } from "$lib/types"
+  import { capitalized, entityToInt } from "$lib/util"
   import { twMerge } from "tailwind-merge"
 
   let {
@@ -62,6 +64,14 @@
       !submitted &&
       !submitting,
   )
+
+  let canViewResults = $derived(
+    submitted ||
+      submissionTimeLeft === 0 ||
+      game.status === GameStatus.Complete,
+  )
+
+  let showResults = $state(false)
 </script>
 
 {#if submitError}
@@ -70,13 +80,33 @@
   </div>
 {/if}
 
-<button
-  class={twMerge(
-    "rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70",
-    className,
-  )}
-  disabled={!canSubmit}
-  onclick={verifyAndSubmitSolution}
->
-  Submit
-</button>
+{#if !canViewResults}
+  <button
+    class={twMerge(
+      "rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70",
+      className,
+    )}
+    disabled={!canSubmit}
+    onclick={verifyAndSubmitSolution}
+  >
+    Submit
+  </button>
+{:else}
+  <button
+    class={twMerge(
+      "rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70",
+      className,
+    )}
+    onclick={() => (showResults = true)}
+  >
+    View Results
+  </button>
+{/if}
+
+<Modal bind:show={showResults}>
+  {#snippet header()}
+    Results for {capitalized(game.type)} Game #{entityToInt(game.id)}
+  {/snippet}
+
+  <div class="font-black leading-none">Game not over yet!</div>
+</Modal>
