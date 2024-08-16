@@ -6,6 +6,12 @@ export function gameTimers(game: PlayerGame) {
   let submissionTimeLeft = $state(game.submissionWindow)
   let submissionTimer: NodeJS.Timer
 
+  const checkSubmissionTimeLeft = () => {
+    submissionTimeLeft = timeRemaining(
+      Number(game.myStartTime) + game.submissionWindow,
+    )
+  }
+
   $effect(() => {
     if (!game) return
 
@@ -14,11 +20,8 @@ export function gameTimers(game: PlayerGame) {
       game.myStartTime &&
       !submissionTimer
     ) {
-      submissionTimer = setInterval(() => {
-        submissionTimeLeft = timeRemaining(
-          Number(game.myStartTime) + game.submissionWindow,
-        )
-      }, 1000)
+      checkSubmissionTimeLeft()
+      submissionTimer = setInterval(checkSubmissionTimeLeft, 1000)
     } else if (submissionTimer) {
       clearInterval(submissionTimer)
     }

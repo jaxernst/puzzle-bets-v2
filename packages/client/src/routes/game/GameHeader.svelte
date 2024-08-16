@@ -2,13 +2,12 @@
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import { gameTimers } from "$lib/gameTimers.svelte"
   import { prices } from "$lib/prices.svelte"
-  import { GameStatus, type PlayerGame, type PuzzleType } from "$lib/types"
+  import {  type PlayerGame, type PuzzleType } from "$lib/types"
   import {
     capitalized,
     entityToInt,
     formatAsDollar,
     formatTimeAbbr,
-    timeRemaining,
   } from "$lib/util"
   import { formatEther } from "viem"
   import { user } from "$lib/userStore.svelte"
