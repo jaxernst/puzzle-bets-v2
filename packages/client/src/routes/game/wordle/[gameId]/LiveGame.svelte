@@ -34,7 +34,7 @@
   import { goto } from "$app/navigation"
   import { gameInviteUrls } from "$lib/inviteUrls"
   import type { Entity } from "@latticexyz/recs"
-    import SubmitAndViewResult from "../../SubmitAndViewResult.svelte"
+  import SubmitAndViewResult from "../../SubmitAndViewResult.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -276,9 +276,9 @@
     {/if}
 
     {#if puzzleState.solved || puzzleState.lost}
-      <div class="flex w-full justify-center pt-2">
+      <div class="flex w-full justify-center">
         <button
-          class="bg-pb-yellow rounded-lg px-2 py-1 font-semibold text-white"
+          class="bg-pb-yellow rounded-md border-2 border-black px-2 py-1 font-semibold text-black"
           onclick={() => copyBoard(puzzleState?.answers ?? [])}
         >
           {#if copied}

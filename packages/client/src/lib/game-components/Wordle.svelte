@@ -175,22 +175,9 @@
   <div>
     <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
       {#if won}
-        <p class="text-neutral-500">You solved it!</p>
+        <p class="text-base font-bold text-black">You solved it!</p>
       {:else if answers.length >= 6}
-        <p class="text-neutral-500">the answer was "{answer}"!</p>
-        <!--
-      <button
-        data-key="enter"
-        class="restart selected"
-        on:click={(e) => {
-          e.preventDefault();
-          dispatch("restart");
-        }}
-      >
-        {won
-          ? "you solved the puzzle. Wait for the deadline to view results :)"
-          : `game over :(`} play again?
-      </button>-->
+        <p class="text-blac text-base font-bold">the answer was "{answer}"!</p>
       {:else if !paused}
         <div class="keyboard">
           <button
