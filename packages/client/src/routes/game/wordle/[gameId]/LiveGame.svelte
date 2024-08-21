@@ -270,7 +270,7 @@
     />
 
     {#if puzzleState.solved && !submitted && !expired}
-      <div class="w-full text-center text-neutral-500">
+      <div class="w-full text-center">
         Submit your solution before the deadline
       </div>
     {/if}
