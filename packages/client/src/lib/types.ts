@@ -14,6 +14,12 @@ export type Game = {
   p2Balance?: bigint
   p1StartTime?: bigint
   p2StartTime?: bigint
+  p1Submitted: boolean
+  p2Submitted: boolean
+  p1Score?: number
+  p2Score?: number
+  p1Rematch?: boolean
+  p2Rematch?: boolean
   submissionWindow: number
   inviteExpiration: bigint
 }

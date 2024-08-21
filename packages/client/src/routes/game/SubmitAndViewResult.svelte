@@ -1,16 +1,26 @@
 <script lang="ts">
   import type { EvmAddress } from "$lib"
+  import Avatar1 from "$lib/assets/Avatar1.svelte"
+  import Avatar2 from "$lib/assets/Avatar2.svelte"
   import Modal from "$lib/components/Modal.svelte"
+  import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { getPlayerSolutionState } from "$lib/gameQueries"
   import { gameTimers } from "$lib/gameTimers.svelte"
   import { mud } from "$lib/mudStore.svelte"
+  import type { WordleGameState } from "$lib/puzzleGameState.svelte"
   import { GameStatus, type PlayerGame } from "$lib/types"
-  import { capitalized, entityToInt } from "$lib/util"
+  import {
+    capitalized,
+    entityToInt,
+    formatTime,
+    timeRemaining,
+  } from "$lib/util"
   import { twMerge } from "tailwind-merge"
 
   let {
     game,
     user,
+    puzzleState,
     class: className,
   } = $props<{
     user: EvmAddress
@@ -45,6 +55,7 @@
       const { won, score, signature } = await res.json()
       if (!won) {
         submitError = "Puzzle not solved!"
+        await mud.systemCalls.submitSolution(game.id, 0, "0x")
       } else {
         await mud.systemCalls.submitSolution(game.id, score, signature)
       }
@@ -72,6 +83,56 @@
   )
 
   let showResults = $state(false)
+
+  /**
+   Results modal:
+    - Should show pot in usd and eth
+    - Show your score (how many tries)
+    - Show your opponent's score and status (whether they have started, 
+      how much time they have left to play back)
+    - Button to rematch if game was tied
+    - Button to withdraw if game was tied or you won
+  */
+  let opponentName = $derived(displayNameStore.get(game.opponent))
+
+  let opponentPlaybackTime = $state(0)
+  let playbackTimer: NodeJS.Timer
+  $effect(() => {
+    if (game.myStartTime && !game.opponentStartTime) {
+      playbackTimer = setInterval(() => {
+        const due = Number(game.myStartTime) + game.playbackWindow
+        opponentPlaybackTime = timeRemaining(due)
+      }, 1000)
+    }
+
+    if (game.opponentStartTime) clearInterval(playbackTimer)
+    return () => clearInterval(playbackTimer)
+  })
+
+  let opponentSubmissionTimeRemaining = $state(-1)
+  let opponentSubmissionTimer: NodeJS.Timer
+  $effect(() => {
+    if (game.opponentStartTime) {
+      opponentSubmissionTimer = setInterval(() => {
+        const due = Number(game.opponentStartTime) + game.submissionWindow
+        opponentSubmissionTimeRemaining = timeRemaining(due)
+      })
+    }
+
+    if (game.opponentSubmitted) clearInterval(opponentSubmissionTimer)
+
+    return () => {
+      clearTimeout(opponentSubmissionTimer)
+    }
+  })
+
+  let waitingForOpponentPlayback = $derived(
+    game.myStartTime && !game.opponentStartTime,
+  )
+
+  // Still need:
+  // gameOver = (over when both have submitted or submissionWindows have passed)
+  // gaemOutcome = (tie win or lose - Only need to show once gameOver is true)
 </script>
 
 {#if submitError}
@@ -108,5 +169,49 @@
     Results for {capitalized(game.type)} Game #{entityToInt(game.id)}
   {/snippet}
 
-  <div class="font-black leading-none">Game not over yet!</div>
+  <div>
+    <div class="flex items-center gap-1">
+      <Avatar1 />
+      You
+    </div>
+
+    Score: {game.myScore}
+    <div>Rematch Vote: {Boolean(game.myRematchVote)}</div>
+  </div>
+
+  <div>
+    <div class="flex items-center gap-1">
+      <Avatar2 />
+      {opponentName}
+    </div>
+
+    {#if game.opponentSubmitted}
+      Score: {game.opponentScore}
+    {:else if waitingForOpponentPlayback}
+      <p class="pt-1">
+        Has {formatTime(opponentPlaybackTime)} to start their turn...
+      </p>
+    {:else if opponentSubmissionTimeRemaining > 0}
+      <p>
+        Opponent playing with {formatTime(opponentSubmissionTimeRemaining)} left
+        to submit
+      </p>
+    {/if}
+
+    <div>Rematch Vote: {Boolean(game.myRematchVote)}</div>
+  </div>
+
+  <hr />
+
+  <button
+    class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
+  >
+    Withdraw
+  </button>
+
+  <button
+    class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
+  >
+    Vote Rematch
+  </button>
 </Modal>

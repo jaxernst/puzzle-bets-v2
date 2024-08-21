@@ -178,6 +178,19 @@ export const gameIdToGame = (
     (p2GameKey && getComponentValue(mudComponents.Balance, p2GameKey)?.value) ??
     0n
 
+  const p1Score = getComponentValue(mudComponents.Score, p1GameKey)?.value ?? 0
+
+  const p2Score =
+    (p2GameKey && getComponentValue(mudComponents.Score, p2GameKey)?.value) ?? 0
+
+  const p1Submitted =
+    getComponentValue(mudComponents.Submitted, p1GameKey)?.value ?? false
+
+  const p2Submitted =
+    (p2GameKey &&
+      getComponentValue(mudComponents.Submitted, p2GameKey)?.value) ??
+    false
+
   const p1Rematch = getComponentValue(
     mudComponents.VoteRematch,
     p1GameKey,
@@ -200,6 +213,10 @@ export const gameIdToGame = (
     p2Balance,
     p1StartTime,
     p2StartTime,
+    p1Score,
+    p2Score,
+    p1Submitted,
+    p2Submitted,
     submissionWindow,
     inviteExpiration,
     playbackWindow,
@@ -216,15 +233,27 @@ export const playerFields = (game: Game, player: EvmAddress) => {
     return {
       myBalance: game.p1Balance,
       myStartTime: game.p1StartTime,
+      myScore: game.p1Score,
+      myRematchVote: game.p1Rematch,
+      iSubmitted: game.p1Submitted,
       opponent: game.p2,
       opponentStartTime: game.p2StartTime,
+      opponentScore: game.p2Score,
+      opponentRematchVote: game.p2Rematch,
+      opponentSubmitted: game.p2Submitted,
     }
   } else {
     return {
       myBalance: game.p2Balance,
       myStartTime: game.p2StartTime,
+      myScore: game.p2Score,
+      myRematchVote: game.p2Rematch,
+      iSubmitted: game.p2Submitted,
       opponent: game.p1,
       opponentStartTime: game.p1StartTime,
+      opponentScore: game.p1Score,
+      opponentRematchVote: game.p1Rematch,
+      opponentSubmitted: game.p1Submitted,
     }
   }
 }
