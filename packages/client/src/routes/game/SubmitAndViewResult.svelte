@@ -28,11 +28,13 @@
     class?: string
   }>()
 
-  let timers = gameTimers(game)
-  let submissionTimeLeft = $derived(timers.submissionTimeLeft)
+  let showResults = $state(false)
+
   let submitted = $derived(
     Boolean(getPlayerSolutionState(user, game.id, mud).submitted),
   )
+
+  let opponentName = $derived(displayNameStore.get(game.opponent))
 
   let submitting = $state(false)
   let submitError: null | string = $state(null)
@@ -68,32 +70,9 @@
     }
   }
 
-  let canSubmit = $derived(
-    game.status === GameStatus.Active &&
-      game.myStartTime &&
-      submissionTimeLeft &&
-      !submitted &&
-      !submitting,
-  )
-
-  let canViewResults = $derived(
-    submitted ||
-      submissionTimeLeft === 0 ||
-      game.status === GameStatus.Complete,
-  )
-
-  let showResults = $state(false)
-
-  /**
-   Results modal:
-    - Should show pot in usd and eth
-    - Show your score (how many tries)
-    - Show your opponent's score and status (whether they have started, 
-      how much time they have left to play back)
-    - Button to rematch if game was tied
-    - Button to withdraw if game was tied or you won
-  */
-  let opponentName = $derived(displayNameStore.get(game.opponent))
+  // Timers
+  let timers = gameTimers(game)
+  let mySubmissionTimeLeft = $derived(timers.submissionTimeLeft)
 
   let opponentPlaybackTime = $state(0)
   let playbackTimer: NodeJS.Timer
@@ -126,13 +105,41 @@
     }
   })
 
+  let canSubmit = $derived(
+    game.status === GameStatus.Active &&
+      game.myStartTime &&
+      mySubmissionTimeLeft &&
+      !submitted &&
+      !submitting,
+  )
+
+  let canViewResults = $derived(
+    submitted ||
+      mySubmissionTimeLeft === 0 ||
+      game.status === GameStatus.Complete,
+  )
+
   let waitingForOpponentPlayback = $derived(
     game.myStartTime && !game.opponentStartTime,
   )
 
-  // Still need:
-  // gameOver = (over when both have submitted or submissionWindows have passed)
-  // gaemOutcome = (tie win or lose - Only need to show once gameOver is true)
+  let gameOver = $derived.by(() => {
+    if (game.iSubmitted && game.opponentSubmitted) return true
+    if (mySubmissionTimeLeft === 0 && opponentSubmissionTimeRemaining === 0) {
+      return true
+    }
+
+    return false
+  })
+
+  let gameOutcome = $derived.by(() => {
+    if (!gameOver) return null
+    if (game.myScore > game.opponentScore) return "win"
+    if (game.myScore < game.opponentScore) return "lose"
+    return "tie"
+  })
+
+  $inspect(gameOutcome, game)
 </script>
 
 {#if submitError}
@@ -169,6 +176,18 @@
     Results for {capitalized(game.type)} Game #{entityToInt(game.id)}
   {/snippet}
 
+  <div class="font-bold">
+    {#if !gameOver}
+      Game still active! Come back later to see final results and withdrawl
+    {:else if gameOutcome === "win"}
+      Congrats you won!
+    {:else if gameOutcome === "tie"}
+      Tie game! You can withdraw your portion or vote to rematch
+    {:else}
+      You lose :( Better luck next time!
+    {/if}
+  </div>
+
   <div>
     <div class="flex items-center gap-1">
       <Avatar1 />
@@ -203,15 +222,19 @@
 
   <hr />
 
-  <button
-    class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-  >
-    Withdraw
-  </button>
+  <div class="flex flex-col gap-2">
+    <button
+      class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+      disabled={!gameOutcome || gameOutcome === "lose"}
+    >
+      Withdraw
+    </button>
 
-  <button
-    class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-  >
-    Vote Rematch
-  </button>
+    <button
+      class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+      disabled={!gameOutcome || gameOutcome !== "tie"}
+    >
+      Vote Rematch
+    </button>
+  </div>
 </Modal>
