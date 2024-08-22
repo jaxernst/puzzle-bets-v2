@@ -2,6 +2,7 @@
   import type { EvmAddress } from "$lib"
   import Avatar1 from "$lib/assets/Avatar1.svelte"
   import Avatar2 from "$lib/assets/Avatar2.svelte"
+  import DotLoader from "$lib/components/DotLoader.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { getPlayerSolutionState } from "$lib/gameQueries"
@@ -16,6 +17,7 @@
     timeRemaining,
   } from "$lib/util"
   import { twMerge } from "tailwind-merge"
+  import { formatEther } from "viem"
 
   let {
     game,
@@ -35,40 +37,6 @@
   )
 
   let opponentName = $derived(displayNameStore.get(game.opponent))
-
-  let submitting = $state(false)
-  let submitError: null | string = $state(null)
-  const verifyAndSubmitSolution = async () => {
-    if (!mud.systemCalls) return
-
-    submitError = null
-    submitting = true
-    try {
-      const res = await fetch(`/api/${game.type}/verify-user-solution`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          gameId: parseInt(game.id, 16),
-        }),
-      })
-
-      const { won, score, signature } = await res.json()
-      if (!won) {
-        submitError = "Puzzle not solved!"
-        await mud.systemCalls.submitSolution(game.id, 0, "0x")
-      } else {
-        await mud.systemCalls.submitSolution(game.id, score, signature)
-      }
-    } catch (e: any) {
-      console.error("Failed to submit solution")
-      console.error(e)
-      submitError = e.shortMessage ?? "Error submitting"
-    } finally {
-      submitting = false
-    }
-  }
 
   // Timers
   let timers = gameTimers(game)
@@ -139,7 +107,69 @@
     return "tie"
   })
 
-  $inspect(gameOutcome, game)
+  let submitting = $state(false)
+  let submitError: null | string = $state(null)
+  const verifyAndSubmitSolution = async () => {
+    if (submitting || !mud.systemCalls) return
+
+    submitError = null
+    submitting = true
+    try {
+      const res = await fetch(`/api/${game.type}/verify-user-solution`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          gameId: parseInt(game.id, 16),
+        }),
+      })
+
+      const { won, score, signature } = await res.json()
+      if (!won) {
+        submitError = "Puzzle not solved!"
+        await mud.systemCalls.submitSolution(game.id, 0, "0x")
+      } else {
+        await mud.systemCalls.submitSolution(game.id, score, signature)
+      }
+    } catch (e: any) {
+      console.error("Failed to submit solution")
+      console.error(e)
+      submitError = e.shortMessage ?? "Error submitting"
+    } finally {
+      submitting = false
+    }
+  }
+
+  let claiming = $state(false)
+  let claimError = $state(null)
+  const claim = async () => {
+    if (claiming || !mud.systemCalls) return
+
+    claiming = true
+    claimError = null
+
+    try {
+      await mud.systemCalls.claim(game.id)
+    } catch (e: any) {
+      claimError = e.shortMessage ?? "Something went wrong"
+    } finally {
+      claiming = false
+    }
+  }
+
+  let votingRematch = $state(false)
+  const voteRematch = async () => {
+    if (votingRematch || !mud.systemCalls) return
+
+    votingRematch = true
+
+    try {
+      await mud.systemCalls.voteRematch(game.id)
+    } finally {
+      votingRematch = false
+    }
+  }
 </script>
 
 {#if submitError}
@@ -184,7 +214,7 @@
     {:else if gameOutcome === "tie"}
       Tie game! You can withdraw your portion or vote to rematch
     {:else}
-      You lose :( Better luck next time!
+      You lost :( Better luck next time!
     {/if}
   </div>
 
@@ -196,6 +226,7 @@
 
     Score: {game.myScore}
     <div>Rematch Vote: {Boolean(game.myRematchVote)}</div>
+    <div>Contract balance: {formatEther(game.opponentBalance)} eth</div>
   </div>
 
   <div>
@@ -217,24 +248,39 @@
       </p>
     {/if}
 
-    <div>Rematch Vote: {Boolean(game.myRematchVote)}</div>
+    <div>Rematch Vote: {Boolean(game.opponentRematchVote)}</div>
+    <div>Contract balance: {formatEther(game.opponentBalance)} eth</div>
   </div>
 
   <hr />
 
   <div class="flex flex-col gap-2">
     <button
-      class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+      class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
       disabled={!gameOutcome || gameOutcome === "lose"}
+      onclick={claim}
     >
-      Withdraw
+      {#if claiming}
+        <DotLoader class="fill-white " />
+      {:else}
+        Withdraw
+      {/if}
     </button>
 
+    {#if claimError}
+      <p class="text=red-600">{claimError}</p>
+    {/if}
+
     <button
-      class="rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+      class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
       disabled={!gameOutcome || gameOutcome !== "tie"}
+      onclick={voteRematch}
     >
-      Vote Rematch
+      {#if votingRematch}
+        <DotLoader class="fill-white " />
+      {:else}
+        Vote Rematch
+      {/if}
     </button>
   </div>
 </Modal>
