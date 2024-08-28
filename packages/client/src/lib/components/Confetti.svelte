@@ -40,8 +40,8 @@
         force: 0.7,
         stageWidth: $stageWidth, // Use $ to access store value
         stageHeight: $stageHeight, // Use $ to access store value
-        colors: ["#EACB28", "#40b3ff", "#676778", "rgb(132, 204, 22)"],
+        colors: ["#EACB28", "#E2E4F4", "#FEECC8", "#2FB163"],
       }}
-    />
+    ></div>
   {/if}
 {/key}
