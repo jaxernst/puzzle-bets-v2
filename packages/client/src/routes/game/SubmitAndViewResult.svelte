@@ -13,6 +13,7 @@
   import {
     capitalized,
     entityToInt,
+    formatSigFig,
     formatTime,
     timeRemaining,
   } from "$lib/util"
@@ -56,7 +57,7 @@
     return () => clearInterval(playbackTimer)
   })
 
-  let opponentSubmissionTimeRemaining = $state(-1)
+  let opponentSubmissionTimeRemaining = $state(0)
   let opponentSubmissionTimer: NodeJS.Timer
   $effect(() => {
     if (game.opponentStartTime) {
@@ -92,6 +93,7 @@
   )
 
   let gameOver = $derived.by(() => {
+    if (game.status === GameStatus.Complete) return true
     if (game.iSubmitted && game.opponentSubmitted) return true
     if (mySubmissionTimeLeft === 0 && opponentSubmissionTimeRemaining === 0) {
       return true
@@ -105,6 +107,19 @@
     if (game.myScore > game.opponentScore) return "win"
     if (game.myScore < game.opponentScore) return "lose"
     return "tie"
+  })
+
+  let claimed = $derived.by(() => {
+    // This check can be misleading if the game has a 0 buy in amount, but in this case
+    // it is fine if we 'think' we have claimed, because there's no money to withdraw
+    if (game.myBalance === 0n) return true
+
+    if (gameOutcome === "tie" && game.myBalance > 0n) return true
+    if (gameOutcome === "win" && game.status === GameStatus.Complete) {
+      return true
+    }
+
+    return false
   })
 
   let submitting = $state(false)
@@ -257,11 +272,13 @@
   <div class="flex flex-col gap-2">
     <button
       class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-      disabled={!gameOutcome || gameOutcome === "lose"}
+      disabled={!gameOutcome || gameOutcome === "lose" || claimed}
       onclick={claim}
     >
       {#if claiming}
         <DotLoader class="fill-white " />
+      {:else if claimed}
+        {formatSigFig(Number(formatEther(2n * game.buyInAmount)))} ETH Claimed
       {:else}
         Withdraw
       {/if}
@@ -271,16 +288,18 @@
       <p class="text=red-600">{claimError}</p>
     {/if}
 
-    <button
-      class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-      disabled={!gameOutcome || gameOutcome !== "tie"}
-      onclick={voteRematch}
-    >
-      {#if votingRematch}
-        <DotLoader class="fill-white " />
-      {:else}
-        Vote Rematch
-      {/if}
-    </button>
+    {#if gameOutcome === "tie"}
+      <button
+        class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+        disabled={!gameOutcome || gameOutcome !== "tie"}
+        onclick={voteRematch}
+      >
+        {#if votingRematch}
+          <DotLoader class="fill-white " />
+        {:else}
+          Vote Rematch
+        {/if}
+      </button>
+    {/if}
   </div>
 </Modal>
