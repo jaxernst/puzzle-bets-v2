@@ -7,6 +7,8 @@
     formatAsDollar,
     formatSigFig,
     capitalized,
+    timeRemaining,
+    systemTimestamp,
   } from "$lib/util"
   import { getPlayerOutcomes } from "$lib/gameQueries"
 
@@ -35,9 +37,36 @@
     return getPlayerOutcomes(game)
   })
 
+  let inviteTimeLeft = $state(
+    game.status === GameStatus.Pending
+      ? timeRemaining(game.inviteExpiration)
+      : null,
+  )
+
+  let inviteExpired = $derived(
+    game.status === GameStatus.Pending &&
+      inviteTimeLeft !== null &&
+      inviteTimeLeft <= 0,
+  )
+
+  let inviteTimer: NodeJS.Timer
+
+  $effect(() => {
+    if (game.status === GameStatus.Pending) {
+      inviteTimer = setInterval(() => {
+        inviteTimeLeft = timeRemaining(game.inviteExpiration)
+      }, 1000)
+    }
+
+    return () => {
+      clearInterval(inviteTimer)
+    }
+  })
+
   /**
    Status Indicator/Action pairs:
    - Invite Pending -> Waiting for opponent to join
+   - Invite Expired -> Cancel Game
    - Opponent Started -> Start your turn
    - 8m 21s left -> Rejoin 
    - Won, Tie, Loss -> Show Results
@@ -46,7 +75,11 @@
 
 {#snippet statusLabel()}
   {#if status === GameStatus.Pending}
-    Invite Pending
+    {#if inviteExpired}
+      Invite Expired
+    {:else}
+      Invite Pending (expires in {formatTimeAbbr(inviteTimeLeft ?? 0)})
+    {/if}
   {:else if status === GameStatus.Active}
     {#if outcomes.mySubmissionTimeLeft > 0}
       <div class="flex items-center gap-1">
@@ -72,9 +105,11 @@
       href={`/game/${game.type}/${entityToInt(game.id)}${outcomes.canViewResults ? "?results=true" : ""}`}
     >
       {#if status === GameStatus.Pending}
-        View Game Page
-      {:else if status === GameStatus.Active && outcomes.waitingForOpponentPlayback}
-        View Game Page
+        {#if inviteExpired}
+          Cancel Game
+        {:else}
+          View Game Page
+        {/if}
       {:else if status === GameStatus.Active}
         {#if game.myStartTime}
           Rejoin
