@@ -37,8 +37,11 @@
     }, 1000)
   })
 
-  let outcomes = $derived(getPlayerOutcomes(game) || tick)
-  $inspect(outcomes)
+  let outcomes = $derived.by(() => {
+    tick
+    return getPlayerOutcomes(game)
+  })
+
   let opponentName = $derived(displayNameStore.get(game.opponent))
   let submitting = $state(false)
   let submitError: null | string = $state(null)
