@@ -34,21 +34,20 @@
 
     // TODO: Display proper error when password is incorrect
     joinGameLoading = true
-    try {
-      await mud.systemCalls.joinGame(
-        game.id,
-        Number(formatEther(game?.buyInAmount)),
-        pw ?? undefined,
-      )
 
-      fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
-        method: "POST",
-      })
+    await mud.systemCalls.joinGame(
+      game.id,
+      Number(formatEther(game?.buyInAmount)),
+      pw ?? undefined,
+    )
 
-      goto(`/game/${game.type}/${entityToInt(game.id)}`)
-    } finally {
-      joinGameLoading = false
-    }
+    joinGameLoading = false
+
+    fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
+      method: "POST",
+    })
+
+    goto(`/game/${game.type}/${entityToInt(game.id)}`)
   }
 
   let gameWagerEth = $state(Number(formatEther(game?.buyInAmount ?? 0n)))

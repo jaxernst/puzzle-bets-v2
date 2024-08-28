@@ -4,15 +4,36 @@ import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "$lib/types"
 import { padHex, parseEther } from "viem"
 import { hashString, systemTimestamp } from "$lib/util"
 import { env } from "$env/dynamic/public"
+import { writable } from "svelte/store"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
+export const txErrorStore = writable<string | null>(null)
+
 const DEFAULT_PLAYBACK_WINDOW = 60 * 60 * 24 // 1 Day
 
-/*
- * Create the system calls that the client can use to ask
- * for changes in the World state (using the System contracts).
- */
+const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
+  fn: T,
+): T => {
+  return (async (...args: Parameters<T>) => {
+    try {
+      await fn(...args)
+      txErrorStore.set(null)
+    } catch (error: unknown) {
+      // Catch viem error with .shortMessage fields
+      console.error(error)
+      if (typeof error === "object" && error !== null) {
+        const errorObj = error as { shortMessage?: string; message?: string }
+        txErrorStore.set(
+          errorObj.shortMessage ?? errorObj.message ?? String(error),
+        )
+      } else {
+        txErrorStore.set(String(error))
+      }
+    }
+  }) as T
+}
+
 export function createSystemCalls({
   worldContract,
   waitForTransaction,
@@ -110,12 +131,12 @@ export function createSystemCalls({
   }
 
   return {
-    newGame,
-    joinGame,
-    startTurn,
-    submitSolution,
-    claim,
-    voteRematch,
-    cancelPendingGame,
+    newGame: incerceptTxError(newGame),
+    joinGame: incerceptTxError(joinGame),
+    startTurn: incerceptTxError(startTurn),
+    submitSolution: incerceptTxError(submitSolution),
+    claim: incerceptTxError(claim),
+    voteRematch: incerceptTxError(voteRematch),
+    cancelPendingGame: incerceptTxError(cancelPendingGame),
   }
 }

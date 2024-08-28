@@ -3,6 +3,7 @@
   import { entityToInt, shortenAddress } from "$lib/util"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { user } from "$lib/userStore.svelte"
+  import { goto } from "$app/navigation"
 
   let { game } = $props<{ game: Game }>()
 
@@ -54,6 +55,7 @@
 
   <button
     class="self-stretch rounded bg-black p-3 text-center text-base font-bold text-white disabled:opacity-40"
+    onclick={() => goto(`/join/${entityToInt(game.id)}`)}
     disabled={isUserGame}
   >
     {#if isUserGame}
