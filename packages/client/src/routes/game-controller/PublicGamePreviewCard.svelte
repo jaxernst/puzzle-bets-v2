@@ -1,9 +1,17 @@
 <script lang="ts">
   import { type Game } from "$lib/types"
-  import { entityToInt, shortenAddress } from "$lib/util"
+  import {
+    capitalized,
+    entityToInt,
+    formatAsDollar,
+    formatSigFig,
+    shortenAddress,
+  } from "$lib/util"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { user } from "$lib/userStore.svelte"
   import { goto } from "$app/navigation"
+  import { formatEther } from "viem"
+  import { prices } from "$lib/prices.svelte"
 
   let { game } = $props<{ game: Game }>()
 
@@ -19,7 +27,7 @@
   <div class="flex items-center justify-between">
     <div>
       #{entityToInt(game.id)}
-      <div class="font-bold">Wordle</div>
+      <div class="font-bold">{capitalized(game.type)}</div>
     </div>
 
     <div
@@ -46,8 +54,12 @@
       <div class="flex flex-col items-end gap-1">
         <div class="text-xs text-[#757575]">Amount to Bet</div>
         <div class="flex gap-1 font-bold">
-          <div>$5.00</div>
-          <div class="text-[#8F8F8F]">(.00128 ETH)</div>
+          <div>
+            {formatAsDollar(Number(formatEther(game.buyInAmount)) * prices.eth)}
+          </div>
+          <div class="text-[#8F8F8F]">
+            ({formatSigFig(Number(formatEther(game.buyInAmount)))} ETH)
+          </div>
         </div>
       </div>
     </div>
