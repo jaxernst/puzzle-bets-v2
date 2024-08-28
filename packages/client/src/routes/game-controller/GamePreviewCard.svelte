@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { GameStatus, type Game, type PlayerGame } from "$lib/types"
+  import { GameStatus, type PlayerGame } from "$lib/types"
   import {
     entityToInt,
-    formatTime,
     formatTimeAbbr,
     shortenAddress,
-    timeRemaining as _timeRemaining,
     formatAsDollar,
     formatSigFig,
+    capitalized,
   } from "$lib/util"
+  import { getPlayerOutcomes } from "$lib/gameQueries"
 
   import Avatar1 from "$lib/assets/Avatar1.svelte"
   import Avatar2 from "$lib/assets/Avatar2.svelte"
@@ -19,39 +19,20 @@
   let { game } = $props<{ game: PlayerGame }>()
 
   let status = $derived(game.status)
-  let turnStartTime = $derived(Number(game?.myStartTime) ?? 0)
   let buyInEth = $derived(Number(formatEther(game.buyInAmount)))
   let buyInUsd = $derived(formatAsDollar(buyInEth * prices.eth))
 
-  let timeRemaining = $state<number | null>(null)
-  let countdownInterval: NodeJS.Timer | undefined
-
-  const startCountdown = () => {
-    countdownInterval = setInterval(() => {
-      timeRemaining = _timeRemaining(turnStartTime + game.submissionWindow)
-      if (timeRemaining === 0) clearInterval(countdownInterval)
-    }, 1000)
-  }
-
-  const stopCountdown = () => {
-    if (countdownInterval) {
-      clearInterval(countdownInterval)
-      countdownInterval = undefined
-    }
-  }
-
+  let tick = $state(0)
   $effect(() => {
-    if (
-      turnStartTime &&
-      game.status === GameStatus.Active &&
-      !countdownInterval
-    ) {
-      startCountdown()
-    } else {
-      stopCountdown()
-    }
+    const interval = setInterval(() => {
+      tick += 1
+    }, 1000)
+    return () => clearInterval(interval)
+  })
 
-    return stopCountdown
+  let outcomes = $derived.by(() => {
+    tick
+    return getPlayerOutcomes(game)
   })
 
   /**
@@ -67,16 +48,17 @@
   {#if status === GameStatus.Pending}
     Invite Pending
   {:else if status === GameStatus.Active}
-    <!--If we are player that joined, show the timer, else show start turn-->
-    {#if turnStartTime && timeRemaining}
+    {#if outcomes.mySubmissionTimeLeft > 0}
       <div class="flex items-center gap-1">
         <Clock class="h-[14px] w-[14px]" />
-        {formatTimeAbbr(timeRemaining)}
+        {formatTimeAbbr(outcomes.mySubmissionTimeLeft)}
       </div>
-    {:else if timeRemaining === 0}
-      Out of time
-    {:else if !turnStartTime}
+    {:else if game.opponentStartTime}
       Opponent Started
+    {:else if outcomes.waitingForOpponentPlayback}
+      Waiting for opponent
+    {:else if outcomes.mySubmissionTimeLeft === 0}
+      Out of time
     {/if}
   {:else if status === GameStatus.Inactive}
     Game Cancelled
@@ -85,18 +67,21 @@
 
 {#snippet actionButton()}
   {#if game.status !== GameStatus.Inactive}
-    {@const showResults = status === GameStatus.Complete || timeRemaining === 0}
     <a
       class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
-      href={`/game/${game.type}/${entityToInt(game.id)}${showResults ? "?results=true" : ""}`}
+      href={`/game/${game.type}/${entityToInt(game.id)}${outcomes.canViewResults ? "?results=true" : ""}`}
     >
       {#if status === GameStatus.Pending}
         View Game Page
-      {:else if status === GameStatus.Active && !turnStartTime}
-        Start Turn
-      {:else if status === GameStatus.Active && turnStartTime && (timeRemaining ?? 0) > 0}
-        Rejoin
-      {:else if showResults}
+      {:else if status === GameStatus.Active && outcomes.waitingForOpponentPlayback}
+        View Game Page
+      {:else if status === GameStatus.Active}
+        {#if game.myStartTime}
+          Rejoin
+        {:else}
+          Start Turn ({formatTimeAbbr(outcomes.myPlaybackTime)} left)
+        {/if}
+      {:else if outcomes.canViewResults}
         Show Results
       {/if}
     </a>
@@ -114,11 +99,25 @@
     </div>
 
     <div>
-      <div
-        class="bg-pb-yellow rounded-full px-[7px] py-[5px] text-[10px] font-bold leading-[10px]"
-      >
-        {@render statusLabel()}
-      </div>
+      {#if outcomes.gameOutcome}
+        <div
+          class={`${
+            outcomes.gameOutcome === "win"
+              ? "bg-pb-green"
+              : outcomes.gameOutcome === "lose"
+                ? "bg-pb-orange"
+                : "bg-pb-gray-1"
+          } rounded-full px-[7px] py-[5px] text-[11px] font-bold leading-[11px]`}
+        >
+          {capitalized(outcomes.gameOutcome)}
+        </div>
+      {:else}
+        <div
+          class="bg-pb-yellow rounded-full px-[7px] py-[5px] text-[10px] font-bold leading-[10px]"
+        >
+          {@render statusLabel()}
+        </div>
+      {/if}
     </div>
   </div>
 

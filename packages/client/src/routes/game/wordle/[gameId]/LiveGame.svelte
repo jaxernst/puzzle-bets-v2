@@ -190,7 +190,7 @@
 </script>
 
 <div
-  class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 px-4"
+  class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 overflow-y-auto px-4"
 >
   <GameHeader {game} puzzle="wordle" />
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
@@ -306,6 +306,8 @@
       <DotLoader class="h-10 w-10 fill-black" />
     </div>
   {/if}
+
+  <div class="min-h-5"></div>
 
   <div class="flex w-full grow items-end pb-1 md:hidden">
     <SubmitAndViewResult {game} {user} class="w-full" />

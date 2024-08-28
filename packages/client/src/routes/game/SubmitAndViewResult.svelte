@@ -1,22 +1,15 @@
 <script lang="ts">
+  import { getPlayerOutcomes } from "$lib/gameQueries"
   import type { EvmAddress } from "$lib"
   import Avatar1 from "$lib/assets/Avatar1.svelte"
   import Avatar2 from "$lib/assets/Avatar2.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
-  import { getPlayerSolutionState } from "$lib/gameQueries"
-  import { gameTimers } from "$lib/gameTimers.svelte"
   import { mud } from "$lib/mudStore.svelte"
-  import type { WordleGameState } from "$lib/puzzleGameState.svelte"
   import { GameStatus, type PlayerGame } from "$lib/types"
-  import {
-    capitalized,
-    entityToInt,
-    formatSigFig,
-    formatTime,
-    timeRemaining,
-  } from "$lib/util"
+  import { capitalized, entityToInt, formatSigFig, formatTime } from "$lib/util"
+  import { toast } from "@zerodevx/svelte-toast"
   import { twMerge } from "tailwind-merge"
   import { formatEther } from "viem"
 
@@ -36,97 +29,23 @@
       false,
   )
 
-  let submitted = $derived(
-    Boolean(getPlayerSolutionState(user, game.id, mud).submitted),
-  )
+  // tick is used to force re-evaluation of timed outcomes
+  let tick = $state(0)
+  $effect(() => {
+    setInterval(() => {
+      tick += 1
+    }, 1000)
+  })
 
+  let outcomes = $derived(getPlayerOutcomes(game) || tick)
+  $inspect(outcomes)
   let opponentName = $derived(displayNameStore.get(game.opponent))
-
-  // Timers
-  let timers = gameTimers(game)
-  let mySubmissionTimeLeft = $derived(timers.submissionTimeLeft)
-
-  let opponentPlaybackTime = $state(0)
-  let playbackTimer: NodeJS.Timer
-  $effect(() => {
-    if (game.myStartTime && !game.opponentStartTime) {
-      playbackTimer = setInterval(() => {
-        const due = Number(game.myStartTime) + game.playbackWindow
-        opponentPlaybackTime = timeRemaining(due)
-      }, 1000)
-    }
-
-    if (game.opponentStartTime) clearInterval(playbackTimer)
-    return () => clearInterval(playbackTimer)
-  })
-
-  let opponentSubmissionTimeRemaining = $state(0)
-  let opponentSubmissionTimer: NodeJS.Timer
-  $effect(() => {
-    if (game.opponentStartTime) {
-      opponentSubmissionTimer = setInterval(() => {
-        const due = Number(game.opponentStartTime) + game.submissionWindow
-        opponentSubmissionTimeRemaining = timeRemaining(due)
-      })
-    }
-
-    if (game.opponentSubmitted) clearInterval(opponentSubmissionTimer)
-
-    return () => {
-      clearTimeout(opponentSubmissionTimer)
-    }
-  })
-
-  let canSubmit = $derived(
-    game.status === GameStatus.Active &&
-      game.myStartTime &&
-      mySubmissionTimeLeft &&
-      !submitted &&
-      !submitting,
-  )
-
-  let canViewResults = $derived(
-    submitted ||
-      mySubmissionTimeLeft === 0 ||
-      game.status === GameStatus.Complete,
-  )
-
-  let waitingForOpponentPlayback = $derived(
-    game.myStartTime && !game.opponentStartTime,
-  )
-
-  let gameOver = $derived.by(() => {
-    if (game.status === GameStatus.Complete) return true
-    if (game.iSubmitted && game.opponentSubmitted) return true
-    if (mySubmissionTimeLeft === 0 && opponentSubmissionTimeRemaining === 0) {
-      return true
-    }
-
-    return false
-  })
-
-  let gameOutcome = $derived.by(() => {
-    if (!gameOver) return null
-    if (game.myScore > game.opponentScore) return "win"
-    if (game.myScore < game.opponentScore) return "lose"
-    return "tie"
-  })
-
-  let claimed = $derived.by(() => {
-    // This check can be misleading if the game has a 0 buy in amount, but in this case
-    // it is fine if we 'think' we have claimed, because there's no money to withdraw
-    if (game.myBalance === 0n) return true
-
-    if (gameOutcome === "tie" && game.myBalance > 0n) return true
-    if (gameOutcome === "win" && game.status === GameStatus.Complete) {
-      return true
-    }
-
-    return false
-  })
-
   let submitting = $state(false)
   let submitError: null | string = $state(null)
+  let claiming = $state(false)
+  let claimError = $state(null)
+  let votingRematch = $state(false)
+
   const verifyAndSubmitSolution = async () => {
     if (submitting || !mud.systemCalls) return
 
@@ -145,7 +64,7 @@
 
       const { won, score, signature } = await res.json()
       if (!won) {
-        submitError = "Puzzle not solved!"
+        // submitError = "Puzzle not solved!"
         await mud.systemCalls.submitSolution(game.id, 0, "0x")
       } else {
         await mud.systemCalls.submitSolution(game.id, score, signature)
@@ -159,8 +78,6 @@
     }
   }
 
-  let claiming = $state(false)
-  let claimError = $state(null)
   const claim = async () => {
     if (claiming || !mud.systemCalls) return
 
@@ -176,7 +93,6 @@
     }
   }
 
-  let votingRematch = $state(false)
   const voteRematch = async () => {
     if (votingRematch || !mud.systemCalls) return
 
@@ -196,13 +112,13 @@
   </div>
 {/if}
 
-{#if !canViewResults}
+{#if !outcomes.canViewResults}
   <button
     class={twMerge(
       "rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70",
       className,
     )}
-    disabled={!canSubmit}
+    disabled={!outcomes.canSubmit || submitting}
     onclick={verifyAndSubmitSolution}
   >
     Submit
@@ -225,11 +141,16 @@
   {/snippet}
 
   <div class="font-bold">
-    {#if !gameOver}
-      Game still active! Come back later to see final results and withdrawl
-    {:else if gameOutcome === "win"}
+    {#if !outcomes.gameOver}
+      Game still active! Come back later to see final results and withdrawal
+    {:else if outcomes.gameOutcome === "win"}
       Congrats you won!
-    {:else if gameOutcome === "tie"}
+      {#if outcomes.opponentMissedPlaybackWindow}
+        <p class="text-sm font-medium">
+          (Your opponent missed the playback window and forfeited the game)
+        </p>
+      {/if}
+    {:else if outcomes.gameOutcome === "tie"}
       Tie game! You can withdraw your portion or vote to rematch
     {:else}
       You lost :( Better luck next time!
@@ -255,14 +176,15 @@
 
     {#if game.opponentSubmitted}
       Score: {game.opponentScore}
-    {:else if waitingForOpponentPlayback}
+    {:else if outcomes.waitingForOpponentPlayback}
       <p class="pt-1">
-        Has {formatTime(opponentPlaybackTime)} to start their turn...
+        Has {formatTime(outcomes.opponentPlaybackTime)} to start their turn...
       </p>
-    {:else if opponentSubmissionTimeRemaining > 0}
+    {:else if outcomes.opponentSubmissionTimeRemaining > 0}
       <p>
-        Opponent playing with {formatTime(opponentSubmissionTimeRemaining)} left
-        to submit
+        Opponent playing with {formatTime(
+          outcomes.opponentSubmissionTimeRemaining,
+        )} left to submit
       </p>
     {/if}
 
@@ -275,12 +197,14 @@
   <div class="flex flex-col gap-2">
     <button
       class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-      disabled={!gameOutcome || gameOutcome === "lose" || claimed}
+      disabled={!outcomes.gameOutcome ||
+        outcomes.gameOutcome === "lose" ||
+        outcomes.claimed}
       onclick={claim}
     >
       {#if claiming}
         <DotLoader class="fill-white " />
-      {:else if claimed}
+      {:else if outcomes.claimed}
         {formatSigFig(Number(formatEther(2n * game.buyInAmount)))} ETH Claimed
       {:else}
         Withdraw
@@ -291,10 +215,10 @@
       <p class="text=red-600">{claimError}</p>
     {/if}
 
-    {#if gameOutcome === "tie"}
+    {#if outcomes.gameOutcome === "tie"}
       <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-        disabled={!gameOutcome || gameOutcome !== "tie"}
+        disabled={!outcomes.gameOutcome || outcomes.gameOutcome !== "tie"}
         onclick={voteRematch}
       >
         {#if votingRematch}

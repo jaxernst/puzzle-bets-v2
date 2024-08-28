@@ -10,7 +10,7 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>
 
 export const txErrorStore = writable<string | null>(null)
 
-const DEFAULT_PLAYBACK_WINDOW = 60 * 60 * 24 // 1 Day
+const DEFAULT_PLAYBACK_WINDOW = 60 // 1 Day
 
 const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
   fn: T,

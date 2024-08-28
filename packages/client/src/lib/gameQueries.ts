@@ -14,10 +14,11 @@ import {
   gameNumberToType,
   type EvmAddress,
   type Game,
+  type PlayerGame,
 } from "$lib/types"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 import { type SetupNetworkResult } from "./mud/setupNetwork"
-import { systemTimestamp } from "$lib/util"
+import { systemTimestamp, timeRemaining } from "$lib/util"
 import { PUBLIC_PUZZLE_MASTER_ADDRESS } from "$env/static/public"
 
 export function getPlayerGames(
@@ -258,4 +259,149 @@ export const playerFields = (game: Game, player: EvmAddress) => {
       opponentSubmitted: game.p1Submitted,
     }
   }
+}
+
+export function getPlayerOutcomes(game: PlayerGame) {
+  const now = systemTimestamp()
+
+  const mySubmissionTimeLeft = game.myStartTime
+    ? timeRemaining(Number(game.myStartTime) + game.submissionWindow)
+    : -1
+
+  const opponentSubmissionTimeRemaining = game.opponentStartTime
+    ? timeRemaining(Number(game.opponentStartTime) + game.submissionWindow)
+    : -1
+
+  const opponentPlaybackTime =
+    game.opponent === game.p1 && game.myStartTime && !game.opponentStartTime
+      ? timeRemaining(Number(game.myStartTime) + game.playbackWindow)
+      : -1
+
+  const myPlaybackTime =
+    game.opponent === game.p2 && !game.myStartTime && game.opponentStartTime
+      ? timeRemaining(Number(game.opponentStartTime) + game.playbackWindow)
+      : -1
+
+  const opponentMissedPlaybackWindow =
+    game.myStartTime &&
+    !game.opponentStartTime &&
+    Number(game.myStartTime) + game.playbackWindow <= now
+
+  // Determine if the current player is player 1 (starting player)
+  const isPlayer1 = game.opponent === game.p2
+
+  // Calculate if player 1 missed the playback window
+  const iMissedPlaybackWindow =
+    isPlayer1 &&
+    game.opponentStartTime &&
+    Number(game.opponentStartTime) + game.playbackWindow <= now &&
+    !game.myStartTime
+
+  const gameOver = calculateGameOver(
+    game,
+    mySubmissionTimeLeft,
+    opponentSubmissionTimeRemaining,
+    Boolean(opponentMissedPlaybackWindow),
+    Boolean(iMissedPlaybackWindow),
+  )
+  const gameOutcome = calculateGameOutcome(
+    game,
+    gameOver,
+    Boolean(opponentMissedPlaybackWindow),
+    Boolean(iMissedPlaybackWindow),
+  )
+
+  return {
+    mySubmissionTimeLeft,
+    myPlaybackTime,
+    opponentSubmissionTimeRemaining,
+    opponentPlaybackTime,
+    opponentMissedPlaybackWindow,
+    iMissedPlaybackWindow,
+    gameOver,
+    gameOutcome,
+    claimed: calculateClaimed(game, gameOutcome),
+    canSubmit: calculateCanSubmit(game, mySubmissionTimeLeft),
+    canViewResults: calculateCanViewResults(game, mySubmissionTimeLeft),
+    waitingForOpponentPlayback: calculateWaitingForOpponentPlayback(
+      game,
+      mySubmissionTimeLeft,
+    ),
+  }
+}
+
+function calculateGameOver(
+  game: PlayerGame,
+  mySubmissionTimeLeft: number,
+  opponentSubmissionTimeRemaining: number,
+  opponentMissedPlaybackWindow: boolean,
+  iMissedPlaybackWindow: boolean,
+): boolean {
+  if (opponentMissedPlaybackWindow || iMissedPlaybackWindow) return true
+  if (!game.myStartTime || !game.opponentStartTime) return false
+  if (game.status === GameStatus.Complete) return true
+  if (game.iSubmitted && game.opponentSubmitted) return true
+  if (mySubmissionTimeLeft === 0 && opponentSubmissionTimeRemaining === 0)
+    return true
+  return false
+}
+
+function calculateGameOutcome(
+  game: PlayerGame,
+  gameOver: boolean,
+  opponentMissedPlaybackWindow: boolean,
+  iMissedPlaybackWindow: boolean,
+): "win" | "lose" | "tie" | null {
+  if (!gameOver) return null
+  if (iMissedPlaybackWindow) return "lose"
+  if (
+    (game.myScore ?? 0) > (game.opponentScore ?? 0) ||
+    opponentMissedPlaybackWindow
+  )
+    return "win"
+  if ((game.myScore ?? 0) < (game.opponentScore ?? 0)) return "lose"
+  return "tie"
+}
+
+function calculateClaimed(
+  game: PlayerGame,
+  gameOutcome: "win" | "lose" | "tie" | null,
+): boolean {
+  if (game.buyInAmount > 0n && game.myBalance === 0n) return true
+  if (gameOutcome === "win" && game.status === GameStatus.Complete) return true
+  return false
+}
+
+function calculateCanSubmit(
+  game: PlayerGame,
+  mySubmissionTimeLeft: number,
+): boolean {
+  return (
+    game.status === GameStatus.Active &&
+    Boolean(game.myStartTime) &&
+    mySubmissionTimeLeft > 0 &&
+    !game.iSubmitted
+  )
+}
+
+function calculateCanViewResults(
+  game: PlayerGame,
+  mySubmissionTimeLeft: number,
+): boolean {
+  return (
+    game.iSubmitted ||
+    mySubmissionTimeLeft === 0 ||
+    game.status === GameStatus.Complete
+  )
+}
+
+function calculateWaitingForOpponentPlayback(
+  game: PlayerGame,
+  mySubmissionTimeLeft: number,
+): boolean {
+  return Boolean(
+    game.myStartTime &&
+      !game.opponentStartTime &&
+      (mySubmissionTimeLeft === 0 || game.iSubmitted),
+  )
 }
