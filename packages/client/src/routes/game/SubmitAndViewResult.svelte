@@ -31,7 +31,10 @@
     class?: string
   }>()
 
-  let showResults = $state(false)
+  let showResults = $state(
+    new URLSearchParams(window.location.search).get("results") === "true" ||
+      false,
+  )
 
   let submitted = $derived(
     Boolean(getPlayerSolutionState(user, game.id, mud).submitted),

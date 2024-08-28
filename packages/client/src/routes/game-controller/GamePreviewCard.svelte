@@ -56,12 +56,10 @@
 
   /**
    Status Indicator/Action pairs:
-
    - Invite Pending -> Waiting for opponent to join
    - Opponent Started -> Start your turn
    - 8m 21s left -> Rejoin 
    - Won, Tie, Loss -> Show Results
-
    **/
 </script>
 
@@ -87,9 +85,10 @@
 
 {#snippet actionButton()}
   {#if game.status !== GameStatus.Inactive}
+    {@const showResults = status === GameStatus.Complete || timeRemaining === 0}
     <a
       class="w-full rounded bg-black py-3 text-center text-base font-bold text-white"
-      href={`/game/${game.type}/${entityToInt(game.id)}`}
+      href={`/game/${game.type}/${entityToInt(game.id)}${showResults ? "?results=true" : ""}`}
     >
       {#if status === GameStatus.Pending}
         View Game Page
@@ -97,7 +96,7 @@
         Start Turn
       {:else if status === GameStatus.Active && turnStartTime && (timeRemaining ?? 0) > 0}
         Rejoin
-      {:else if status === GameStatus.Complete || timeRemaining === 0}
+      {:else if showResults}
         Show Results
       {/if}
     </a>
