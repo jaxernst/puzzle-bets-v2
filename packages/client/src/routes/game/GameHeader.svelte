@@ -1,8 +1,7 @@
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
-  import { gameTimers } from "$lib/gameTimers.svelte"
   import { prices } from "$lib/prices.svelte"
-  import {  type PlayerGame, type PuzzleType } from "$lib/types"
+  import { type PlayerGame, type PuzzleType } from "$lib/types"
   import {
     capitalized,
     entityToInt,
@@ -12,6 +11,7 @@
   import { formatEther } from "viem"
   import { user } from "$lib/userStore.svelte"
   import SubmitAndViewResult from "./SubmitAndViewResult.svelte"
+  import { getGameTimers } from "$lib/gameQueries"
 
   let { game, puzzle } = $props<{ game?: PlayerGame; puzzle: PuzzleType }>()
 
@@ -19,9 +19,8 @@
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let timers = $derived(game ? gameTimers(game) : undefined)
-
-  let submissionTimeLeft = $derived(timers?.submissionTimeLeft)
+  let timers = $derived(game ? getGameTimers(game) : undefined)
+  let submissionTimeLeft = $derived(timers?.mySubmissionTimeLeft)
 </script>
 
 <div class="flex w-full justify-center">
@@ -59,12 +58,12 @@
           {formatAsDollar(betAmountDollar)} Wager
         </div>
         <div class="rounded-full bg-black p-2 text-base text-white">
-          {#if submissionTimeLeft === undefined}
+          {#if !game}
             No time limit
           {:else if submissionTimeLeft === 0}
             Out of time
-          {:else}
-            {formatTimeAbbr(submissionTimeLeft)}
+          {:else if submissionTimeLeft === -1}
+            {formatTimeAbbr(submissionTimeLeft === -1 ? game.submissionWindow : submissionTimeLeft)}
           {/if}
         </div>
       </div>

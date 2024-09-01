@@ -264,23 +264,12 @@ export const playerFields = (game: Game, player: EvmAddress) => {
 export function getPlayerOutcomes(game: PlayerGame) {
   const now = systemTimestamp()
 
-  const mySubmissionTimeLeft = game.myStartTime
-    ? timeRemaining(Number(game.myStartTime) + game.submissionWindow)
-    : -1
-
-  const opponentSubmissionTimeRemaining = game.opponentStartTime
-    ? timeRemaining(Number(game.opponentStartTime) + game.submissionWindow)
-    : -1
-
-  const opponentPlaybackTime =
-    game.opponent === game.p1 && game.myStartTime && !game.opponentStartTime
-      ? timeRemaining(Number(game.myStartTime) + game.playbackWindow)
-      : -1
-
-  const myPlaybackTime =
-    game.opponent === game.p2 && !game.myStartTime && game.opponentStartTime
-      ? timeRemaining(Number(game.opponentStartTime) + game.playbackWindow)
-      : -1
+  const {
+    mySubmissionTimeLeft,
+    myPlaybackTime,
+    opponentSubmissionTimeRemaining,
+    opponentPlaybackTime,
+  } = getGameTimers(game)
 
   const opponentMissedPlaybackWindow =
     game.myStartTime &&
@@ -327,6 +316,33 @@ export function getPlayerOutcomes(game: PlayerGame) {
       game,
       mySubmissionTimeLeft,
     ),
+  }
+}
+
+export function getGameTimers(game: PlayerGame) {
+  const mySubmissionTimeLeft = game.myStartTime
+    ? timeRemaining(Number(game.myStartTime) + game.submissionWindow)
+    : -1
+
+  const opponentSubmissionTimeRemaining = game.opponentStartTime
+    ? timeRemaining(Number(game.opponentStartTime) + game.submissionWindow)
+    : -1
+
+  const opponentPlaybackTime =
+    game.opponent === game.p1 && game.myStartTime && !game.opponentStartTime
+      ? timeRemaining(Number(game.myStartTime) + game.playbackWindow)
+      : -1
+
+  const myPlaybackTime =
+    game.opponent === game.p2 && !game.myStartTime && game.opponentStartTime
+      ? timeRemaining(Number(game.opponentStartTime) + game.playbackWindow)
+      : -1
+
+  return {
+    mySubmissionTimeLeft,
+    myPlaybackTime,
+    opponentSubmissionTimeRemaining,
+    opponentPlaybackTime,
   }
 }
 

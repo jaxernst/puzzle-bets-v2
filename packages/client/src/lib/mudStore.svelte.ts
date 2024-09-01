@@ -16,6 +16,10 @@ export const mud = (function createMudStore() {
       }
   >({ synced: false })
 
+  // Tick value updated every second to force re-renders
+  // (used for auto-updating game timers)
+  let tick = $state(0)
+
   let stop = () => {}
 
   async function setup(wallet: Wallet) {
@@ -49,8 +53,13 @@ export const mud = (function createMudStore() {
       },
     )
 
+    const timer = setInterval(() => {
+      tick = tick + 1
+    }, 1000)
+
     stop = () => {
       network.stopSync()
+      clearInterval(timer)
 
       componentSubscriptions.forEach((subscription) =>
         subscription.unsubscribe(),
@@ -62,7 +71,7 @@ export const mud = (function createMudStore() {
 
   return {
     get components() {
-      if (mudState.synced) {
+      if (tick && mudState.synced) {
         return mudState.components
       }
     },
