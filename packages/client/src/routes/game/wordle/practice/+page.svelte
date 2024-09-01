@@ -3,11 +3,12 @@
   import Wordle from "$lib/game-components/Wordle.svelte"
   import { wordleGameStates } from "$lib/puzzleGameState.svelte"
   import { generateRandomID } from "$lib/util"
+  import type { Entity } from "@latticexyz/recs"
   import GameHeader from "../../GameHeader.svelte"
   import OpponentDisplay from "../../OpponentDisplay.svelte"
 
   const storedGameId = localStorage.getItem("wordleDemoGameId")
-  const gameId = storedGameId ?? generateRandomID(32)
+  const gameId = (storedGameId ?? generateRandomID(32)) as Entity
 
   if (!storedGameId) {
     localStorage.setItem("wordleDemoGameId", gameId)
