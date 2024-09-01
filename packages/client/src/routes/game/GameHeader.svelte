@@ -19,9 +19,9 @@
     ? Number(formatEther(game.buyInAmount)) * prices.eth
     : 0
 
-  let timers = $derived(gameTimers(game))
+  let timers = $derived(game ? gameTimers(game) : undefined)
 
-  let submissionTimeLeft = $derived(timers.submissionTimeLeft)
+  let submissionTimeLeft = $derived(timers?.submissionTimeLeft)
 </script>
 
 <div class="flex w-full justify-center">

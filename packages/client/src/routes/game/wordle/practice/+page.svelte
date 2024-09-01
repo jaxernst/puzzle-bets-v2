@@ -48,7 +48,7 @@
 </div>
 
 {#if showRestart || game?.solved || game?.lost}
-  <div class="w-ful flex justify-center py-4">
+  <div class="w-ful flex justify-center pb-4">
     <button
       class="rounded-lg bg-black p-2 font-semibold text-white"
       onclick={() => {
