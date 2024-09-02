@@ -23,21 +23,9 @@
   let status = $derived(game.status)
   let buyInEth = $derived(Number(formatEther(game.buyInAmount)))
   let buyInUsd = $derived(formatAsDollar(buyInEth * prices.eth))
+  let outcomes = $derived(getPlayerOutcomes(game))
 
-  let tick = $state(0)
-  $effect(() => {
-    const interval = setInterval(() => {
-      tick += 1
-    }, 1000)
-    return () => clearInterval(interval)
-  })
-
-  let outcomes = $derived.by(() => {
-    tick
-    return getPlayerOutcomes(game)
-  })
-
-  let inviteTimeLeft = $state(
+  let inviteTimeLeft = $derived(
     game.status === GameStatus.Pending
       ? timeRemaining(game.inviteExpiration)
       : null,
@@ -48,20 +36,6 @@
       inviteTimeLeft !== null &&
       inviteTimeLeft <= 0,
   )
-
-  let inviteTimer: NodeJS.Timer
-
-  $effect(() => {
-    if (game.status === GameStatus.Pending) {
-      inviteTimer = setInterval(() => {
-        inviteTimeLeft = timeRemaining(game.inviteExpiration)
-      }, 1000)
-    }
-
-    return () => {
-      clearInterval(inviteTimer)
-    }
-  })
 
   /**
    Status Indicator/Action pairs:
@@ -78,7 +52,7 @@
     {#if inviteExpired}
       Invite Expired
     {:else}
-      Invite Pending (expires in {formatTimeAbbr(inviteTimeLeft ?? 0)})
+      Invite Pending (expires: {formatTimeAbbr(inviteTimeLeft ?? 0)})
     {/if}
   {:else if status === GameStatus.Active}
     {#if outcomes.mySubmissionTimeLeft > 0}
