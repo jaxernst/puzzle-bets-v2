@@ -338,11 +338,16 @@ export function getGameTimers(game: PlayerGame) {
       ? timeRemaining(Number(game.opponentStartTime) + game.playbackWindow)
       : -1
 
+  const inviteTimeLeft = game.inviteExpiration
+    ? timeRemaining(Number(game.inviteExpiration))
+    : -1
+
   return {
     mySubmissionTimeLeft,
     myPlaybackTime,
     opponentSubmissionTimeRemaining,
     opponentPlaybackTime,
+    inviteTimeLeft,
   }
 }
 
