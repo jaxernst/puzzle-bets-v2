@@ -29,25 +29,14 @@
       false,
   )
 
-  // tick is used to force re-evaluation of timed outcomes
-  let tick = $state(0)
-  $effect(() => {
-    setInterval(() => {
-      tick += 1
-    }, 1000)
-  })
-
-  let outcomes = $derived.by(() => {
-    tick
-    return getPlayerOutcomes(game)
-  })
-
-  let opponentName = $derived(displayNameStore.get(game.opponent))
   let submitting = $state(false)
   let submitError: null | string = $state(null)
   let claiming = $state(false)
   let claimError = $state(null)
   let votingRematch = $state(false)
+
+  let outcomes = $derived(getPlayerOutcomes(game))
+  let opponentName = $derived(displayNameStore.get(game.opponent))
 
   const verifyAndSubmitSolution = async () => {
     if (submitting || !mud.systemCalls) return

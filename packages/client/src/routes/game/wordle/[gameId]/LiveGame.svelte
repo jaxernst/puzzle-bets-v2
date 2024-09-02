@@ -1,6 +1,10 @@
 <script lang="ts">
   import Wordle from "$lib/game-components/Wordle.svelte"
-  import { gameIdToGame, getPlayerSolutionState } from "$lib/gameQueries"
+  import {
+    gameIdToGame,
+    getGameTimers,
+    getPlayerSolutionState,
+  } from "$lib/gameQueries"
   import { user as userStore } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import {
@@ -47,6 +51,11 @@
     game.status === GameStatus.Active && !game.myStartTime,
   )
 
+  let wagerEth = Number(formatEther(game.buyInAmount))
+  let wagerUsd = $derived(formatAsDollar(wagerEth * prices.eth))
+
+  let timers = $derived(getGameTimers(game))
+
   $effect(() => {
     if (!userIsPlayer) history.back()
   })
@@ -89,45 +98,6 @@
     game && getPlayerSolutionState(user, gameId, mud).submitted,
   )
 
-  let inviteTimeLeft: number | undefined = $state()
-  let inviteExpTimer: NodeJS.Timer
-  $effect(() => {
-    if (game.status === GameStatus.Pending && !inviteExpTimer) {
-      inviteExpTimer = setInterval(() => {
-        inviteTimeLeft = timeRemaining(game.inviteExpiration)
-      }, 1000)
-    }
-
-    if (game.status !== GameStatus.Pending && inviteExpTimer) {
-      clearInterval(inviteExpTimer)
-    }
-
-    return () => {
-      if (inviteExpTimer) clearInterval(inviteExpTimer)
-    }
-  })
-
-  let playbackTimeLeft: number | undefined = $state()
-  let playbackTimer: NodeJS.Timer
-  $effect(() => {
-    if (awaitingTurnStart) {
-      playbackTimer = setInterval(() => {
-        playbackTimeLeft = Math.max(
-          Number(game.opponentStartTime) +
-            game.playbackWindow -
-            systemTimestamp(),
-          0,
-        )
-      }, 1000)
-    } else {
-      clearInterval(playbackTimer)
-    }
-
-    return () => {
-      clearInterval(playbackTimer)
-    }
-  })
-
   let expired = false
 
   let copied = $state(false)
@@ -165,13 +135,9 @@
     }
   }
 
-  let wagerEth = Number(formatEther(game.buyInAmount))
-  let wagerUsd = $derived(formatAsDollar(wagerEth * prices.eth))
-
   let showCancelGame = $state(false)
   let showCancelGameSuccess = $state(false)
   let cancelGameState = $state<"loading" | "error" | null>(null)
-
   const cancelGame = async () => {
     if (cancelGameState === "loading") return
 
@@ -195,7 +161,7 @@
   <GameHeader {game} puzzle="wordle" />
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
-  {#if game.status === GameStatus.Pending && inviteTimeLeft !== undefined}
+  {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
     <div
       class="mx-auto flex min-h-72 w-full flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
     >
@@ -206,8 +172,8 @@
       <div
         class="rounded-full bg-black px-2 py-2 text-sm font-semibold text-white"
       >
-        {#if inviteTimeLeft > 0}
-          Invite expires {formatTimeAbbr(inviteTimeLeft)}
+        {#if timers.inviteTimeLeft > 0}
+          Invite expires {formatTimeAbbr(timers.inviteTimeLeft)}
         {:else}
           Invite Expired. Cancel Game to withdraw
         {/if}
@@ -241,12 +207,12 @@
     <div
       class="mx-auto flex min-h-72 w-full flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
     >
-      {#if playbackTimeLeft === 0}
+      {#if timers.myPlaybackTime === 0}
         You did not play your opponent back in time. Wager forfeited.
-      {:else if playbackTimeLeft}
+      {:else if timers.myPlaybackTime > 0}
         <div class="font-bold">
           Your opponent has joined and started their timer. Your have {formatTime(
-            playbackTimeLeft ?? 0,
+            timers.myPlaybackTime ?? 0,
           )}
           to start your turn.
         </div>
