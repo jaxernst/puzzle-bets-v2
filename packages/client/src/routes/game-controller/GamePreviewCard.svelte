@@ -27,7 +27,7 @@
 
   let inviteTimeLeft = $derived(
     game.status === GameStatus.Pending
-      ? timeRemaining(game.inviteExpiration)
+      ? timeRemaining(Number(game.inviteExpiration))
       : null,
   )
 

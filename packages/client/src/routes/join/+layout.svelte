@@ -2,7 +2,7 @@
   import { mud } from "$lib/mudStore.svelte"
   import { page } from "$app/stores"
   import Modal from "$lib/components/Modal.svelte"
-  import { systemTimestamp, intToEntity, capitalized } from "$lib/util"
+  import { intToEntity, capitalized, timeRemaining } from "$lib/util"
   import { user } from "$lib/userStore.svelte"
   import { GameStatus } from "$lib/types"
   import DotLoader from "$lib/components/DotLoader.svelte"
@@ -47,26 +47,11 @@
 
   let puzzleType = "wordle"
 
-  let inviteTimeRemaining = $state(-1)
-  const checkInviteExpired = (inviteExpirationTime: bigint) => {
-    const tDiff = Number(inviteExpirationTime) - systemTimestamp()
-    inviteTimeRemaining = Math.max(0, tDiff)
-  }
-
-  let intervalTimer: NodeJS.Timer
-  $effect(() => {
-    if (game?.status === GameStatus.Pending && !intervalTimer) {
-      checkInviteExpired(game.inviteExpiration)
-      intervalTimer = setInterval(
-        () => checkInviteExpired(game!.inviteExpiration),
-        1000,
-      )
-    }
-
-    return () => {
-      if (intervalTimer) clearInterval(intervalTimer)
-    }
-  })
+  let inviteTimeRemaining = $derived(
+    game && game.status === GameStatus.Pending
+      ? timeRemaining(Number(game.inviteExpiration))
+      : -1,
+  )
 </script>
 
 {#if !user.address}
