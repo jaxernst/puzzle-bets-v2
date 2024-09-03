@@ -97,11 +97,14 @@
 {/snippet}
 
 <div
-  class={`absolute bottom-0 w-full ${hidden ? "translate-y-20" : ""} transition-transform sm:px-4`}
+  class={`absolute bottom-0 flex w-full justify-center  ${hidden ? "translate-y-20" : ""} transition-transform sm:px-4`}
 >
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div
+    tabindex="0"
+    class=" bg-pb-beige-2 flex max-w-[830px] flex-grow flex-col gap-6 rounded-t-xl border-x-2 border-t-2 border-black p-4"
+    style={`height: ${$size}px;`}
     onclick={() => openControls()}
     onkeydown={(event) => {
       if (event.key === "Enter") open = !open
@@ -112,9 +115,6 @@
         open = false
       },
     }}
-    tabindex="0"
-    class=" bg-pb-beige-2 flex flex-col gap-6 rounded-t-xl border-x-2 border-t-2 border-black p-4"
-    style={`height: ${$size}px;`}
   >
     <div class="flex items-center gap-2 font-extrabold">
       <PuzzlePiece class="h-6 w-6" />

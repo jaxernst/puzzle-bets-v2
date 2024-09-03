@@ -163,9 +163,9 @@
 
   {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
     <div
-      class="mx-auto flex min-h-72 w-full flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
+      class=" mx-auto flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
     >
-      <div class="font-extrabold">
+      <div class="font-angkor font-extrabold">
         The Puzzle will be ready to reveal once your opponent joins.
       </div>
 
@@ -354,7 +354,7 @@
   {/snippet}
 
   <div class="flex flex-col gap-6">
-    <div class="font-black leading-none">Game Canceled!?</div>
+    <div class="font-black leading-none">Game Canceled!</div>
 
     <div class="text-base leading-tight">
       Your wager is been refunded to your wallet
