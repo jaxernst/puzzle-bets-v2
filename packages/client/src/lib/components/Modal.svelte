@@ -85,19 +85,20 @@
     tabindex="-1"
     class="fixed left-0 top-0 z-50 flex h-screen w-screen items-end justify-center bg-black bg-opacity-30 sm:items-center"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
-    onclick={clickOutside}
+    onclick={(e) => {
+      clickOutside(e)
+      stopPropagation && e.stopPropagation()
+    }}
     aria-modal="true"
     role="dialog"
     aria-describedby={description}
   >
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       class={twMerge(
         "bg-pb-off-white flex max-h-full w-full flex-col gap-6 overflow-y-auto rounded-t-md px-4 pt-4 sm:max-w-[500px] sm:rounded-b-md",
         className,
       )}
       transition:fly={{ easing: cubicInOut, duration: 220, y: "120vw" }}
-      onclick={(e) => stopPropagation || e.stopPropagation()}
     >
       <div class="flex items-center justify-between text-sm font-black">
         {@render header()}
