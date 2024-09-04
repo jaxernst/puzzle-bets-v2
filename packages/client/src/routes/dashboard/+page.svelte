@@ -11,6 +11,7 @@
   import { user } from "$lib/userStore.svelte"
   import { capitalized, shortenAddress } from "$lib/util"
   import { toggleAboutModal } from "../AboutModal.svelte"
+  import { toggleDisplayNameModal } from "../DisplayNameModal.svelte"
   import GameController, {
     openControls,
     showControls,
@@ -80,7 +81,7 @@
       {#if canSetDisplayName}
         <div class="flex flex-grow justify-end">
           <button
-            onclick={() => {}}
+            onclick={toggleDisplayNameModal}
             class="flex items-center gap-1 rounded-full border bg-[#E7E1D2] px-1.5 py-1 text-xs font-bold sm:text-sm"
           >
             <Edit class="stroke-black" />

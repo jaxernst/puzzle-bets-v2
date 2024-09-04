@@ -12,6 +12,7 @@
   import NewGameModal from "./NewGameModal.svelte"
   import AboutModal from "./AboutModal.svelte"
   import { txErrorStore } from "$lib/mud/createSystemCalls"
+  import DisplayNameModal from "./DisplayNameModal.svelte"
 
   let { children } = $props()
 
@@ -44,6 +45,7 @@
 <WalletConnector autoconnect />
 <NewGameModal />
 <AboutModal />
+<DisplayNameModal />
 
 <div class="text-base leading-snug">
   <SvelteToast />

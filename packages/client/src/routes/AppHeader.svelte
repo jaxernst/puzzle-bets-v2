@@ -10,6 +10,8 @@
   import { prices } from "$lib/prices.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import { walletStore } from "$lib/walletStore.svelte"
+  import { toggleDisplayNameModal } from "./DisplayNameModal.svelte"
+  import Edit from "$lib/icons/Edit.svelte"
 
   let showAccountModal = $state(false)
 </script>
@@ -72,11 +74,20 @@
         {#if user.displayName}
           <div>
             <div class="mb-1 text-sm text-[#3f3f3f]">Your Display Name</div>
-            <div class="font-bold">{user.displayName}</div>
+            <div class="flex items-center gap-1">
+              <div class="font-bold">{user.displayName}</div>
+              <button onclick={toggleDisplayNameModal}>
+                <Edit class="stroke-black" />
+              </button>
+            </div>
           </div>
         {:else}
-          <button class=" bg-pb-yellow self-start rounded-full p-1.5 font-bold">
-            Set Display Name
+          <button
+            onclick={toggleDisplayNameModal}
+            class=" bg-pb-yellow flex items-center gap-1 self-start rounded-full px-2 py-1 font-bold"
+          >
+            <Edit class="stroke-black" />
+            <p class="pt-[2px]">Set Display Name</p>
           </button>
         {/if}
 

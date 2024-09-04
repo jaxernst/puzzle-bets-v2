@@ -3,6 +3,7 @@ import { formatEther, type Account } from "viem"
 import type { EvmAddress } from "./types"
 import { signInWithEthereum } from "./siwe"
 import { publicClient } from "./mud/setupNetwork"
+import { displayNameStore } from "./displayNameStore.svelte"
 
 const initialState = {
   address: undefined,
@@ -61,9 +62,9 @@ export const user = (() => {
       userState = { ...initialState }
 
       if (wallet.address) {
-        console.log("Address available, signing in")
-        userState.address = wallet.address
         balanceSync.start(wallet.address)
+        userState.address = wallet.address
+        userState.displayName = await displayNameStore.fetch(wallet.address)
 
         if (!wallet.walletClient?.signMessage) {
           throw new Error("No SIWE Signer Available")
@@ -92,6 +93,10 @@ export const user = (() => {
     },
     get balance() {
       return userState.balance
+    },
+
+    onDisplayNameChange: (displayName: string) => {
+      userState.displayName = displayName
     },
 
     onWalletChange,
