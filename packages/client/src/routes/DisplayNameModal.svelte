@@ -65,7 +65,7 @@
     instead of a wallet address.
   </div>
 
-  <form on:submit={handleSubmit} class="flex flex-col gap-2">
+  <form onsubmit={handleSubmit} class="flex flex-col gap-2">
     <div class="flex items-center gap-2 px-2">
       <input
         type="text"
