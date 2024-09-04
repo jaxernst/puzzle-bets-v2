@@ -30,7 +30,7 @@
     }
   }
 
-  let inputElement: HTMLInputElement = $state()
+  let inputElement: HTMLInputElement | undefined = $state()
   $effect(() => {
     if (inputElement) {
       inputElement.focus()
