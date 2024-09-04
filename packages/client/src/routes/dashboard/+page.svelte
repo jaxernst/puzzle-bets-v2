@@ -167,7 +167,7 @@
     <div class="w-full max-w-[400px] self-center">
       <div class="flex max-w-[400px] flex-col items-stretch gap-4 self-stretch">
         {#if user.address}
-          <div class="mb-2 flex justify-center gap-3">
+          <div class="flex justify-center gap-3">
             <button
               class="bg-pb-yellow w-1/2 rounded-md px-4 py-3 text-center font-bold"
               style="box-shadow: 0px 5px 0px 0px #DDAC00;"
