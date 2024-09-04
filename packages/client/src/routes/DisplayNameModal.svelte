@@ -12,6 +12,7 @@
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { user } from "$lib/userStore.svelte"
   import { toast } from "@zerodevx/svelte-toast"
+  import { onMount } from "svelte"
 
   let displayNameTemp = $state("")
   let error = $state<string | null>(null)
@@ -27,6 +28,18 @@
     } catch (_error: any) {
       error = _error.message ?? "Failed to set display name"
     }
+  }
+
+  let inputElement: HTMLInputElement = $state()
+  $effect(() => {
+    if (inputElement) {
+      inputElement.focus()
+    }
+  })
+
+  async function handleSubmit(event: Event) {
+    event.preventDefault()
+    await handleSave()
   }
 </script>
 
@@ -52,25 +65,25 @@
     instead of a wallet address.
   </div>
 
-  <div class="flex items-center gap-2 px-2">
-    <input
-      type="text"
-      class="w-full rounded-md border-2 border-black bg-transparent px-4 py-2"
-      placeholder="Your Name Here"
-      bind:value={displayNameTemp}
-    />
+  <form on:submit={handleSubmit} class="flex flex-col gap-2">
+    <div class="flex items-center gap-2 px-2">
+      <input
+        type="text"
+        class="w-full rounded-md border-2 border-black bg-transparent px-4 py-2"
+        placeholder="Your Name Here"
+        bind:value={displayNameTemp}
+        bind:this={inputElement}
+      />
 
-    <button
-      class="rounded-md bg-black px-4 py-2 text-white"
-      onclick={handleSave}
-    >
-      Save
-    </button>
-  </div>
+      <button type="submit" class="rounded-md bg-black px-4 py-2 text-white">
+        Save
+      </button>
+    </div>
 
-  {#if error}
-    <p class="px-2 text-sm text-red-600">
-      {error}
-    </p>
-  {/if}
+    {#if error}
+      <p class="px-2 text-sm text-red-600">
+        {error}
+      </p>
+    {/if}
+  </form>
 </Modal>
