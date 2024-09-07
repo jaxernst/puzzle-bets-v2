@@ -18,7 +18,7 @@ export const mud = (function createMudStore() {
 
   // Tick value updated every second to force re-renders
   // (used for auto-updating game timers)
-  let tick = $state(0)
+  let tick = $state(1)
 
   let stop = () => {}
 
