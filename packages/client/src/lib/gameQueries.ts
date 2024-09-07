@@ -8,6 +8,7 @@ import {
   getComponentValue,
   type Entity,
   Not,
+  NotValue,
 } from "@latticexyz/recs"
 import {
   GameStatus,
@@ -46,6 +47,40 @@ export function getPlayerGames(
   return Array.from([...p1Games, ...p2Games]).map((gameId) => {
     const game = gameIdToGame(gameId, c)
 
+    return {
+      ...game,
+      ...playerFields(game, player),
+      opponent: player === game.p1 ? game.p2 : game.p1,
+    }
+  })
+}
+
+export function getActivePlayerGames(
+  player: EvmAddress | undefined,
+  { synced, components: c }: typeof mud,
+) {
+  if (!player || !synced || !c) return []
+
+  const p1Games = runQuery([
+    HasValue(c.Player1, { value: player }),
+    HasValue(c.PuzzleMasterEoa, {
+      value: PUBLIC_PUZZLE_MASTER_ADDRESS,
+    }),
+    NotValue(c.GameStatus, { value: GameStatus.Inactive }),
+    NotValue(c.GameStatus, { value: GameStatus.Complete }),
+  ])
+
+  const p2Games = runQuery([
+    HasValue(c.Player2, { value: player }),
+    HasValue(c.PuzzleMasterEoa, {
+      value: PUBLIC_PUZZLE_MASTER_ADDRESS,
+    }),
+    NotValue(c.GameStatus, { value: GameStatus.Inactive }),
+    NotValue(c.GameStatus, { value: GameStatus.Complete }),
+  ])
+
+  return Array.from([...p1Games, ...p2Games]).map((gameId) => {
+    const game = gameIdToGame(gameId, c)
     return {
       ...game,
       ...playerFields(game, player),

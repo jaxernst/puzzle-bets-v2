@@ -35,7 +35,11 @@
   import { page } from "$app/stores"
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
-  import { getPlayerGames, getPublicGames } from "$lib/gameQueries"
+  import {
+    getActivePlayerGames,
+    getPlayerGames,
+    getPublicGames,
+  } from "$lib/gameQueries"
   import { toggleNewGameModal } from "../NewGameModal.svelte"
   import { goto } from "$app/navigation"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
@@ -83,7 +87,8 @@
     }
   })
 
-  let numGames = $derived(getPlayerGames(user.address, mud).length)
+  let numActiveGames = $derived(getActivePlayerGames(user.address, mud).length)
+  let numLobbyGames = $derived(getPublicGames(mud).length)
 </script>
 
 {#snippet TabButton(name: Tab)}
@@ -124,7 +129,13 @@
       <div
         class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs"
       >
-        {numGames} Live Games
+        {numActiveGames} Active Game{numActiveGames === 1 ? "" : "s"}
+      </div>
+
+      <div
+        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs"
+      >
+        {numLobbyGames} Public Game{numLobbyGames === 1 ? "" : "s"}
       </div>
 
       <button
