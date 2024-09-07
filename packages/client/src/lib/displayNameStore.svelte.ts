@@ -6,7 +6,7 @@ export const displayNameStore = (() => {
 
   const fetchName = async (user: EvmAddress) => {
     try {
-      const response = await fetch(`/api/display-name`)
+      const response = await fetch(`/api/display-name/${user}`)
       if (!response.ok) throw new Error("Failed to fetch display name")
 
       const { name: displayName } = await response.json()
@@ -42,6 +42,7 @@ export const displayNameStore = (() => {
 
   return {
     get: (user: EvmAddress, fallback: boolean = true) => {
+      console.log(store)
       const name = store.get(user)
       if (name) return name
 

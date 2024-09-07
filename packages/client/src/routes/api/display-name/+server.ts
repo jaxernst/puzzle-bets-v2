@@ -1,9 +1,4 @@
-import { getDisplayName, setDisplayName } from "$lib/server/supabaseClient"
-
-export const GET = async ({ locals }) => {
-  const displayName = await getDisplayName(locals.user)
-  return new Response(JSON.stringify({ name: displayName ?? null }))
-}
+import { setDisplayName } from "$lib/server/supabaseClient"
 
 export const POST = async ({ request, locals }) => {
   if (!locals.user) {
