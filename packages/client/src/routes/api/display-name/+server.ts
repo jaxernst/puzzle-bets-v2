@@ -1,8 +1,6 @@
 import { getDisplayName, setDisplayName } from "$lib/server/supabaseClient"
 
 export const GET = async ({ locals }) => {
-  if (!locals.user) throw "Should be authenticated"
-
   const displayName = await getDisplayName(locals.user)
   return new Response(JSON.stringify({ name: displayName ?? null }))
 }
