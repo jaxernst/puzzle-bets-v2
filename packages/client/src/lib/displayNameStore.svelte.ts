@@ -42,7 +42,6 @@ export const displayNameStore = (() => {
 
   return {
     get: (user: EvmAddress, fallback: boolean = true) => {
-      console.log(store)
       const name = store.get(user)
       if (name) return name
 
