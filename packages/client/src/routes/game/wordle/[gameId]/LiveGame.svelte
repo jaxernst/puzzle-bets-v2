@@ -163,17 +163,17 @@
 
   {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
     <div
-      class=" mx-auto flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
+      class="mx-auto flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
     >
-      <div class="font-angkor font-extrabold">
+      <div class="font-black">
         The Puzzle will be ready to reveal once your opponent joins.
       </div>
 
       <div
-        class="rounded-full bg-black px-2 py-2 text-sm font-semibold text-white"
+        class="rounded-full border-2 border-black px-2 py-1.5 text-sm font-semibold"
       >
         {#if timers.inviteTimeLeft > 0}
-          Invite expires {formatTimeAbbr(timers.inviteTimeLeft)}
+          Invite expires {formatTime(timers.inviteTimeLeft)}
         {:else}
           Invite Expired. Cancel Game to withdraw
         {/if}
@@ -192,7 +192,7 @@
         </button>
 
         <button
-          class="mt-2 w-full rounded border-2 border-black p-3 font-bold"
+          class="mt-2 w-full rounded p-3 font-bold underline"
           onclick={() => (showCancelGame = true)}
         >
           Cancel Game
