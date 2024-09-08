@@ -21,7 +21,6 @@
 
   let timers = $derived(game ? getGameTimers(game) : undefined)
   let submissionTimeLeft = $derived(timers?.mySubmissionTimeLeft)
-  $inspect(timers)
 </script>
 
 <div class="flex w-full justify-center">
