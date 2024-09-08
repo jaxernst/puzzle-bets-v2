@@ -21,6 +21,7 @@
 
   let timers = $derived(game ? getGameTimers(game) : undefined)
   let submissionTimeLeft = $derived(timers?.mySubmissionTimeLeft)
+  $inspect(timers)
 </script>
 
 <div class="flex w-full justify-center">
@@ -62,8 +63,12 @@
             No time limit
           {:else if submissionTimeLeft === 0}
             Out of time
-          {:else if submissionTimeLeft === -1}
-            {formatTimeAbbr(submissionTimeLeft === -1 ? game.submissionWindow : submissionTimeLeft)}
+          {:else}
+            {formatTimeAbbr(
+              submissionTimeLeft === -1
+                ? game.submissionWindow
+                : submissionTimeLeft,
+            )}
           {/if}
         </div>
       </div>
