@@ -1,3 +1,11 @@
+<script lang="ts" context="module">
+  let showConfirmSubmit = $state(false)
+
+  export const openSubmitModal = () => {
+    showConfirmSubmit = true
+  }
+</script>
+
 <script lang="ts">
   import { getPlayerOutcomes } from "$lib/gameQueries"
   import type { EvmAddress } from "$lib"
@@ -8,19 +16,27 @@
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import { GameStatus, type PlayerGame } from "$lib/types"
-  import { capitalized, entityToInt, formatSigFig, formatTime } from "$lib/util"
-  import { toast } from "@zerodevx/svelte-toast"
+  import {
+    capitalized,
+    entityToInt,
+    formatSigFig,
+    formatTime,
+    formatTimeAbbr,
+  } from "$lib/util"
   import { twMerge } from "tailwind-merge"
   import { formatEther } from "viem"
+  import Wallet from "$lib/icons/Wallet.svelte"
+  import { prices } from "$lib/prices.svelte"
+  import Star from "$lib/icons/Star.svelte"
 
   let {
     game,
-    user,
-    puzzleState,
+    puzzleDueIn,
     class: className,
   } = $props<{
     user: EvmAddress
     game: PlayerGame
+    puzzleDueIn: number
     class?: string
   }>()
 
@@ -34,9 +50,16 @@
   let claiming = $state(false)
   let claimError = $state(null)
   let votingRematch = $state(false)
-
   let outcomes = $derived(getPlayerOutcomes(game))
   let opponentName = $derived(displayNameStore.get(game.opponent))
+
+  let gameBuyInEth = formatSigFig(Number(formatEther(game.buyInAmount)), 1)
+  let gameBuyInUsd = $derived((gameBuyInEth * prices.eth).toFixed(2))
+
+  const confirmSubmit = async () => {
+    showConfirmSubmit = false
+    await verifyAndSubmitSolution()
+  }
 
   const verifyAndSubmitSolution = async () => {
     if (submitting || !mud.systemCalls) return
@@ -111,7 +134,7 @@
       className,
     )}
     disabled={!outcomes.canSubmit || submitting}
-    onclick={verifyAndSubmitSolution}
+    onclick={openSubmitModal}
   >
     Submit
   </button>
@@ -220,5 +243,38 @@
         {/if}
       </button>
     {/if}
+  </div>
+</Modal>
+
+<Modal bind:show={showConfirmSubmit} class="w-fit">
+  {#snippet header()}
+    Confirm Puzzle Submission
+  {/snippet}
+
+  <div
+    class="self-start rounded-full bg-black p-2 text-xs font-bold text-white"
+  >
+    Puzzle Due in {formatTimeAbbr(puzzleDueIn)}
+  </div>
+
+  <p class="max-w-[300px]">
+    Submit your solution before the deadline for a shot at victory!
+  </p>
+
+  <div class="flex flex-col gap-2">
+    <button
+      class="rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70"
+      onclick={confirmSubmit}
+      disabled={submitting}
+    >
+      {submitting ? "Submitting..." : "Submit Puzzle"}
+    </button>
+
+    <button
+      class="rounded border-2 border-black px-6 py-2 font-black"
+      onclick={() => (showConfirmSubmit = false)}
+    >
+      Cancel
+    </button>
   </div>
 </Modal>

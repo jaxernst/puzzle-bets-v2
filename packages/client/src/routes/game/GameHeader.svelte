@@ -13,7 +13,11 @@
   import SubmitAndViewResult from "./SubmitAndViewResult.svelte"
   import { getGameTimers } from "$lib/gameQueries"
 
-  let { game, puzzle } = $props<{ game?: PlayerGame; puzzle: PuzzleType }>()
+  let { game, puzzle, score } = $props<{
+    game?: PlayerGame
+    score?: number
+    puzzle: PuzzleType
+  }>()
 
   let betAmountDollar = game
     ? Number(formatEther(game.buyInAmount)) * prices.eth
@@ -75,7 +79,12 @@
 
     <div class="hidden grow justify-end md:flex">
       {#if user.address && game}
-        <SubmitAndViewResult {game} user={user.address} />
+        <SubmitAndViewResult
+          {game}
+          user={user.address}
+          puzzleDueIn={submissionTimeLeft ?? -1}
+          {score}
+        />
       {:else}
         <button
           class="disabled:opacity-4 rounded bg-black px-6 py-2 font-black text-white opacity-70"

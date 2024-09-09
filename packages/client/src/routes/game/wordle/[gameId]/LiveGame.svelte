@@ -16,7 +16,11 @@
     systemTimestamp,
     timeRemaining,
   } from "$lib/util"
-  import { wordleGameStates } from "$lib/puzzleGameState.svelte"
+  import {
+    wordleGameStates,
+    type PuzzleState,
+    type WordleGameState,
+  } from "$lib/puzzleGameState.svelte"
   import { exportWordleBoard } from "../exportBoard"
   import { launchConfetti } from "$lib/components/Confetti.svelte"
   import {
@@ -38,7 +42,9 @@
   import { goto } from "$app/navigation"
   import { gameInviteUrls } from "$lib/inviteUrls"
   import type { Entity } from "@latticexyz/recs"
-  import SubmitAndViewResult from "../../SubmitAndViewResult.svelte"
+  import SubmitAndViewResult, {
+    openSubmitModal,
+  } from "../../SubmitAndViewResult.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -153,6 +159,12 @@
 
     cancelGameState = null
   }
+
+  $effect(() => {
+    if (puzzleState?.solved && !submitted && !expired) {
+      openSubmitModal()
+    }
+  })
 </script>
 
 <div
@@ -276,7 +288,12 @@
   <div class="min-h-5"></div>
 
   <div class="flex w-full grow items-end pb-1 md:hidden">
-    <SubmitAndViewResult {game} {user} class="w-full" />
+    <SubmitAndViewResult
+      class="w-full"
+      {game}
+      {user}
+      puzzleDueIn={timers.myPlaybackTime}
+    />
   </div>
 </div>
 
