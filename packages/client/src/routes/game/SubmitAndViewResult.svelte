@@ -53,9 +53,6 @@
   let outcomes = $derived(getPlayerOutcomes(game))
   let opponentName = $derived(displayNameStore.get(game.opponent))
 
-  let gameBuyInEth = formatSigFig(Number(formatEther(game.buyInAmount)), 1)
-  let gameBuyInUsd = $derived((gameBuyInEth * prices.eth).toFixed(2))
-
   const confirmSubmit = async () => {
     showConfirmSubmit = false
     await verifyAndSubmitSolution()
