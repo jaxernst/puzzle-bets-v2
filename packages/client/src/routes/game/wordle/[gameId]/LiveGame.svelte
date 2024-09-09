@@ -12,23 +12,11 @@
     formatAsDollar,
     formatSigFig,
     formatTime,
-    formatTimeAbbr,
-    systemTimestamp,
-    timeRemaining,
   } from "$lib/util"
-  import {
-    wordleGameStates,
-    type PuzzleState,
-    type WordleGameState,
-  } from "$lib/puzzleGameState.svelte"
+  import { wordleGameStates } from "$lib/puzzleGameState.svelte"
   import { exportWordleBoard } from "../exportBoard"
   import { launchConfetti } from "$lib/components/Confetti.svelte"
-  import {
-    GameStatus,
-    type EvmAddress,
-    type Game,
-    type PlayerGame,
-  } from "$lib/types"
+  import { GameStatus, type EvmAddress, type PlayerGame } from "$lib/types"
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
   import DotLoader from "$lib/components/DotLoader.svelte"
