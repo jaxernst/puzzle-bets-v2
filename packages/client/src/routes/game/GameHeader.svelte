@@ -83,7 +83,6 @@
           {game}
           user={user.address}
           puzzleDueIn={submissionTimeLeft ?? -1}
-          {score}
         />
       {:else}
         <button
