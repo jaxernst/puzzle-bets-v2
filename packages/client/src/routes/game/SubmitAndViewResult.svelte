@@ -1,8 +1,13 @@
 <script lang="ts" context="module">
   let showConfirmSubmit = $state(false)
+  let showResults = $state(false)
 
   export const openSubmitModal = () => {
     showConfirmSubmit = true
+  }
+
+  export const openResultsModal = () => {
+    showResults = true
   }
 </script>
 
@@ -13,6 +18,7 @@
   import Avatar2 from "$lib/assets/Avatar2.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import Modal from "$lib/components/Modal.svelte"
+  import LoadingButton from "$lib/components/LoadingButton.svelte"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import { GameStatus, type PlayerGame } from "$lib/types"
@@ -25,9 +31,6 @@
   } from "$lib/util"
   import { twMerge } from "tailwind-merge"
   import { formatEther } from "viem"
-  import Wallet from "$lib/icons/Wallet.svelte"
-  import { prices } from "$lib/prices.svelte"
-  import Star from "$lib/icons/Star.svelte"
 
   let {
     game,
@@ -42,10 +45,11 @@
     disabled?: boolean
   }>()
 
-  let showResults = $state(
-    new URLSearchParams(window.location.search).get("results") === "true" ||
-      false,
-  )
+  $effect(() => {
+    if (new URLSearchParams(window.location.search).get("results") === "true") {
+      showResults = true
+    }
+  })
 
   let submitting = $state(false)
   let submitError: null | string = $state(null)
@@ -56,8 +60,9 @@
   let opponentName = $derived(displayNameStore.get(game.opponent))
 
   const confirmSubmit = async () => {
-    showConfirmSubmit = false
     await verifyAndSubmitSolution()
+    showConfirmSubmit = false
+    showResults = true
   }
 
   const verifyAndSubmitSolution = async () => {
@@ -261,13 +266,13 @@
   </p>
 
   <div class="flex flex-col gap-2">
-    <button
+    <LoadingButton
       class="rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70"
-      onclick={confirmSubmit}
+      onClick={confirmSubmit}
       disabled={submitting}
     >
       {submitting ? "Submitting..." : "Submit Puzzle"}
-    </button>
+    </LoadingButton>
 
     <button
       class="rounded border-2 border-black px-6 py-2 font-black"
