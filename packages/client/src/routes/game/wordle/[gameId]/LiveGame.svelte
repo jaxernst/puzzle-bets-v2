@@ -291,7 +291,6 @@
       class="w-full"
       {game}
       {user}
-      puzzleDueIn={timers.myPlaybackTime}
       disabled={!gameOver || submitted}
       failedToSolve={puzzleState?.lost}
     />

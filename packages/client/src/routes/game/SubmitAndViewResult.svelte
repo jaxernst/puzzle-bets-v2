@@ -34,14 +34,12 @@
 
   let {
     game,
-    puzzleDueIn,
     class: className,
     disabled,
     failedToSolve,
   } = $props<{
     user: EvmAddress
     game: PlayerGame
-    puzzleDueIn: number
     class?: string
     disabled?: boolean
     failedToSolve?: boolean
@@ -60,6 +58,8 @@
   let votingRematch = $state(false)
   let outcomes = $derived(getPlayerOutcomes(game))
   let opponentName = $derived(displayNameStore.get(game.opponent))
+
+  let puzzleDueIn = $derived(outcomes.mySubmissionTimeLeft)
 
   const confirmSubmit = async () => {
     await verifyAndSubmitSolution()
@@ -263,7 +263,7 @@
     Puzzle Due in {formatTimeAbbr(puzzleDueIn)}
   </div>
 
-  <div class="max-w-[300px] leading-tight">
+  <div class="sm:max-w-[300px] leading-tight">
     {#if failedToSolve}
       <p>You did not solve the puzzle :(</p>
       <p class="mt-3">

@@ -84,7 +84,6 @@
         <SubmitAndViewResult
           {game}
           user={user.address}
-          puzzleDueIn={submissionTimeLeft ?? -1}
           disabled={disableSubmit}
           {failedToSolve}
         />
