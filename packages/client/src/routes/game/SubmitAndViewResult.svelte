@@ -33,11 +33,13 @@
     game,
     puzzleDueIn,
     class: className,
+    disabled,
   } = $props<{
     user: EvmAddress
     game: PlayerGame
     puzzleDueIn: number
     class?: string
+    disabled?: boolean
   }>()
 
   let showResults = $state(
@@ -130,7 +132,7 @@
       "rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70",
       className,
     )}
-    disabled={!outcomes.canSubmit || submitting}
+    disabled={!outcomes.canSubmit || submitting || disabled}
     onclick={openSubmitModal}
   >
     Submit

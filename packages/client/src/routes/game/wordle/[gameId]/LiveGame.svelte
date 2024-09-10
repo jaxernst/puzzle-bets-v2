@@ -33,6 +33,7 @@
   import SubmitAndViewResult, {
     openSubmitModal,
   } from "../../SubmitAndViewResult.svelte"
+  import LoadingButton from "$lib/components/LoadingButton.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress
@@ -158,7 +159,7 @@
 <div
   class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 overflow-y-auto px-4"
 >
-  <GameHeader {game} puzzle="wordle" />
+  <GameHeader {game} puzzle="wordle" disableSubmit={!gameOver || submitted} />
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
   {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
@@ -215,14 +216,18 @@
             timers.myPlaybackTime ?? 0,
           )}
           to start your turn.
+          <div class="mt-2 text-sm font-normal">
+            (This will initiate a blockchain transaction to start your game
+            timer)
+          </div>
         </div>
 
-        <button
+        <LoadingButton
           class="w-full max-w-[375px] rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-          onclick={() => mud.systemCalls?.startTurn(gameId)}
+          onClick={async () => await mud.systemCalls?.startTurn(gameId)}
         >
           Start Turn
-        </button>
+        </LoadingButton>
       {/if}
     </div>
   {:else if puzzleState}
@@ -281,6 +286,7 @@
       {game}
       {user}
       puzzleDueIn={timers.myPlaybackTime}
+      disabled={!gameOver || submitted}
     />
   </div>
 </div>
