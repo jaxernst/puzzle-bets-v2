@@ -159,7 +159,13 @@
 <div
   class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 overflow-y-auto px-4"
 >
-  <GameHeader {game} puzzle="wordle" disableSubmit={!gameOver || submitted} />
+  <GameHeader
+    {game}
+    puzzle="wordle"
+    disableSubmit={!gameOver || submitted}
+    failedToSolve={puzzleState?.lost}
+  />
+
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
   {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
@@ -287,6 +293,7 @@
       {user}
       puzzleDueIn={timers.myPlaybackTime}
       disabled={!gameOver || submitted}
+      failedToSolve={puzzleState?.lost}
     />
   </div>
 </div>

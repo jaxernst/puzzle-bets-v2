@@ -412,8 +412,7 @@
       </div>
 
       <div class="leading-tight">
-        If you have notifications enabled, you'll get notified as soon as
-        someone joins your game. <span class="underline"
+        <span class="underline"
           >Once your opponent joins, you'll have 12 hours to start your turn</span
         >
       </div>

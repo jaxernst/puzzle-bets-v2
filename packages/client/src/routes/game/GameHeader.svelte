@@ -13,11 +13,12 @@
   import SubmitAndViewResult from "./SubmitAndViewResult.svelte"
   import { getGameTimers } from "$lib/gameQueries"
 
-  let { game, puzzle, score, disableSubmit } = $props<{
+  let { game, puzzle, score, disableSubmit, failedToSolve } = $props<{
     game?: PlayerGame
     score?: number
     puzzle: PuzzleType
     disableSubmit?: boolean
+    failedToSolve?: boolean
   }>()
 
   let betAmountDollar = game
@@ -85,6 +86,7 @@
           user={user.address}
           puzzleDueIn={submissionTimeLeft ?? -1}
           disabled={disableSubmit}
+          {failedToSolve}
         />
       {:else}
         <button

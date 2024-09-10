@@ -37,12 +37,14 @@
     puzzleDueIn,
     class: className,
     disabled,
+    failedToSolve,
   } = $props<{
     user: EvmAddress
     game: PlayerGame
     puzzleDueIn: number
     class?: string
     disabled?: boolean
+    failedToSolve?: boolean
   }>()
 
   $effect(() => {
@@ -261,9 +263,17 @@
     Puzzle Due in {formatTimeAbbr(puzzleDueIn)}
   </div>
 
-  <p class="max-w-[300px]">
-    Submit your solution before the deadline for a shot at victory!
-  </p>
+  <div class="max-w-[300px] leading-tight">
+    {#if failedToSolve}
+      <p>You did not solve the puzzle :(</p>
+      <p class="mt-3">
+        Submit now with a 0 score to see your opponent's status or wait until
+        the time runs out...
+      </p>
+    {:else}
+      Submit your solution before the deadline for a shot at victory!
+    {/if}
+  </div>
 
   <div class="flex flex-col gap-2">
     <LoadingButton
