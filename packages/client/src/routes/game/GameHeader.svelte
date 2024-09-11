@@ -12,6 +12,7 @@
   import { user } from "$lib/userStore.svelte"
   import SubmitAndViewResult from "./SubmitAndViewResult.svelte"
   import { getGameTimers } from "$lib/gameQueries"
+  import { goto } from "$app/navigation"
 
   let { game, puzzle, score, disableSubmit, failedToSolve } = $props<{
     game?: PlayerGame
@@ -33,7 +34,7 @@
   <div class="flex max-w-[1000px] flex-grow items-center gap-4">
     <button
       class="flex items-center text-base font-semibold"
-      onclick={() => window.history.back()}
+      onclick={() => goto("/dashboard")}
     >
       <div class="p-.5 bg-pb-beige-1 rounded-md">
         <AnimatedArrow
