@@ -3,13 +3,21 @@
   import Avatar2 from "$lib/assets/Avatar2.svelte"
   import { type EvmAddress } from "$lib/types"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
+  import { isAddress } from "viem"
+  import { shortenAddress } from "$lib/util"
 
   let { opponent, pending } = $props<{
     opponent: EvmAddress | null
     pending?: boolean
   }>()
 
-  let opponentName = $derived(opponent && displayNameStore.get(opponent))
+  let opponentName = $derived.by(() => {
+    if (pending) return "Pending..."
+    if (!opponent) return "Nobody"
+
+    const name = displayNameStore.get(opponent, false)
+    return name ?? shortenAddress(opponent)
+  })
 </script>
 
 <div class="flex items-center justify-center gap-2">
@@ -22,12 +30,6 @@
 
   <div class="flex items-center gap-1">
     <Avatar2 />
-    {#if opponent}
-      {opponentName}
-    {:else if pending}
-      Pending...
-    {:else}
-      Nobody
-    {/if}
+    {opponentName}
   </div>
 </div>
