@@ -4,21 +4,22 @@ import type { EvmAddress } from "./types"
 import { signInWithEthereum } from "./siwe"
 import { publicClient } from "./mud/setupNetwork"
 import { displayNameStore } from "./displayNameStore.svelte"
+import { prices } from "./prices.svelte"
+import { formatAsDollar } from "./util"
 
 const initialState = {
   address: undefined,
   authenticated: false,
-  balance: "0.00",
+  balance: 0n,
 }
 
-const makeBalanceSync = (setBalance: (balance: string) => any) => {
+const makeBalanceSync = (setBalance: (balance: bigint) => any) => {
   let started = false
   let syncInterval: NodeJS.Timeout | null = null
 
   async function updateBalance(address: EvmAddress) {
     const balance = await publicClient.getBalance({ address })
-    const formattedBalance = Number(formatEther(balance)).toFixed(4)
-    setBalance(formattedBalance)
+    setBalance(balance)
   }
 
   return {
@@ -44,11 +45,11 @@ export const user = (() => {
   let userState = $state<{
     address: EvmAddress | undefined
     authenticated: boolean
-    balance: string
+    balance: bigint
     displayName?: string
   }>(initialState)
 
-  const balanceSync = makeBalanceSync((balance: string) => {
+  const balanceSync = makeBalanceSync((balance: bigint) => {
     // Only update store when balance has changed
     if (balance !== userState.balance) {
       userState.balance = balance
@@ -93,6 +94,14 @@ export const user = (() => {
     },
     get balance() {
       return userState.balance
+    },
+
+    get balanceEth() {
+      return Number(formatEther(userState.balance)).toFixed(2)
+    },
+
+    get balanceUsd() {
+      return formatAsDollar(Number(formatEther(userState.balance)) * prices.eth)
     },
 
     onDisplayNameChange: (displayName: string) => {
