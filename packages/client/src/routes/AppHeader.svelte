@@ -7,7 +7,6 @@
   import Avatar1 from "$lib/assets/Avatar1.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import { prices } from "$lib/prices.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import { walletStore } from "$lib/walletStore.svelte"
   import { toggleDisplayNameModal } from "./DisplayNameModal.svelte"
@@ -39,7 +38,7 @@
             class=" bg-pb-beige-1 flex items-center gap-1 rounded-full p-2 text-xs"
           >
             <Wallet />
-            {formatAsDollar(Number(user.balance) * prices.eth)}
+            {user.balanceUsd}
           </div>
         </button>
       {:else}
