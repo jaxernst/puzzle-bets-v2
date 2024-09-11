@@ -2,7 +2,7 @@ import type { EvmAddress } from "$lib"
 import { Map } from "svelte/reactivity"
 
 export const displayNameStore = (() => {
-  let store = $state(new Map())
+  let store = $state(new Map<EvmAddress, string>())
 
   const fetchName = async (user: EvmAddress) => {
     try {
