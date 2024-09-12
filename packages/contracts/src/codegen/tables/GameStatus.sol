@@ -17,7 +17,7 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
-import { Status } from "./../common.sol";
+import { Status } from "../common.sol";
 
 library GameStatus {
   // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "GameStatus", typeId: RESOURCE_TABLE });`

@@ -1,0 +1,32 @@
+{
+  "systems": [
+    {
+      "namespaceLabel": "v1",
+      "label": "AsyncPuzzleBetSystem",
+      "namespace": "v1",
+      "name": "AsyncPuzzleBetSy",
+      "systemId": "0x737976310000000000000000000000004173796e6350757a7a6c654265745379",
+      "abi": [
+        "function cancelPendingGame(bytes32 gameId)",
+        "function claim(bytes32 gameId)",
+        "function joinGame(bytes32 gameId, string password) payable",
+        "function joinGame(bytes32 gameId) payable",
+        "function newGame(uint8 puzzleType, uint32 submissionWindowSeconds, uint32 playbackWindowSeconds, uint256 inviteExpirationTimestamp, address puzzleMaster, bytes32 passwordHash) payable returns (bytes32)",
+        "function startTurn(bytes32 gameId)",
+        "function submitSolution(bytes32 gameId, uint32 score, bytes puzzleMasterSignature)",
+        "function voteRematch(bytes32 gameId)"
+      ],
+      "worldAbi": [
+        "function v1__cancelPendingGame(bytes32 gameId)",
+        "function v1__claim(bytes32 gameId)",
+        "function v1__joinGame(bytes32 gameId, string password) payable",
+        "function v1__joinGame(bytes32 gameId) payable",
+        "function v1__newGame(uint8 puzzleType, uint32 submissionWindowSeconds, uint32 playbackWindowSeconds, uint256 inviteExpirationTimestamp, address puzzleMaster, bytes32 passwordHash) payable returns (bytes32)",
+        "function v1__startTurn(bytes32 gameId)",
+        "function v1__submitSolution(bytes32 gameId, uint32 score, bytes puzzleMasterSignature)",
+        "function v1__voteRematch(bytes32 gameId)"
+      ]
+    }
+  ],
+  "createdAt": 1726117563988
+}

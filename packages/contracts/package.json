@@ -20,12 +20,12 @@
     "serve-index": "pnpm postgres-frontend"
   },
   "dependencies": {
-    "@latticexyz/cli": "2.0.12",
-    "@latticexyz/schema-type": "2.0.12",
-    "@latticexyz/store": "2.0.12",
-    "@latticexyz/store-indexer": "2.0.12",
-    "@latticexyz/world": "2.0.12",
-    "@latticexyz/world-modules": "2.0.12"
+    "@latticexyz/cli": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "@latticexyz/schema-type": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "@latticexyz/store": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "@latticexyz/store-indexer": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "@latticexyz/world": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "@latticexyz/world-modules": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
@@ -34,7 +34,7 @@
     "prettier": "^2.6.2",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solhint": "^3.3.7",
-    "solhint-config-mud": "2.0.12",
-    "solhint-plugin-mud": "2.0.12"
+    "solhint-config-mud": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "solhint-plugin-mud": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048"
   }
 }

@@ -17,7 +17,7 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
-import { Puzzle } from "./../common.sol";
+import { Puzzle } from "../common.sol";
 
 library PuzzleType {
   // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "PuzzleType", typeId: RESOURCE_TABLE });`
