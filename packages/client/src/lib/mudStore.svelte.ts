@@ -1,11 +1,7 @@
-import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import type { Components } from "./mud/setupNetwork"
 import { type Component } from "@latticexyz/recs"
-import { mount as mountDevTools } from "@latticexyz/dev-tools"
-
 import { setupNetwork, type Wallet } from "$lib/mud/setupNetwork"
 import { createSystemCalls } from "$lib/mud/createSystemCalls"
-import mudConfig from "contracts/mud.config"
 
 type MudState =
   | { synced: false }
