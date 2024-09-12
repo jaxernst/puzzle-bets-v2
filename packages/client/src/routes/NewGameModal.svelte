@@ -426,15 +426,15 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <a
-          href={`/game/wordle/${entityToInt(createdGameId)}`}
+        <button
           onclick={() => {
+            goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
             showCreated = false
           }}
           class="rounded-md border-2 border-black bg-black py-2 text-center text-white"
         >
           Go To Game Room
-        </a>
+        </button>
 
         <button
           class="rounded-md border-2 border-black py-2"
