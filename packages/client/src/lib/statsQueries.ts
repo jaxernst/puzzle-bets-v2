@@ -18,16 +18,19 @@ export function getPlayerStats(
   const gameStats = playerGames.reduce(
     (stats, game) => {
       const outcome = getPlayerOutcomes(game)
-      stats.totalBetAmount += game.buyInAmount
 
-      if (outcome.gameOutcome === "win") {
-        stats.numWins++
-        stats.totalWonAmount += game.buyInAmount * 2n
-      } else if (outcome.gameOutcome === "lose") {
-        stats.numLosses++
-      } else if (outcome.gameOutcome === "tie") {
-        stats.numTies++
-        stats.totalWonAmount += game.buyInAmount
+      if (outcome.gameOver) {
+        stats.totalBetAmount += game.buyInAmount
+
+        if (outcome.gameOutcome === "win") {
+          stats.numWins++
+          stats.totalWonAmount += game.buyInAmount * 2n
+        } else if (outcome.gameOutcome === "lose") {
+          stats.numLosses++
+        } else if (outcome.gameOutcome === "tie") {
+          stats.numTies++
+          stats.totalWonAmount += game.buyInAmount
+        }
       }
 
       return stats
