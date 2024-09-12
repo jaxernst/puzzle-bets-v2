@@ -7,9 +7,12 @@
   import Stars from "$lib/icons/Stars.svelte"
   import Trophy from "$lib/icons/Trophy.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
+  import { mud } from "$lib/mudStore.svelte"
+  import { prices } from "$lib/prices.svelte"
+  import { getPlayerStats } from "$lib/statsQueries"
   import type { PuzzleType } from "$lib/types"
   import { user } from "$lib/userStore.svelte"
-  import { capitalized, shortenAddress } from "$lib/util"
+  import { capitalized, shortenAddress, weiToDollarFormatted } from "$lib/util"
   import { toggleAboutModal } from "../AboutModal.svelte"
   import { toggleDisplayNameModal } from "../DisplayNameModal.svelte"
   import GameController, {
@@ -48,15 +51,9 @@
     return ["Guest", false]
   })
 
-  let walletBalanceUsd = "$32.00"
-  let walletBalanceEth = "0.012"
-  let activeWagerValUsd = "$30.00"
-  let numActiveGames = 3
-  let numWins = 12
-  let numLoss = 2
-  let numTied = 1
-  let totalBetUsd = "$140.00"
-  let totalWonUsd = "$90.00"
+  let stats = $derived(
+    user.address && mud.synced ? getPlayerStats(user.address, mud) : null,
+  )
 </script>
 
 <div class="flex h-full w-full flex-col overflow-visible md:h-auto">
@@ -102,8 +99,8 @@
 
           <div>
             {#if user.address}
-              <span class="font-bold">{walletBalanceUsd}</span>
-              <span>/ {walletBalanceEth} ETH</span>
+              <span class="font-bold">{user.balanceUsd}</span>
+              <span>/ {user.balanceEth} ETH</span>
             {:else}
               ---
             {/if}
@@ -119,8 +116,8 @@
           <Trophy class="h-[21px] w-[20px]" />
 
           <div>
-            {#if user.address}
-              {numWins} / {numLoss} / {numTied}
+            {#if stats}
+              {stats.numWins} / {stats.numLosses} / {stats.numTies}
             {:else}
               ---
             {/if}
@@ -136,8 +133,8 @@
           <Clock class="h-[20px] w-[21px]" />
 
           <div>
-            {#if user.address}
-              {activeWagerValUsd} / {numActiveGames}
+            {#if stats}
+              {weiToDollarFormatted(stats.activeWagerAmount, prices.eth)} / {stats.numActiveGames}
             {:else}
               ---
             {/if}
@@ -153,8 +150,9 @@
           <Coins class="h-[21px] w-[20px]" />
 
           <div>
-            {#if user.address}
-              {totalBetUsd} / {totalWonUsd}
+            {#if stats}
+              {weiToDollarFormatted(stats.totalBetAmount, prices.eth)} /
+              {weiToDollarFormatted(stats.totalWonAmount, prices.eth)}
             {:else}
               ---
             {/if}

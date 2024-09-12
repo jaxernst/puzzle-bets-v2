@@ -20,12 +20,11 @@ export const mud = (function createMudStore() {
   // (used for auto-updating game timers)
   let tick = $state(1)
 
-  let stop = () => {}
+  let stop = $state(() => {})
 
   async function setup(wallet: Wallet) {
     const network = await setupNetwork(wallet)
     await waitForSync(network.components)
-
     PUBLIC_CHAIN_ID === 31337 && mountDevTools(network as any)
 
     mudState = {
@@ -57,15 +56,16 @@ export const mud = (function createMudStore() {
       tick = tick + 1
     }, 1000)
 
-    stop = () => {
-      network.stopSync()
+    // Return cleanup function
+    return () => {
       clearInterval(timer)
 
       componentSubscriptions.forEach((subscription) =>
         subscription.unsubscribe(),
       )
 
-      mudState = { synced: false }
+      network.stopSync()
+      mudState.synced = false
     }
   }
 
@@ -86,8 +86,13 @@ export const mud = (function createMudStore() {
       return mudState.synced
     },
 
-    setup,
-    stop,
+    setup: async (wallet: Wallet) => {
+      stop = await setup(wallet)
+    },
+
+    get stop() {
+      return stop
+    },
   }
 })()
 

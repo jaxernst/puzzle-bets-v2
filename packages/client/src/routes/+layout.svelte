@@ -15,10 +15,11 @@
   import DisplayNameModal from "./DisplayNameModal.svelte"
 
   let { children } = $props()
-
   $effect(() => {
     if (walletStore.walletClient?.account) {
       mud.setup(walletStore.walletClient)
+    } else {
+      mud.stop()
     }
   })
 

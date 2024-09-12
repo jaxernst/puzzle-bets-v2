@@ -228,6 +228,10 @@ export const formatAsDollar = (value: number) => {
   }).format(value)
 }
 
+export const weiToDollarFormatted = (wei: bigint, ethPrice: number) => {
+  return formatAsDollar(Number(formatEther(wei)) * ethPrice)
+}
+
 export const formatSigFig = (num: number, sigFigs = 3) => {
   if (num === 0) return 0
 
