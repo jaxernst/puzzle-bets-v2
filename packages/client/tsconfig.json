@@ -2,17 +2,12 @@
   "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
-    "checkJs": true,
-    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true,
     "strict": true,
     "incremental": true,
-    "composite": true,
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
-    "isolatedModules": true
+    "esModuleInterop": true
   },
-  "exclude": ["node_modules", ".svelte-kit", "../_client_old", "../contracts"]
+  "exclude": ["node_modules", ".svelte-kit", "../_client_old", "../contracts"],
+  "include": ["src/**/*", "src/node_modules", ".svelte-kit/ambient.d.ts"]
 }

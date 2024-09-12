@@ -24,8 +24,10 @@ import worlds from "contracts/worlds.json"
  * for instructions on how to add networks.
  */
 
-import { supportedChains } from "./supportedChains"
+// @ts-ignore
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
+
+import { supportedChains } from "./supportedChains"
 import { fallback, http } from "viem"
 import { transportObserver } from "@latticexyz/common"
 import type { MUDChain } from "@latticexyz/common/chains"
@@ -91,7 +93,6 @@ export const networkConfig = (() => {
     worldAddress,
     initialBlockNumber,
     connectMode: (chainConnectMethod as any)[chainId],
-    // @ts-ignore
     transport: transportObserver(fallback([http()])),
   }
 })()

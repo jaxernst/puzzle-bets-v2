@@ -1,9 +1,11 @@
+// @ts-ignore
+import { env } from "$env/dynamic/public"
+
 import { type Entity } from "@latticexyz/recs"
 import type { SetupNetworkResult } from "./setupNetwork"
 import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "$lib/types"
 import { padHex, parseEther } from "viem"
 import { hashString, systemTimestamp } from "$lib/util"
-import { env } from "$env/dynamic/public"
 import { writable } from "svelte/store"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
@@ -11,28 +13,6 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>
 export const txErrorStore = writable<string | null>(null)
 
 const DEFAULT_PLAYBACK_WINDOW = 60 * 60 * 24 // 1 Day
-
-const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
-  fn: T,
-): T => {
-  return (async (...args: Parameters<T>) => {
-    try {
-      await fn(...args)
-      txErrorStore.set(null)
-    } catch (error: unknown) {
-      // Catch viem error with .shortMessage fields
-      console.error(error)
-      if (typeof error === "object" && error !== null) {
-        const errorObj = error as { shortMessage?: string; message?: string }
-        txErrorStore.set(
-          errorObj.shortMessage ?? errorObj.message ?? String(error),
-        )
-      } else {
-        txErrorStore.set(String(error))
-      }
-    }
-  }) as T
-}
 
 export function createSystemCalls({
   worldContract,
@@ -139,4 +119,26 @@ export function createSystemCalls({
     voteRematch: incerceptTxError(voteRematch),
     cancelPendingGame: incerceptTxError(cancelPendingGame),
   }
+}
+
+const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
+  fn: T,
+): T => {
+  return (async (...args: Parameters<T>) => {
+    try {
+      await fn(...args)
+      txErrorStore.set(null)
+    } catch (error: unknown) {
+      // Catch viem error with .shortMessage fields
+      console.error(error)
+      if (typeof error === "object" && error !== null) {
+        const errorObj = error as { shortMessage?: string; message?: string }
+        txErrorStore.set(
+          errorObj.shortMessage ?? errorObj.message ?? String(error),
+        )
+      } else {
+        txErrorStore.set(String(error))
+      }
+    }
+  }) as T
 }

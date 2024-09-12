@@ -1,8 +1,21 @@
-import { worldContract } from "$lib/mud/setupNetwork"
 import { resourceToHex } from "@latticexyz/common"
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs"
 import { intToEntity } from "$lib/util"
 import type { EvmAddress } from "$lib/types"
+import { getContract, type Hex } from "viem"
+import { networkConfig } from "$lib/mud/networkConfig"
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
+import { publicClient, type SetupNetworkResult } from "$lib/mud/setupNetwork"
+
+type ReadonlyWorld = Pick<SetupNetworkResult["worldContract"], "read">
+
+export const worldContract: ReadonlyWorld = getContract({
+  address: networkConfig.worldAddress as Hex,
+  abi: IWorldAbi,
+  client: {
+    public: publicClient,
+  },
+})
 
 const Player1 = resourceToHex({
   type: "table",

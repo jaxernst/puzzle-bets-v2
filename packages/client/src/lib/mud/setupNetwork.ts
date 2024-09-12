@@ -5,6 +5,7 @@ import {
   type Transport,
   type Account,
   type Chain,
+  type PublicClient,
   getContract,
 } from "viem"
 
@@ -12,12 +13,11 @@ import { syncToRecs } from "@latticexyz/store-sync/recs"
 import { networkConfig } from "./networkConfig"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import { type ContractWrite } from "@latticexyz/common"
-import { createWorld } from "@latticexyz/recs"
+import { createWorld, type World } from "@latticexyz/recs"
 import { Subject, share } from "rxjs"
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions"
 import mudConfig from "contracts/mud.config"
 import { browser } from "$app/environment"
-import { type WaitForTransactionResult } from "@latticexyz/store-sync"
 
 export const world = createWorld()
 
@@ -25,19 +25,9 @@ export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 export type Components = SetupNetworkResult["components"]
 export type Wallet = WalletClient<Transport, Chain, Account>
 
-// @ts-ignore
-export const publicClient = createPublicClient({
+export const publicClient: PublicClient = createPublicClient({
   ...networkConfig,
   pollingInterval: 1000,
-})
-
-// Create a readonly instance of the world contract (for backend verifications)
-export const worldContract = getContract({
-  address: networkConfig.worldAddress as Hex,
-  abi: IWorldAbi,
-  client: {
-    public: publicClient,
-  },
 })
 
 export async function setupNetwork(wallet: Wallet) {
@@ -111,22 +101,6 @@ export async function setupNetwork(wallet: Wallet) {
 
   const MAX_RETRIES = 3
 
-  const retryWaitForTransaction = async (
-    tx: `0x${string}`,
-    retries = 0,
-  ): Promise<WaitForTransactionResult> => {
-    try {
-      return await waitForTransaction(tx)
-    } catch (e) {
-      if (retries < MAX_RETRIES) {
-        console.log("Retrying wait for transaction")
-        await new Promise((r) => setTimeout(r, 1500))
-        return await retryWaitForTransaction(tx, retries + 1)
-      }
-      throw e
-    }
-  }
-
   return {
     world,
     components,
@@ -136,7 +110,7 @@ export async function setupNetwork(wallet: Wallet) {
     storedBlockLogs$,
     worldContract,
     write$: write$.asObservable().pipe(share()),
-    waitForTransaction: retryWaitForTransaction,
+    waitForTransaction,
     stopSync,
-  }
+  } as const
 }
