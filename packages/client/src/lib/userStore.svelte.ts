@@ -76,8 +76,20 @@ export const user = (() => {
           wallet.walletClient.signMessage,
         )
       } else {
-        console.log("Signing out (todo)")
-        // TODO: When address changes to none (disconnected), we should logout
+        console.log("Signing out")
+
+        // Perform logout request
+        const response = await fetch("/api/siwe-auth/logout", {
+          method: "POST",
+          credentials: "include",
+        })
+
+        if (response.ok) {
+          console.log("Logout successful")
+          userState.authenticated = false
+        } else {
+          console.error("Logout failed")
+        }
       }
     }
   }
