@@ -21,7 +21,7 @@
   import LoadingButton from "$lib/components/LoadingButton.svelte"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
-  import { GameStatus, type PlayerGame } from "$lib/types"
+  import { type PlayerGame } from "$lib/types"
   import {
     capitalized,
     entityToInt,
@@ -31,6 +31,9 @@
   } from "$lib/util"
   import { twMerge } from "tailwind-merge"
   import { formatEther } from "viem"
+  import Star from "$lib/icons/Star.svelte"
+  import Coins from "$lib/icons/Coins.svelte"
+  import Trophy from "$lib/icons/Trophy.svelte"
 
   let {
     game,
@@ -114,6 +117,26 @@
       votingRematch = false
     }
   }
+
+  // Add this constant for the protocol fee percentage
+  const PROTOCOL_FEE_PERCENTAGE = 2.5
+
+  // Modify the getClaimableAmount function to accept a player parameter
+  const getClaimableAmount = (player: "user" | "opponent") => {
+    const isWinner =
+      player === "user"
+        ? outcomes.gameOutcome === "win"
+        : outcomes.gameOutcome === "lose"
+    if (isWinner) {
+      const totalPot = 2n * game.buyInAmount
+      const protocolFee =
+        (totalPot * BigInt(PROTOCOL_FEE_PERCENTAGE * 100)) / 10000n
+      return totalPot - protocolFee
+    } else if (outcomes.gameOutcome === "tie") {
+      return game.buyInAmount
+    }
+    return 0n
+  }
 </script>
 
 {#if !outcomes.canViewResults}
@@ -141,7 +164,10 @@
 
 <Modal bind:show={showResults}>
   {#snippet header()}
-    Results for {capitalized(game.type)} Game #{entityToInt(game.id)}
+    <div class="flex items-center gap-2">
+      <Trophy class="h-6 w-6" />
+      Results for {capitalized(game.type)} Game #{entityToInt(game.id)}
+    </div>
   {/snippet}
 
   <div class="font-bold">
@@ -155,67 +181,135 @@
         </p>
       {/if}
     {:else if outcomes.gameOutcome === "tie"}
-      Tie game! You can withdraw your portion or vote to rematch
+      Tie game! You can withdraw your full wager
     {:else}
       You lost :( Better luck next time!
     {/if}
   </div>
 
-  <div>
+  <div class="flex flex-col gap-2">
     <div class="flex items-center gap-1">
       <Avatar1 />
       You
     </div>
 
-    Score: {game.myScore}
-    <div>Rematch Vote: {Boolean(game.myRematchVote)}</div>
-    <div>Contract balance: {formatEther(game.opponentBalance)} eth</div>
+    <div class="flex gap-2">
+      <div
+        class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
+      >
+        <Star class="h-[21px] w-[20px]" />
+        Score: {game.myScore}
+      </div>
+
+      {#if outcomes.gameOutcome === "win" && outcomes.claimed}
+        <div
+          class="text-md bg-pb-yellow flex items-center gap-2 self-start rounded-full px-2 py-1 font-bold"
+        >
+          <Trophy class="h-[21px] w-[20px]" />
+          Claimed {formatSigFig(
+            Number(formatEther(getClaimableAmount("user"))),
+            3,
+          )} ETH
+        </div>
+      {:else if outcomes.gameOutcome !== "lose" || !outcomes.opponentClaimed}
+        <div
+          class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
+        >
+          <Coins class="h-[21px] w-[20px]" />
+          Balance: {formatSigFig(Number(formatEther(game.myBalance)), 2)} ETH
+        </div>
+      {/if}
+    </div>
   </div>
 
-  <div>
+  <div class="flex flex-col gap-2">
     <div class="flex items-center gap-1">
       <Avatar2 />
       {opponentName}
     </div>
 
-    {#if game.opponentSubmitted}
-      Score: {game.opponentScore}
-    {:else if outcomes.waitingForOpponentPlayback}
-      <p class="pt-1">
+    <div class="flex gap-2">
+      <div
+        class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
+      >
+        <Star class="h-[21px] w-[20px]" />
+        Score: {game.opponentSubmitted || outcomes.gameOver
+          ? game.opponentScore
+          : "Pending"}
+      </div>
+
+      {#if outcomes.gameOutcome === "lose" && outcomes.opponentClaimed}
+        <div
+          class="text-md bg-pb-yellow flex items-center gap-2 self-start rounded-full px-2 py-1 font-bold"
+        >
+          <Trophy class="h-[21px] w-[20px]" />
+          Claimed {formatSigFig(
+            Number(formatEther(getClaimableAmount("opponent"))),
+            3,
+          )} ETH
+        </div>
+      {:else if outcomes.gameOutcome !== "win" || !outcomes.claimed}
+        <div
+          class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
+        >
+          <Coins class="h-[21px] w-[20px]" />
+          Balance: {formatSigFig(Number(formatEther(game.opponentBalance)), 2)} ETH
+        </div>
+      {/if}
+    </div>
+
+    <p class="text-sm italic">
+      {#if outcomes.waitingForOpponentPlayback}
         Has {formatTime(outcomes.opponentPlaybackTime)} to start their turn...
-      </p>
-    {:else if outcomes.opponentSubmissionTimeRemaining > 0}
-      <p>
+      {:else if outcomes.opponentSubmissionTimeRemaining > 0}
         Opponent playing with {formatTime(
           outcomes.opponentSubmissionTimeRemaining,
         )} left to submit
-      </p>
-    {/if}
-
-    <div>Rematch Vote: {Boolean(game.opponentRematchVote)}</div>
-    <div>Contract balance: {formatEther(game.opponentBalance)} eth</div>
+      {/if}
+    </p>
   </div>
 
   <hr />
 
-  <div class="flex flex-col gap-2">
-    <button
-      class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-      disabled={!outcomes.gameOutcome ||
-        outcomes.gameOutcome === "lose" ||
-        outcomes.claimed}
-      onclick={claim}
-    >
-      {#if claiming}
-        <DotLoader class="fill-white " />
-      {:else if outcomes.claimed}
-        {formatSigFig(Number(formatEther(2n * game.buyInAmount)))} ETH Claimed
-      {:else}
-        Withdraw
-      {/if}
-    </button>
+  <div class="flex flex-col">
+    {#if outcomes.gameOutcome === "lose"}
+      <a
+        class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+        href="/dashboard"
+      >
+        Return to Dashboard
+      </a>
+    {:else}
+      <button
+        class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+        disabled={!outcomes.gameOutcome || outcomes.claimed}
+        onclick={claim}
+      >
+        {#if claiming}
+          <DotLoader class="fill-white " />
+        {:else if outcomes.claimed}
+          {formatSigFig(Number(formatEther(getClaimableAmount("user"))), 3)} ETH
+          Claimed
+        {:else if outcomes.gameOutcome === "tie"}
+          Withdraw {formatSigFig(Number(formatEther(game.buyInAmount)), 3)} ETH
+        {:else if outcomes.gameOutcome === "win"}
+          Claim Pot {formatSigFig(
+            Number(formatEther(getClaimableAmount("user"))),
+            3,
+          )}
+          ETH
+        {/if}
+      </button>
 
-    <!-- {#if outcomes.gameOutcome === "tie"}
+      {#if outcomes.gameOutcome === "win"}
+        <p class="mt-1.5 self-center text-sm">
+          {PROTOCOL_FEE_PERCENTAGE}% protocol fee applied
+        </p>
+      {/if}
+    {/if}
+
+    <!--  Rematch Button
+    {#if outcomes.gameOutcome === "tie"}
       <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
         disabled={!outcomes.gameOutcome || outcomes.gameOutcome !== "tie"}
