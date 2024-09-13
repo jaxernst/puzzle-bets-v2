@@ -6,6 +6,7 @@
     formatAsDollar,
     formatSigFig,
     shortenAddress,
+    formatTimeAbbr,
   } from "$lib/util"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { user } from "$lib/userStore.svelte"
@@ -38,27 +39,41 @@
   </div>
 
   <div class="flex flex-col">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between gap-1">
       <div class="flex items-center gap-1.5">
         <img
           alt="Player Avatar"
           src={"/avatar1.png"}
           class="h-[26px] w-[26px]"
         />
-        <div class="flex flex-col gap-1">
-          <div class="font-bold">{creatorDisplayName}</div>
-          <div>{shortenAddress(game.p1)}</div>
+        <div class="flex flex-col gap-1 overflow-hidden">
+          <div
+            class="max-w-[140px] overflow-hidden text-ellipsis whitespace-nowrap font-bold"
+          >
+            {creatorDisplayName ?? ""}{creatorDisplayName ??
+              ""}{creatorDisplayName ?? ""}
+          </div>
+          <div class="whitespace-nowrap">{shortenAddress(game.p1)}</div>
         </div>
       </div>
 
-      <div class="flex flex-col items-end gap-1">
-        <div class="text-xs text-[#757575]">Amount to Bet</div>
-        <div class="flex gap-1 font-bold">
-          <div>
-            {formatAsDollar(Number(formatEther(game.buyInAmount)) * prices.eth)}
+      <div class="flex flex-col items-end gap-2">
+        <div class="flex flex-col items-end">
+          <div class="flex gap-1 overflow-hidden font-bold">
+            <div>
+              {formatAsDollar(
+                Number(formatEther(game.buyInAmount)) * prices.eth,
+              )}
+            </div>
+            <div class="whitespace-nowrap text-[#8F8F8F]">
+              ({formatSigFig(Number(formatEther(game.buyInAmount)), 2)} ETH)
+            </div>
           </div>
-          <div class="text-[#8F8F8F]">
-            ({formatSigFig(Number(formatEther(game.buyInAmount)))} ETH)
+        </div>
+        <div class="flex flex-col items-end">
+          <div class="text-xs text-[#757575]">Puzzle Deadline</div>
+          <div class="font-bold">
+            {formatTimeAbbr(game.submissionWindow)}
           </div>
         </div>
       </div>
