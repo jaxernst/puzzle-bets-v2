@@ -347,6 +347,7 @@ export function getPlayerOutcomes(game: PlayerGame) {
     gameOver,
     gameOutcome,
     claimed: calculateClaimed(game, gameOutcome),
+    opponentClaimed: calculateOpponentClaimed(game, gameOutcome),
     canSubmit: calculateCanSubmit(game, mySubmissionTimeLeft),
     canViewResults: calculateCanViewResults(game, mySubmissionTimeLeft),
     waitingForOpponentPlayback: calculateWaitingForOpponentPlayback(
@@ -427,6 +428,15 @@ function calculateClaimed(
 ): boolean {
   if (game.buyInAmount > 0n && game.myBalance === 0n) return true
   if (gameOutcome === "win" && game.status === GameStatus.Complete) return true
+  return false
+}
+
+function calculateOpponentClaimed(
+  game: PlayerGame,
+  gameOutcome: "win" | "lose" | "tie" | null,
+): boolean {
+  if (game.buyInAmount > 0n && game.opponentBalance === 0n) return true
+  if (gameOutcome === "lose" && game.status === GameStatus.Complete) return true
   return false
 }
 
