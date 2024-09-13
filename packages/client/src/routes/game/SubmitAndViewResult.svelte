@@ -52,9 +52,7 @@
   })
 
   let submitting = $state(false)
-  let submitError: null | string = $state(null)
   let claiming = $state(false)
-  let claimError = $state(null)
   let votingRematch = $state(false)
   let outcomes = $derived(getPlayerOutcomes(game))
   let opponentName = $derived(displayNameStore.get(game.opponent))
@@ -70,7 +68,6 @@
   const verifyAndSubmitSolution = async () => {
     if (submitting || !mud.systemCalls) return
 
-    submitError = null
     submitting = true
     try {
       const res = await fetch(`/api/${game.type}/verify-user-solution`, {
@@ -90,10 +87,6 @@
       } else {
         await mud.systemCalls.submitSolution(game.id, score, signature)
       }
-    } catch (e: any) {
-      console.error("Failed to submit solution")
-      console.error(e)
-      submitError = e.shortMessage ?? "Error submitting"
     } finally {
       submitting = false
     }
@@ -103,12 +96,8 @@
     if (claiming || !mud.systemCalls) return
 
     claiming = true
-    claimError = null
-
     try {
       await mud.systemCalls.claim(game.id)
-    } catch (e: any) {
-      claimError = e.shortMessage ?? "Something went wrong"
     } finally {
       claiming = false
     }
@@ -126,12 +115,6 @@
     }
   }
 </script>
-
-{#if submitError}
-  <div class="font-medium text-red-600">
-    {submitError}
-  </div>
-{/if}
 
 {#if !outcomes.canViewResults}
   <button
@@ -232,11 +215,7 @@
       {/if}
     </button>
 
-    {#if claimError}
-      <p class="text=red-600">{claimError}</p>
-    {/if}
-
-    {#if outcomes.gameOutcome === "tie"}
+    <!-- {#if outcomes.gameOutcome === "tie"}
       <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
         disabled={!outcomes.gameOutcome || outcomes.gameOutcome !== "tie"}
@@ -248,7 +227,7 @@
           Vote Rematch
         {/if}
       </button>
-    {/if}
+    {/if} -->
   </div>
 </Modal>
 
@@ -263,7 +242,7 @@
     Puzzle Due in {formatTimeAbbr(puzzleDueIn)}
   </div>
 
-  <div class="sm:max-w-[300px] leading-tight">
+  <div class="leading-tight sm:max-w-[300px]">
     {#if failedToSolve}
       <p>You did not solve the puzzle :(</p>
       <p class="mt-3">
