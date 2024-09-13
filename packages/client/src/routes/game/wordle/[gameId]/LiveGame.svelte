@@ -150,7 +150,12 @@
   }
 
   $effect(() => {
-    if (puzzleState?.solved && !submitted && !expired) {
+    if (
+      puzzleState?.solved &&
+      !submitted &&
+      !expired &&
+      timers.mySubmissionTimeLeft > 0
+    ) {
       openSubmitModal()
     }
   })
