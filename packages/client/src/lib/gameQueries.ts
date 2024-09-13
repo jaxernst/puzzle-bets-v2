@@ -20,6 +20,8 @@ import {
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 import { type SetupNetworkResult } from "./mud/setupNetwork"
 import { systemTimestamp, timeRemaining } from "$lib/util"
+
+// @ts-ignore
 import { PUBLIC_PUZZLE_MASTER_ADDRESS } from "$env/static/public"
 
 export function getPlayerGames(

@@ -309,9 +309,8 @@
     <div class="font-black leading-none">Are you sure you want to cancel?</div>
 
     <div class="text-base leading-tight">
-      This will end the game and refund your original creation wager you
-      selected. If nobody joins your game or the invite link expires, your wager
-      will still be refunded all the same.
+      This will end the game and refund your wager. If nobody joins your game or
+      the invite link expires, your wager will still be refunded all the same.
     </div>
 
     <div class="flex flex-col items-start gap-2">
