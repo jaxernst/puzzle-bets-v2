@@ -173,7 +173,7 @@
 
   <div class="font-bold">
     {#if !outcomes.gameOver}
-      Game still active! Come back later to see final results and withdrawal
+      Game still active! Come back later to see final results and withdraw
     {:else if outcomes.gameOutcome === "win"}
       Congrats you won!
       {#if outcomes.opponentMissedPlaybackWindow}
@@ -182,7 +182,10 @@
         </p>
       {/if}
     {:else if outcomes.gameOutcome === "tie"}
-      Tie game! You can withdraw your full wager
+      Tie game!
+      <div class="text-sm font-medium">
+        You can withdraw your wager and start a new game
+      </div>
     {:else}
       You lost :( Better luck next time!
     {/if}
