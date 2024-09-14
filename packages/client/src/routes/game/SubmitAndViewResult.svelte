@@ -34,6 +34,7 @@
   import Star from "$lib/icons/Star.svelte"
   import Coins from "$lib/icons/Coins.svelte"
   import Trophy from "$lib/icons/Trophy.svelte"
+  import { goto } from "$app/navigation"
 
   let {
     game,
@@ -261,7 +262,7 @@
     <p class="text-sm italic">
       {#if outcomes.waitingForOpponentPlayback}
         Has {formatTime(outcomes.opponentPlaybackTime)} to start their turn...
-      {:else if outcomes.opponentSubmissionTimeRemaining > 0}
+      {:else if outcomes.opponentSubmissionTimeRemaining > 0 && !outcomes.gameOver}
         Opponent playing with {formatTime(
           outcomes.opponentSubmissionTimeRemaining,
         )} left to submit
@@ -273,12 +274,12 @@
 
   <div class="flex flex-col">
     {#if outcomes.gameOutcome === "lose"}
-      <a
+      <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-        href="/dashboard"
+        onclick={() => goto("/dashboard")}
       >
         Return to Dashboard
-      </a>
+      </button>
     {:else}
       <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
@@ -298,6 +299,8 @@
             3,
           )}
           ETH
+        {:else if !outcomes.gameOutcome}
+          Check back later to claim
         {/if}
       </button>
 
