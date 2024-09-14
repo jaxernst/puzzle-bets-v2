@@ -53,7 +53,7 @@
   let gameWagerEth = $state(Number(formatEther(game?.buyInAmount ?? 0n)))
   let gameWagerUsd = $derived(gameWagerEth * prices.eth)
   let creatorAddress = shortenAddress(game.p1) as EvmAddress
-  let creatorName = $derived(displayNameStore.get(creatorAddress, false))
+  let creatorName = $derived(displayNameStore.get(game.p1, false))
 </script>
 
 {#if game && gameType}
@@ -111,7 +111,7 @@
       {#if joinGameLoading}
         <DotLoader class="fill-white" />
       {:else}
-        Join and Match Wager
+        Join and Reveal Puzzle
       {/if}
     </button>
 
