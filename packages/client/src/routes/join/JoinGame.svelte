@@ -111,7 +111,7 @@
       {#if joinGameLoading}
         <DotLoader class="fill-white" />
       {:else}
-        Join and Reveal Puzzle
+        Join and Start Puzzle
       {/if}
     </button>
 
