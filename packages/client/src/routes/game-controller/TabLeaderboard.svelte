@@ -4,41 +4,49 @@
   import { formatAsDollar, shortenAddress } from "$lib/util"
   import { prices } from "$lib/prices.svelte"
   import { formatEther } from "viem"
+  import { displayNameStore } from "$lib/displayNameStore.svelte"
 
   let leaderboard = $derived(getLeaderboard(mud))
 </script>
 
-<div class="bg-pb-beige-2 rounded-lg p-4 shadow-md">
-  <h2 class="mb-4 text-2xl font-bold">Leaderboard</h2>
-  <table class="w-full">
+<div class="sm:p-4">
+  <table class="w-full border-separate border-spacing-y-3 text-sm sm:text-base">
     <thead>
-      <tr class="text-left">
-        <th class="pb-2">Rank</th>
-        <th class="pb-2">Player</th>
-        <th class="pb-2">Won</th>
-        <th class="pb-2">Lost</th>
-        <th class="pb-2">Tied</th>
-        <th class="pb-2">Total Won</th>
+      <tr>
+        <th class="text-left">Rank</th>
+        <th class="text-left">Player</th>
+        <th class="text-left">W / L / T</th>
+        <th class="text-left">Amount Won</th>
       </tr>
     </thead>
     <tbody>
       {#each leaderboard as { rank, player, won, lost, tied, totalWonAmount }}
-        <tr class="border-t border-gray-200">
-          <td class="py-2">#{rank}</td>
-          <td class="py-2">
+        {@const playerName = displayNameStore.get(player, false)}
+
+        <tr
+          class=" bg-pb-off-white rounded"
+          style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
+        >
+          <td class="rounded-l p-3">{rank}</td>
+          <td class="p-3">
             <div class="flex items-center">
               <img
                 src="/avatar1.png"
                 alt="Avatar"
                 class="mr-2 h-6 w-6 rounded-full"
               />
-              {shortenAddress(player)}
+              <div>
+                {#if playerName}
+                  <div class="font-bold">{playerName}</div>
+                  <div class=" text-sm">({shortenAddress(player)})</div>
+                {:else}
+                  <div class="font-medium">{shortenAddress(player)}</div>
+                {/if}
+              </div>
             </div>
           </td>
-          <td class="py-2">{won}</td>
-          <td class="py-2">{lost}</td>
-          <td class="py-2">{tied}</td>
-          <td class="py-2"
+          <td class="p-3">{won} / {lost} / {tied}</td>
+          <td class="rounded-r p-3 font-bold"
             >{formatAsDollar(
               Number(formatEther(totalWonAmount)) * prices.eth,
             )}</td
