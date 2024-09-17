@@ -50,8 +50,7 @@
           <div
             class="max-w-[140px] overflow-hidden text-ellipsis whitespace-nowrap font-bold"
           >
-            {creatorDisplayName ?? ""}{creatorDisplayName ??
-              ""}{creatorDisplayName ?? ""}
+            {creatorDisplayName}
           </div>
           <div class="whitespace-nowrap">{shortenAddress(game.p1)}</div>
         </div>
