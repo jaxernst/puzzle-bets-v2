@@ -25,14 +25,13 @@ export function getPlayerStats(
 
         if (outcome.gameOutcome === "win") {
           stats.numWins++
-          const winAmount = game.buyInAmount * 2n
-          const fee = (winAmount * 25n) / 1000n // 2.5% fee
-          stats.totalWonAmount += winAmount - fee
+          const fee = (game.buyInAmount * 25n) / 1000n // 2.5% fee
+          stats.totalWonAmount += game.buyInAmount - fee
         } else if (outcome.gameOutcome === "lose") {
           stats.numLosses++
         } else if (outcome.gameOutcome === "tie") {
           stats.numTies++
-          stats.totalWonAmount += game.buyInAmount
+          stats.totalBetAmount -= game.buyInAmount
         }
       }
 
