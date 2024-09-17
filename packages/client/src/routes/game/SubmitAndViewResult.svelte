@@ -173,7 +173,10 @@
 
   <div class="font-bold">
     {#if !outcomes.gameOver}
-      Game still active! Come back later to see final results and withdraw
+      Game still active!
+      <div class="text-sm font-medium">
+        Come back later to see final results and withdraw
+      </div>
     {:else if outcomes.gameOutcome === "win"}
       Congrats you won!
       {#if outcomes.opponentMissedPlaybackWindow}
