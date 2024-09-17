@@ -1,3 +1,5 @@
 .env
 out/*/
 !out/IWorld.sol/
+
+.mud/local/*
