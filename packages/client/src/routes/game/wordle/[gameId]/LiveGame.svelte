@@ -149,14 +149,17 @@
     cancelGameState = null
   }
 
+  let submitModalAutoOpened = false
   $effect(() => {
     if (
       puzzleState?.solved &&
       !submitted &&
       !expired &&
-      timers.mySubmissionTimeLeft > 0
+      timers.mySubmissionTimeLeft > 0 &&
+      !submitModalAutoOpened
     ) {
       openSubmitModal()
+      submitModalAutoOpened = true
     }
   })
 </script>
