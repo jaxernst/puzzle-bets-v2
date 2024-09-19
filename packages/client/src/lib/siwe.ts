@@ -12,8 +12,8 @@ export async function signInWithEthereum(
     address,
     nonce,
     chainId: Number(PUBLIC_CHAIN_ID),
-    domain: "example.com",
-    uri: "https://example.com/path",
+    domain: "puzzlebets.xyz",
+    uri: window.location.origin,
     version: "1",
   })
 

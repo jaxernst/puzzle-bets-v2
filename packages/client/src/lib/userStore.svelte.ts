@@ -67,14 +67,24 @@ export const user = (() => {
         userState.address = wallet.address
         userState.displayName = await displayNameStore.fetch(wallet.address)
 
-        if (!wallet.walletClient?.signMessage) {
-          throw new Error("No SIWE Signer Available")
-        }
+        try {
+          if (!wallet.walletClient?.signMessage) {
+            throw new Error("No SIWE Signer Available")
+          }
 
-        userState.authenticated = await signInWithEthereum(
-          wallet.address,
-          wallet.walletClient.signMessage,
-        )
+          userState.authenticated = await signInWithEthereum(
+            wallet.address,
+            wallet.walletClient.signMessage,
+          )
+
+          console.log("Authenticated", wallet.address)
+        } catch (error) {
+          walletStore.disconnect()
+          console.error(
+            "Failed to sign in with Ethereum, disconnecting wallet:",
+            error,
+          )
+        }
       } else {
         console.log("Signing out")
 
