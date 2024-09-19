@@ -36,6 +36,20 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(InviteExpiration.get(gameId), block.timestamp + 100);
   }
 
+  function test_newGame_CreatesGameWithPassword() public {
+    bytes32 passwordHash = keccak256(abi.encodePacked("secretpassword"));
+    bytes32 gameId = IWorld(worldAddress).v1__newGame({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      playbackWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      puzzleMaster: address(0x456),
+      passwordHash: passwordHash
+    });
+
+    assertEq(GamePasswordHash.get(gameId), passwordHash);
+  }
+
   function test_joinGame_JoinGameRequiresBuyInDeposit() public {
     address opponent = address(0x123);
     bytes32 gameId = newDefaultGame(1 ether);
@@ -674,6 +688,123 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
     // Tie game (both players have 0 score at the end)
     assertEq(p2.balance, buyIn);
+  }
+
+  function test_claim_WinnerCanClaimImmediatelyAfterSubmittingWhenOpponentMissedDeadline() public {
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address creator = address(0x123);
+    address opponent = address(0x456);
+    uint32 submissionWindow = 100;
+    uint32 playbackWindow = 1000;
+    uint buyIn = 1 ether;
+
+    vm.deal(creator, buyIn);
+    vm.deal(opponent, buyIn);
+
+    vm.prank(creator);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: buyIn }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: submissionWindow,
+      playbackWindowSeconds: playbackWindow,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
+    });
+
+    vm.prank(opponent);
+    IWorld(worldAddress).v1__joinGame{ value: buyIn }(gameId);
+
+    // Opponent fails to submit in time
+    skip(submissionWindow + 1);
+
+    // Creator starts their turn
+    vm.prank(creator);
+    IWorld(worldAddress).v1__startTurn(gameId);
+
+    // Creator submits a non-zero score
+    uint32 score = 10;
+    bytes memory sig = signPuzzleSolved(masterKey, gameId, creator, score);
+
+    vm.prank(creator);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, sig);
+
+    // Creator should be able to claim immediately
+    uint256 creatorBalanceBefore = creator.balance;
+    vm.prank(creator);
+    IWorld(worldAddress).v1__claim(gameId);
+
+    assertEq(Balance.get(gameId, creator), 0);
+    assertEq(Balance.get(gameId, opponent), 0);
+    assertEq(uint(GameStatus.get(gameId)), uint(Status.Complete));
+  }
+
+  function test_claim_ImmediatelyAfterBothPlayersSubmit() public {
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+    uint buyIn = 1 ether;
+
+    vm.deal(p1, buyIn);
+    vm.deal(p2, buyIn);
+
+    // Set protocol fee and recipient
+    address admin = IWorld(worldAddress).creator();
+    vm.startPrank(admin);
+    ProtocolFeeBasisPoints.set(500); // 5% fee
+    ProtocolFeeRecipient.set(address(0x789));
+    vm.stopPrank();
+
+    // Set up a game with two players
+    vm.prank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: buyIn }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 100,
+      playbackWindowSeconds: 100,
+      inviteExpirationTimestamp: block.timestamp + 1000,
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
+    });
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame{ value: buyIn }(gameId);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn(gameId);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, 10, signPuzzleSolved(masterKey, gameId, p1, 10));
+    vm.prank(p2);
+    IWorld(worldAddress).v1__submitSolution(gameId, 5, signPuzzleSolved(masterKey, gameId, p2, 5));
+
+    // Record balances before claim
+    uint256 p1BalanceBefore = p1.balance;
+    uint256 feeRecipientBalanceBefore = ProtocolFeeRecipient.get().balance;
+
+    // Attempt to claim immediately after both submissions
+    vm.prank(p1);
+    IWorld(worldAddress).v1__claim(gameId);
+
+    // Assert that the claim is successful and funds are distributed correctly
+    uint256 expectedFee = (2 * buyIn * 500) / 10000;
+    assertEq(
+      p1.balance,
+      p1BalanceBefore + 2 * buyIn - expectedFee,
+      "Winner (p1) should receive pot minus protocol fee"
+    );
+    assertEq(p2.balance, 0, "Loser (p2) balance should be 0");
+    assertEq(
+      ProtocolFeeRecipient.get().balance,
+      feeRecipientBalanceBefore + expectedFee,
+      "Fee recipient should receive the protocol fee"
+    );
+    assertEq(uint(GameStatus.get(gameId)), uint(Status.Complete), "Game status should be Complete");
+    assertEq(Balance.get(gameId, p1), 0, "p1's game balance should be 0 after claim");
+    assertEq(Balance.get(gameId, p2), 0, "p2's game balance should be 0 after claim");
+
+    // Ensure p2 can't claim after p1 has claimed
+    vm.expectRevert("Nothing to claim");
+    vm.prank(p2);
+    IWorld(worldAddress).v1__claim(gameId);
   }
 
   function test_voteRematch_ResetsGameStateOnceBothPlayersVote() public {
