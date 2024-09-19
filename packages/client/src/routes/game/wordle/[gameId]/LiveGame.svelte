@@ -400,11 +400,11 @@
 
     <hr />
 
-    <a
+    <button
       class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-      href="/dashboard"
+      onclick={() => goto("/dashboard")}
     >
       Back to Dashboard
-    </a>
+    </button>
   </div>
 </Modal>
