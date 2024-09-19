@@ -28,8 +28,8 @@
       Onchain Puzzle PvP Arenas
     </h2>
     <div class="flex-grow leading-tight">
-      Puzzle Bets is an onchain player vs player puzzle game where players
-      challenge each other in timed, winner-takes-all matches.
+      Puzzle Bets is an onchain player vs player puzzle arena where players
+      challenge each other in timed, winner-takes-all puzzle games.
     </div>
   </div>
 
@@ -99,11 +99,15 @@
   <hr />
 
   <div class="flex flex-col gap-6">
-    <h2 class="text-lg font-black leading-none">About Puzzle Bets</h2>
+    <div>
+      <h2 class="mb-4 text-lg font-black leading-none">About Puzzle Bets</h2>
 
-    Puzzle Bets is being developed in the open! All code, including the smart
-    contracts, puzzle backend, and frontend are open source and available on
-    Github.
+      <p class="leading-tight">
+        Puzzle Bets is being developed in the open! All code, including the
+        smart contracts, puzzle backend, and frontend are open source and
+        available on Github.
+      </p>
+    </div>
 
     <div class="flex items-center gap-4">
       <a
