@@ -123,8 +123,8 @@ export function createSystemCalls({
 
 const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
   fn: T,
-): T => {
-  return (async (...args: Parameters<T>) => {
+) => {
+  return async (...args: Parameters<T>) => {
     try {
       await fn(...args)
       txErrorStore.set(null)
@@ -143,5 +143,5 @@ const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
 
       return false
     }
-  }) as T
+  }
 }
