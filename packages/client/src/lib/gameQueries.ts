@@ -389,6 +389,16 @@ export function getGameTimers(game: PlayerGame) {
   }
 }
 
+/**
+ * Investigate:
+ * - I join a game, run out of time without submitting
+ * - Opponent joins game, then solves the puzzle
+ * - Opponent should be able to claim before their time runs out no?
+ * - I just tested this, and got a 'cannot claim' revert
+ *    - Currently ui doesn't allow this
+ *    - Double check the SCs for a mistake
+ */
+
 function calculateGameOver(
   game: PlayerGame,
   mySubmissionTimeLeft: number,
@@ -400,8 +410,10 @@ function calculateGameOver(
   if (!game.myStartTime || !game.opponentStartTime) return false
   if (game.status === GameStatus.Complete) return true
   if (game.iSubmitted && game.opponentSubmitted) return true
-  if (mySubmissionTimeLeft === 0 && opponentSubmissionTimeRemaining === 0)
+  if (mySubmissionTimeLeft === 0 && opponentSubmissionTimeRemaining === 0) {
     return true
+  }
+
   return false
 }
 
