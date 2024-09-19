@@ -121,7 +121,7 @@ contract AsyncPuzzleBetSystem is System {
   }
 
   /**
-   * Verify the score signed by the puzzle master
+   * Submit a score and verify the puzzle master's signature attests to the score.
    */
   function submitSolution(bytes32 gameId, uint32 score, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
     address sender = _msgSender();
@@ -190,16 +190,20 @@ contract AsyncPuzzleBetSystem is System {
     }
 
     uint32 submissionWindow = SubmissionWindow.get(gameId);
-    bool bothSubmitted = Submitted.get(gameId, me) && Submitted.get(gameId, them);
+    bool mySubmissionWindowClosed = (myStartTime + submissionWindow) < block.timestamp;
+    bool theirSubmissionWindowClosed = (theirStartTime + submissionWindow) < block.timestamp;
 
-    bool submissionsClosed;
-    if (theirStartTime > myStartTime) {
-      submissionsClosed = (theirStartTime + submissionWindow) < block.timestamp;
-    } else {
-      submissionsClosed = (myStartTime + submissionWindow) < block.timestamp;
-    }
+    bool iStartedLater = myStartTime > theirStartTime;
+    bool latestSubmissionWindowClosed = iStartedLater ? mySubmissionWindowClosed : theirSubmissionWindowClosed;
 
-    require(bothSubmitted || submissionsClosed, "Cannot claim");
+    bool iHaveSubmitted = Submitted.get(gameId, me);
+    bool bothSubmitted = iHaveSubmitted && Submitted.get(gameId, them);
+
+    bool canClaim = bothSubmitted ||
+      latestSubmissionWindowClosed ||
+      (iStartedLater && theirSubmissionWindowClosed && iHaveSubmitted);
+
+    require(canClaim, "Cannot claim");
 
     uint32 myScore = Score.get(gameId, me);
     uint32 theirScore = Score.get(gameId, them);
