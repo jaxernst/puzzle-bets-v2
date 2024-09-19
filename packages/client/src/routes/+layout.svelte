@@ -4,6 +4,7 @@
   import { walletStore } from "$lib/walletStore.svelte"
   import { user } from "$lib/userStore.svelte"
   import { page } from "$app/stores"
+  import { slide } from "svelte/transition"
   import { SvelteToast, toast } from "@zerodevx/svelte-toast"
   import GameController from "./game-controller/GameController.svelte"
   import AppHeader from "./AppHeader.svelte"
@@ -53,6 +54,7 @@
   })
 
   let isHomePage = $derived($page.url.pathname === "/")
+  let isDashboard = $derived($page.url.pathname === "/dashboard")
 </script>
 
 <Confetti />
@@ -68,8 +70,10 @@
 <div
   class="overflow-none bg-pb-yellow fixed flex h-screen w-screen flex-col justify-between"
 >
-  {#if !isHomePage}
-    <AppHeader />
+  {#if isDashboard}
+    <div transition:slide>
+      <AppHeader />
+    </div>
   {/if}
 
   <div class="flex-grow overflow-y-auto">
