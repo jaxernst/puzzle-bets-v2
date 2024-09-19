@@ -6,4 +6,6 @@
   $effect(hideControls)
 </script>
 
-{@render children()}
+<div class="pt-4">
+  {@render children()}
+</div>

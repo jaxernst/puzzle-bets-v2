@@ -54,7 +54,7 @@
   })
 
   let isHomePage = $derived($page.url.pathname === "/")
-  let isDashboard = $derived($page.url.pathname === "/dashboard")
+  let isGamePath = $derived($page.url.pathname.startsWith("/game"))
 </script>
 
 <Confetti />
@@ -70,7 +70,7 @@
 <div
   class="overflow-none bg-pb-yellow fixed flex h-screen w-screen flex-col justify-between"
 >
-  {#if isDashboard}
+  {#if !isGamePath}
     <div transition:slide>
       <AppHeader />
     </div>

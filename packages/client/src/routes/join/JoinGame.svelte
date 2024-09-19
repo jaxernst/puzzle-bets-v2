@@ -115,12 +115,12 @@
       {/if}
     </button>
 
-    <a
-      href="/dashboard"
+    <button
+      onclick={() => goto("/dashboard")}
       class="rounded border-2 border-black p-2 text-center font-bold"
     >
       Cancel
-    </a>
+    </button>
 
     <div class="text-center text-sm">
       This action will deposit your wager into a smart contract. You can't
