@@ -111,20 +111,20 @@
 
     createGameLoading = true
 
-    try {
-      await mud.systemCalls?.newGame(
-        puzzleType,
-        wagerEth,
-        inputTimeLimit,
-        _inviteExpirationMin,
-        gamePassword,
-      )
+    const success = await mud.systemCalls?.newGame(
+      puzzleType,
+      wagerEth,
+      inputTimeLimit,
+      _inviteExpirationMin,
+      gamePassword,
+    )
 
+    if (success) {
       showConfirm = false
       showCreated = true
-    } finally {
-      createGameLoading = false
     }
+
+    createGameLoading = false
   })
 </script>
 

@@ -128,6 +128,7 @@ const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
     try {
       await fn(...args)
       txErrorStore.set(null)
+      return true
     } catch (error: unknown) {
       // Catch viem error with .shortMessage fields
       console.error(error)
@@ -139,6 +140,8 @@ const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
       } else {
         txErrorStore.set(String(error))
       }
+
+      return false
     }
   }) as T
 }
