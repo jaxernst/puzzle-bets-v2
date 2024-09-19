@@ -1,6 +1,5 @@
 <script context="module" lang="ts">
   import { goto } from "$app/navigation"
-  import HandUp from "$lib/assets/HandUp.svelte"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import Modal from "$lib/components/Modal.svelte"
@@ -17,6 +16,8 @@
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { user } from "$lib/userStore.svelte"
   import { gameInviteUrls } from "$lib/inviteUrls"
+  import Link from "$lib/icons/Link.svelte"
+  import { type Entity } from "@latticexyz/recs"
 
   let showCreate = $state(false)
   let showConfirm = $state(false)
@@ -69,7 +70,7 @@
       HasValue(mud.components.Player1, { value: user.address }),
     ])
 
-    const sorted = Array.from(entities).sort(
+    const sorted: Entity[] = Array.from(entities).sort(
       (a, b) => parseInt(a, 16) - parseInt(b, 16),
     )
 
@@ -338,13 +339,25 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <div class="text-sm">Puzzle Time Limit</div>
-      <div
-        class="bg-pb-gray-1 flex items-center gap-1 self-start rounded-full px-2 py-1 text-[13px]"
-      >
-        <Clock class="h-[18px] w-[18px]" />
-        <span class="font-bold">{inputTimeLimit} min</span>
+    <div class="flex gap-6">
+      <div class="flex flex-col gap-2">
+        <div class="text-sm">Puzzle Time Limit</div>
+        <div
+          class="bg-pb-gray-1 flex items-center gap-1 self-start rounded-full px-2 py-1 text-[13px]"
+        >
+          <Clock class="h-[18px] w-[18px]" />
+          <span class="font-bold">{inputTimeLimit} min</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="text-sm">Invite Expiration</div>
+        <div
+          class="bg-pb-gray-1 flex items-center gap-1 self-start rounded-full px-2 py-1 text-[13px]"
+        >
+          <Clock class="h-[18px] w-[18px]" />
+          <span class="font-bold">{inviteExpirationMin} min</span>
+        </div>
       </div>
     </div>
 
@@ -408,7 +421,12 @@
       <div class="mb-3 font-extrabold">What now?</div>
 
       <div class="mb-3 leading-tight">
-        Go to your game room, copy your invite link, and share with a friend.
+        {#if visibility === "public"}
+          Wait for an opponent to join your public game or invite a friend with
+          your game invite link.
+        {:else}
+          Copy your game invite link and share with a friend to challenge them.
+        {/if}
       </div>
 
       <div class="leading-tight">
@@ -425,16 +443,36 @@
         {capitalized(puzzleType)} #{entityToInt(createdGameId)}
       </div>
 
-      <div class="flex flex-col gap-2">
-        <button
-          onclick={() => {
-            goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
-            showCreated = false
-          }}
-          class="rounded-md border-2 border-black bg-black py-2 text-center text-white"
-        >
-          Go To Game Room
-        </button>
+      <div class="flex flex-col gap-2 font-bold">
+        {#if visibility === "public"}
+          <button
+            onclick={() => {
+              goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
+              showCreated = false
+            }}
+            class="rounded-md border-2 border-black bg-black py-2 text-center text-white"
+          >
+            Go To Game Room
+          </button>
+        {:else}
+          <button
+            class="flex items-center justify-center gap-2 rounded-md border-2 border-black bg-black py-2 text-white"
+            onclick={() =>
+              gameInviteUrls.copyForGame(entityToInt(createdGameId))}
+          >
+            Copy Invite Link
+            <Link />
+          </button>
+          <button
+            class="rounded-md border-2 border-black py-2"
+            onclick={() => {
+              goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
+              showCreated = false
+            }}
+          >
+            Go To Game Room
+          </button>
+        {/if}
 
         <button
           class="rounded-md border-2 border-black py-2"

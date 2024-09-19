@@ -1,5 +1,6 @@
 import { get, writable } from "svelte/store"
 import type { PuzzleType } from "./types"
+import { toast } from "@zerodevx/svelte-toast"
 
 interface InviteUrlParams {
   puzzleType: PuzzleType
@@ -48,6 +49,12 @@ const saveInviteUrl = async (gameId: number, url: string) => {
 export const gameInviteUrls = (() => {
   const urls = writable<Record<number, string>>({})
 
+  const getOrLoadInviteUrl = (gameId: number): string | null => {
+    const loadedUrl = get(urls)[gameId]
+    if (loadedUrl) return loadedUrl
+    return localStorage.getItem(`gameInviteUrl-${gameId}`)
+  }
+
   return {
     subscribe: urls.subscribe,
     create: (params: InviteUrlParams) => {
@@ -65,10 +72,18 @@ export const gameInviteUrls = (() => {
 
       return url
     },
-    getOrLoadInviteUrl: (gameId: number): string | null => {
-      const loadedUrl = get(urls)[gameId]
-      if (loadedUrl) return loadedUrl
-      return localStorage.getItem(`gameInviteUrl-${gameId}`)
+
+    getOrLoadInviteUrl,
+
+    copyForGame: (gameId: number) => {
+      const url = getOrLoadInviteUrl(gameId)
+      if (url) {
+        toast.push(
+          "No invite link found. Please create a new game to generate a new link.",
+        )
+      }
+
+      navigator.clipboard.writeText(url)
     },
   }
 })()
