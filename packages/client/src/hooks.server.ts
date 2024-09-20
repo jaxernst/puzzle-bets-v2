@@ -31,10 +31,11 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   if (isAuthPath(event.url.pathname) && !authenticated) {
-    return new Response("Not Authenticated", { status: 401})
+    return new Response("Not Authenticated", { status: 401 })
   }
 
   const response = await resolve(event)
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin-allow-popups")
 
   return response
 }
