@@ -17,7 +17,6 @@ import { createWorld, type World } from "@latticexyz/recs"
 import { Subject, share } from "rxjs"
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions"
 import mudConfig from "contracts/mud.config"
-import { browser } from "$app/environment"
 
 export const world = createWorld()
 
