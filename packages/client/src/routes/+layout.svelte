@@ -26,8 +26,6 @@
 
   let walletWasSet = false
   $effect(async () => {
-    await user.onWalletChange(walletStore)
-
     if (walletStore.walletClient) {
       walletWasSet = true
     }

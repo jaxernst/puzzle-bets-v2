@@ -1,8 +1,7 @@
-import { walletStore } from "./walletStore.svelte"
 import { formatEther, type Account } from "viem"
 import type { EvmAddress } from "./types"
 import { signInWithEthereum } from "./siwe"
-import { publicClient } from "./mud/setupNetwork"
+import { publicClient, type Wallet } from "./mud/setupNetwork"
 import { displayNameStore } from "./displayNameStore.svelte"
 import { prices } from "./prices.svelte"
 import { formatAsDollar } from "./util"
@@ -56,30 +55,30 @@ export const user = (() => {
     }
   })
 
-  const onWalletChange = async (wallet: typeof walletStore) => {
-    if (userState.address !== wallet.address) {
+  const onWalletChange = async (wallet: Wallet | null) => {
+    const address = wallet?.account.address
+    if (userState.address !== address) {
       console.log("Sync user to wallet")
       balanceSync.stop()
       userState = { ...initialState }
 
-      if (wallet.address) {
-        balanceSync.start(wallet.address)
-        userState.address = wallet.address
-        userState.displayName = await displayNameStore.fetch(wallet.address)
+      if (address && wallet?.signMessage) {
+        balanceSync.start(address)
+        userState.address = address
+        userState.displayName = await displayNameStore.fetch(address)
 
         try {
-          if (!wallet.walletClient?.signMessage) {
+          if (!wallet.signMessage) {
             throw new Error("No SIWE Signer Available")
           }
 
           userState.authenticated = await signInWithEthereum(
-            wallet.address,
-            wallet.walletClient.signMessage,
+            address,
+            wallet.signMessage,
           )
 
-          console.log("Authenticated", wallet.address)
+          console.log("Authenticated", userState.authenticated)
         } catch (error) {
-          walletStore.disconnect()
           console.error(
             "Failed to sign in with Ethereum, disconnecting wallet:",
             error,

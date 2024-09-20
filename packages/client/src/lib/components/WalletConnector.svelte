@@ -5,6 +5,9 @@
   import type { Wallet } from "$lib/mud/setupNetwork"
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import HandUp from "$lib/assets/HandUp.svelte"
+  import { user } from "$lib/userStore.svelte"
+  import { launchConfetti } from "$lib/components/Confetti.svelte"
+  import { toast } from "@zerodevx/svelte-toast"
 
   let showModal = $state(false)
 
@@ -46,6 +49,19 @@
 
     showModalPrev = showModal
   })
+
+  const handleConnect = async () => {
+    const walletClient = await walletStore.connect()
+    await user.onWalletChange(walletClient)
+
+    if (user.authenticated) {
+      walletConnectSuccess(walletClient as Wallet)
+
+      showModal = false
+    } else {
+      walletConnectFail("Error signing in with Ethereum")
+    }
+  }
 </script>
 
 <Modal bind:show={showModal} class="sm:w-[375px]">
@@ -80,10 +96,7 @@
 
   <button
     class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
-    onclick={() => {
-      walletStore.connect()
-      showModal = false
-    }}
+    onclick={handleConnect}
   >
     Connect
   </button>

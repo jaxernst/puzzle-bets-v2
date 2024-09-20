@@ -52,6 +52,7 @@ export const walletStore = (() => {
     })
 
     const walletClient = await getWalletClient(wagmiConfig)
+
     wallet = walletClient
     return walletClient
   }
