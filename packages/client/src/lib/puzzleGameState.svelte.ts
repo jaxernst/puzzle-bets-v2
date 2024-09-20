@@ -21,7 +21,7 @@ export interface WordleGameState extends PuzzleState {
   resetCount?: number
 }
 
-type GameId = string
+type GameId = Entity | string
 
 const emptyWordleState: WordleGameState = {
   answers: [],
@@ -37,7 +37,7 @@ export const wordleGameStates = (() => {
 
   let getOrCreateLoading = false
   const getOrCreate = async (
-    gameId: Entity,
+    gameId: GameId,
     isDemo: boolean,
     opponent?: EvmAddress,
   ) => {
@@ -45,10 +45,16 @@ export const wordleGameStates = (() => {
 
     getOrCreateLoading = true
 
+    console.log("game id", gameId)
     try {
+      const gameIdParam =
+        typeof gameId === "string" && gameId.startsWith("0x")
+          ? entityToInt(gameId as Entity)
+          : gameId
+
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
-        body: JSON.stringify({ gameId: entityToInt(gameId), opponent, isDemo }),
+        body: JSON.stringify({ gameId: gameIdParam, opponent, isDemo }),
       })
 
       if (!res.ok) return
@@ -61,15 +67,20 @@ export const wordleGameStates = (() => {
   }
 
   let guessEntering = false
-  const enterGuess = async (gameId: Entity, guess: string, isDemo: boolean) => {
+  const enterGuess = async (gameId: GameId, guess: string, isDemo: boolean) => {
     if (guessEntering) return
 
     guessEntering = true
     try {
+      const gameIdParam =
+        typeof gameId === "string" && gameId.startsWith("0x")
+          ? entityToInt(gameId as Entity)
+          : gameId
+
       const res = await fetch("/api/wordle/submit-guess", {
         method: "POST",
         body: JSON.stringify({
-          gameId: entityToInt(gameId),
+          gameId: gameIdParam,
           guess,
           isDemo,
         }),
@@ -90,7 +101,7 @@ export const wordleGameStates = (() => {
   }
 
   let resetLoading = false
-  const reset = async (gameId: Entity, isDemo: boolean) => {
+  const reset = async (gameId: GameId, isDemo: boolean) => {
     if (resetLoading || !mud.components) return
 
     const game = isDemo ? undefined : gameIdToGame(gameId, mud.components)
@@ -116,10 +127,15 @@ export const wordleGameStates = (() => {
         resetCount: (currentState?.resetCount ?? 0) + 1,
       })
 
+      const gameIdParam =
+        typeof gameId === "string" && gameId.startsWith("0x")
+          ? entityToInt(gameId as Entity)
+          : gameId
+
       const res = await fetch("/api/wordle/reset-game", {
         method: "POST",
         body: JSON.stringify({
-          gameId: entityToInt(gameId),
+          gameId: gameIdParam,
           otherPlayer: opponent,
           isDemo,
         }),
@@ -140,7 +156,7 @@ export const wordleGameStates = (() => {
   }
 
   return {
-    get(gameId: string) {
+    get(gameId: GameId) {
       return store.get(gameId)
     },
     getOrCreate,

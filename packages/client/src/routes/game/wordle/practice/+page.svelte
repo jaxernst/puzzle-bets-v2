@@ -8,7 +8,7 @@
   import OpponentDisplay from "../../OpponentDisplay.svelte"
 
   const storedGameId = localStorage.getItem("wordleDemoGameId")
-  const gameId = (storedGameId ?? generateRandomID(32)) as Entity
+  const gameId = storedGameId ?? generateRandomID(32)
 
   if (!storedGameId) {
     localStorage.setItem("wordleDemoGameId", gameId)
