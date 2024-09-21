@@ -9,10 +9,7 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
-  import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { user } from "$lib/userStore.svelte"
-  import { toast } from "@zerodevx/svelte-toast"
-  import { onMount } from "svelte"
 
   let displayNameTemp = $state("")
   let error = $state<string | null>(null)
@@ -21,8 +18,7 @@
     error = null
 
     try {
-      await displayNameStore.set(displayNameTemp)
-      user.onDisplayNameChange(displayNameTemp)
+      await user.updateDisplayName(displayNameTemp)
       displayNameTemp = ""
       toggleDisplayNameModal()
     } catch (_error: any) {

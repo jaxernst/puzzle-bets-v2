@@ -4,10 +4,8 @@
   import Modal from "./Modal.svelte"
   import type { Wallet } from "$lib/mud/setupNetwork"
   import WalletIcon from "$lib/icons/Wallet.svelte"
-  import HandUp from "$lib/assets/HandUp.svelte"
   import { user } from "$lib/userStore.svelte"
-  import { launchConfetti } from "$lib/components/Confetti.svelte"
-  import { toast } from "@zerodevx/svelte-toast"
+  import { mud } from "$lib/mudStore.svelte"
 
   let showModal = $state(false)
 
@@ -27,9 +25,47 @@
 <script lang="ts">
   let { autoconnect } = $props<{ autoconnect?: boolean }>()
 
+  const autoConnectWallet = async () => {
+    const walletClient = await walletStore.autoConnect()
+
+    if (walletClient?.account.address) {
+      await user.changeWallet(walletClient)
+
+      if (user.authenticated) {
+        await mud.setup(walletClient)
+      } else {
+        walletStore.disconnect()
+        await user.changeWallet(null)
+      }
+    }
+  }
+
+  const handleConnect = async () => {
+    const walletClient = await walletStore.connect()
+
+    try {
+      await user.changeWallet(walletClient)
+
+      if (user.authenticated) {
+        mud.setup(walletClient)
+        walletConnectSuccess(walletClient as Wallet)
+        showModal = false
+      } else {
+        walletStore.disconnect()
+        await user.changeWallet(null)
+        throw new Error("User not authenticated")
+      }
+    } catch (err) {
+      walletConnectFail("Error signing in with Ethereum")
+    }
+  }
+
+  let autoconnectAttempted = false
   $effect(() => {
-    if (autoconnect) {
-      walletStore.autoConnect()
+    if (autoconnect && !walletStore.address && !autoconnectAttempted) {
+      autoConnectWallet().finally(() => {
+        autoconnectAttempted = true
+      })
     }
   })
 
@@ -49,19 +85,6 @@
 
     showModalPrev = showModal
   })
-
-  const handleConnect = async () => {
-    const walletClient = await walletStore.connect()
-    await user.onWalletChange(walletClient)
-
-    if (user.authenticated) {
-      walletConnectSuccess(walletClient as Wallet)
-
-      showModal = false
-    } else {
-      walletConnectFail("Error signing in with Ethereum")
-    }
-  }
 </script>
 
 <Modal bind:show={showModal} class="sm:w-[375px]">
@@ -83,7 +106,6 @@
 
   <div class="flex flex-grow flex-col gap-4">
     <div style={"font-weight: 900"}>We're in Beta</div>
-
     <div class="text-sm">
       Basically it's all “play money” and not real until launch.
     </div>

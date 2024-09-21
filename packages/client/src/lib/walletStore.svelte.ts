@@ -81,7 +81,7 @@ export const walletStore = (() => {
     },
 
     autoConnect: async () => {
-      console.log("autoConnect", blockAutoconnect)
+      console.log("autoConnect", !blockAutoconnect)
       if (blockAutoconnect) return
 
       if (networkConfig.chainId === 31337) {
@@ -94,6 +94,8 @@ export const walletStore = (() => {
         if (account) {
           const walletClient = await getWalletClient(wagmiConfig)
           wallet = walletClient
+
+          return walletClient
         }
       }
     },

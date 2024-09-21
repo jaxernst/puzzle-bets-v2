@@ -1,8 +1,6 @@
 <script>
   import "../app.css"
-  import { mud } from "$lib/mudStore.svelte"
   import { walletStore } from "$lib/walletStore.svelte"
-  import { user } from "$lib/userStore.svelte"
   import { page } from "$app/stores"
   import { slide } from "svelte/transition"
   import { SvelteToast, toast } from "@zerodevx/svelte-toast"
@@ -14,14 +12,13 @@
   import AboutModal from "./AboutModal.svelte"
   import { txErrorStore } from "$lib/mud/createSystemCalls"
   import DisplayNameModal from "./DisplayNameModal.svelte"
+  import { user } from "$lib/userStore.svelte"
 
   let { children } = $props()
+
   $effect(() => {
-    if (walletStore.walletClient?.account) {
-      mud.setup(walletStore.walletClient)
-    } else {
-      mud.stop()
-    }
+    console.log("pre-auth address:", $page.data.user)
+    user.authenticated = $page.data.user
   })
 
   let walletWasSet = false
