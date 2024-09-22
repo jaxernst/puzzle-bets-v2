@@ -26,12 +26,12 @@
         {#each leaderboard as { rank, player, won, lost, tied, totalWonAmount }}
           {@const playerName = displayNameStore.get(player, false)}
 
-          <tr
-            class=" bg-pb-off-white rounded"
-            style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
-          >
-            <td class="rounded-l p-3">{rank}</td>
-            <td class="p-3">
+          <tr class=" bg-pb-off-white rounded">
+            <td
+              class="rounded-l p-3"
+              style="box-shadow: 0px 5px 0px 0px #E3DDCD;">{rank}</td
+            >
+            <td class="p-3" style="box-shadow: 0px 5px 0px 0px #E3DDCD;">
               <div class="flex items-center">
                 <img
                   src="/avatar1.png"
@@ -48,8 +48,12 @@
                 </div>
               </div>
             </td>
-            <td class="p-3">{won} / {lost} / {tied}</td>
-            <td class="rounded-r p-3 font-bold"
+            <td class="p-3" style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
+              >{won} / {lost} / {tied}</td
+            >
+            <td
+              class="rounded-r p-3 font-bold"
+              style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
               >{formatAsDollar(
                 Number(formatEther(totalWonAmount)) * prices.eth,
               )}</td
