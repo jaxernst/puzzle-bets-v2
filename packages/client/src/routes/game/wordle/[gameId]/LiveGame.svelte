@@ -220,10 +220,12 @@
     </div>
   {:else if awaitingTurnStart}
     <div
-      class="mx-auto flex min-h-72 w-full flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
+      class="mx-auto flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
     >
       {#if timers.myPlaybackTime === 0}
-        You did not play your opponent back in time. Wager forfeited.
+        <p class="font-bold">
+          You did not play your opponent back in time. Wager forfeited.
+        </p>
       {:else if timers.myPlaybackTime > 0}
         <div class="font-bold">
           Your opponent has joined and started their timer. Your have {formatTime(

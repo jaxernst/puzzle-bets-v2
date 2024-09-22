@@ -17,6 +17,7 @@ import { createWorld, type World } from "@latticexyz/recs"
 import { Subject, share } from "rxjs"
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions"
 import mudConfig from "contracts/mud.config"
+import { browser } from "$app/environment"
 
 export const world = createWorld()
 
@@ -71,10 +72,10 @@ export async function setupNetwork(wallet: Wallet) {
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     // Only running an indexer on 4242 currently
-    indexerUrl: undefined,
-    //   browser && networkConfig.chainId !== 31337
-    //    ? window.location.origin
-    //   : undefined,
+    indexerUrl:
+      browser && networkConfig.chainId !== 31337
+        ? window.location.origin
+        : undefined,
   })
 
   /* if (networkConfig.faucetServiceUrl) {

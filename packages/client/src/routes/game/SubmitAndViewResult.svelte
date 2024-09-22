@@ -60,7 +60,6 @@
   let votingRematch = $state(false)
   let outcomes = $derived(getPlayerOutcomes(game))
   let opponentName = $derived(displayNameStore.get(game.opponent))
-
   let puzzleDueIn = $derived(outcomes.mySubmissionTimeLeft)
 
   const confirmSubmit = async () => {
@@ -227,6 +226,10 @@
         </div>
       {/if}
     </div>
+
+    {#if outcomes.iMissedPlaybackWindow}
+      <p class="text-sm italic">Playback window missed: Game forfeited.</p>
+    {/if}
   </div>
 
   <div class="flex flex-col gap-2">

@@ -75,10 +75,6 @@ export const user = (() => {
     balanceSync.stop()
 
     if (address) {
-      userState.address = address
-      userState.displayName = await displayNameStore.fetch(address)
-      balanceSync.start(address)
-
       if (address !== userState.authenticated) {
         try {
           if (!wallet.signMessage) {
@@ -94,6 +90,10 @@ export const user = (() => {
           console.error("Failed to sign in with Ethereum", error)
         }
       }
+
+      userState.address = address
+      balanceSync.start(address)
+      userState.displayName = await displayNameStore.fetch(address)
     } else {
       // No address -> reset store and sign out
       if (userState.authenticated) await logout()

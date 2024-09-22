@@ -337,6 +337,12 @@ export function getPlayerOutcomes(game: PlayerGame) {
     Boolean(iMissedPlaybackWindow),
   )
 
+  const canViewResults =
+    gameOver ||
+    game.iSubmitted ||
+    mySubmissionTimeLeft === 0 ||
+    game.status === GameStatus.Complete
+
   return {
     mySubmissionTimeLeft,
     myPlaybackTime,
@@ -346,10 +352,10 @@ export function getPlayerOutcomes(game: PlayerGame) {
     iMissedPlaybackWindow,
     gameOver,
     gameOutcome,
+    canViewResults,
     claimed: calculateClaimed(game, gameOutcome),
     opponentClaimed: calculateOpponentClaimed(game, gameOutcome),
     canSubmit: calculateCanSubmit(game, mySubmissionTimeLeft),
-    canViewResults: calculateCanViewResults(game, mySubmissionTimeLeft),
     waitingForOpponentPlayback: calculateWaitingForOpponentPlayback(
       game,
       mySubmissionTimeLeft,
@@ -461,17 +467,6 @@ function calculateCanSubmit(
     Boolean(game.myStartTime) &&
     mySubmissionTimeLeft > 0 &&
     !game.iSubmitted
-  )
-}
-
-function calculateCanViewResults(
-  game: PlayerGame,
-  mySubmissionTimeLeft: number,
-): boolean {
-  return (
-    game.iSubmitted ||
-    mySubmissionTimeLeft === 0 ||
-    game.status === GameStatus.Complete
   )
 }
 

@@ -84,7 +84,7 @@
         {:else}
           View Game Page
         {/if}
-      {:else if status === GameStatus.Active}
+      {:else if status === GameStatus.Active && !outcomes.gameOver}
         {#if game.myStartTime}
           Rejoin
         {:else}
