@@ -3,8 +3,6 @@ import { mud } from "./mudStore.svelte"
 import type { EvmAddress, PuzzleType } from "$lib/types"
 import { entityToInt } from "$lib/util"
 import { Map } from "svelte/reactivity"
-
-import { derived, get, writable, type Readable } from "svelte/store"
 import { gameIdToGame } from "./gameQueries"
 import type { Entity } from "@latticexyz/recs"
 
@@ -45,7 +43,6 @@ export const wordleGameStates = (() => {
 
     getOrCreateLoading = true
 
-    console.log("game id", gameId)
     try {
       const gameIdParam =
         typeof gameId === "string" && gameId.startsWith("0x")
