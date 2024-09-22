@@ -10,7 +10,9 @@ export const GET: RequestHandler = (req) => {
   const headers = new Headers()
   headers.append(
     "Set-Cookie",
-    `siwe_nonce=${token}; HttpOnly; Path=/; Secure; SameSite=Strict`,
+    `siwe_nonce=${token}; HttpOnly; Path=/; SameSite=Strict; Max-Age=900; ${
+      req.url.protocol === "https" ? "Secure" : ""
+    }`,
   )
 
   return new Response(nonce, { status: 200, headers })

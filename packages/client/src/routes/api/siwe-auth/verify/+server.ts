@@ -32,7 +32,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     const headers = new Headers()
     headers.append(
       "Set-Cookie",
-      "siwe_nonce=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
+      `siwe_nonce=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict; ${
+        request.url.startsWith("https:") ? "Secure" : ""
+      }`,
     )
 
     // Set session
@@ -40,7 +42,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
     headers.append(
       "Set-Cookie",
-      `session_token=${token}; HttpOnly; Secure; Path=/; SameSite=Strict`,
+      `session_token=${token}; HttpOnly; Path=/; SameSite=Strict; ${
+        request.url.startsWith("https:") ? "Secure" : ""
+      }`,
     )
 
     return new Response("Authenticated", { status: 200, headers })
