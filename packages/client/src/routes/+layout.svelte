@@ -13,6 +13,7 @@
   import { txErrorStore } from "$lib/mud/createSystemCalls"
   import DisplayNameModal from "./DisplayNameModal.svelte"
   import { user } from "$lib/userStore.svelte"
+  import { toastError } from "$lib/toast"
 
   let { children } = $props()
 
@@ -36,15 +37,7 @@
 
   txErrorStore.subscribe((error) => {
     if (error) {
-      toast.push(error, {
-        duration: 6000,
-        theme: {
-          "--toastColor": "#ffffff",
-          "--toastBackground": "#dc2626",
-          "--toastBarBackground": "#fc4646",
-          "--toastBorderRadius": "8px",
-        },
-      })
+      toastError(error)
     }
   })
 
@@ -63,7 +56,7 @@
 </div>
 
 <div
-  class="overflow-none bg-pb-yellow fixed flex h-screen w-screen flex-col justify-between"
+  class="overflow-none bg-pb-yellow fixed flex h-svh w-screen flex-col justify-between"
 >
   {#if !isGamePath}
     <div transition:slide>

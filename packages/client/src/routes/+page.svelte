@@ -14,6 +14,14 @@
   }
 </script>
 
+<svelte:head>
+  <title>Puzzle Bets - Competitive Wordle Matches</title>
+  <meta
+    name="description"
+    content="Play competitive Wordle matches with friends"
+  />
+</svelte:head>
+
 <img
   class="absolute left-1/2 top-1/4 hidden h-[306px] w-[293px] -translate-x-[480px] sm:block"
   src="/character2.png"
