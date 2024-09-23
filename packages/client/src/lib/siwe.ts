@@ -1,12 +1,23 @@
+import { browser } from "$app/environment"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import type { EvmAddress } from "$lib/types"
 import { createSiweMessage } from "viem/siwe"
+
+let nonce: string | null = null
+
+if (browser) {
+  ;(async () => {
+    nonce = await (await fetch("/api/siwe-auth/nonce")).text()
+  })()
+}
 
 export async function signInWithEthereum(
   address: EvmAddress,
   signMessage: ({ message }: { message: string }) => Promise<string>,
 ) {
-  const nonce = await (await fetch("/api/siwe-auth/nonce")).text()
+  if (!nonce) {
+    nonce = await (await fetch("/api/siwe-auth/nonce")).text()
+  }
 
   const message = createSiweMessage({
     address,
