@@ -6,6 +6,7 @@ import { browser, version } from "$app/environment"
 import {
   connect,
   createConfig,
+  disconnect,
   fallback,
   getWalletClient,
   reconnect,
@@ -31,9 +32,6 @@ export const chain = networkConfig.chain
 export const walletStore = (() => {
   let wallet = $state<Wallet | undefined>()
   let connecting = $state(false)
-
-  let blockAutoconnect =
-    browser && localStorage.getItem("blockAutoconnect") === "true"
 
   const connectBurner = () => {
     const burnerAccount = createBurnerAccount(getBurnerPrivateKey())
@@ -71,8 +69,6 @@ export const walletStore = (() => {
     },
 
     connect: async () => {
-      browser && localStorage.removeItem("blockAutoconnect")
-
       if (networkConfig.chainId === 31337) {
         return connectBurner()
       } else {
@@ -81,9 +77,6 @@ export const walletStore = (() => {
     },
 
     autoConnect: async () => {
-      console.log("autoConnect", !blockAutoconnect)
-      if (blockAutoconnect) return
-
       if (networkConfig.chainId === 31337) {
         return connectBurner()
       } else {
@@ -101,10 +94,8 @@ export const walletStore = (() => {
     },
 
     disconnect: async () => {
+      disconnect(wagmiConfig)
       wallet = undefined
-
-      blockAutoconnect = true
-      localStorage.setItem("blockAutoconnect", "true") // Set the disconnected state
     },
   }
 })()
