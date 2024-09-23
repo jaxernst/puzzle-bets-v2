@@ -122,18 +122,18 @@
     }}
   >
     <div class="flex items-center gap-2 font-extrabold">
-      <PuzzlePiece class="h-6 w-6" />
+      <PuzzlePiece class="h-5 w-5 sm:h-6 sm:w-6" />
 
-      {routeLabel}
+      <span class="e">{routeLabel}</span>
 
       <div
-        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs"
+        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs"
       >
         {numActiveGames} Active Game{numActiveGames === 1 ? "" : "s"}
       </div>
 
       <div
-        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs"
+        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs"
       >
         {numLobbyGames} Public Game{numLobbyGames === 1 ? "" : "s"}
       </div>

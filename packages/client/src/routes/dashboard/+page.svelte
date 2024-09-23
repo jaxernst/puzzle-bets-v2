@@ -56,13 +56,13 @@
   )
 </script>
 
-<div class="flex h-full w-full flex-col overflow-visible md:h-auto">
+<div class="flex h-full w-full flex-col md:h-auto">
   <div class="relative -z-10 h-[90px] w-full md:hidden"></div>
 
   <div
-    class="bg-pb-off-white flex flex-grow flex-col gap-5 rounded-t-xl px-3 py-5 sm:p-6 md:mx-auto md:mt-6 md:rounded-xl"
+    class="bg-pb-off-white flex h-full flex-grow flex-col rounded-t-xl py-5 sm:p-6 md:mx-auto md:mt-6 md:rounded-xl"
   >
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 px-3">
       <Star />
 
       <div class="font-extrabold">
@@ -88,10 +88,12 @@
       {/if}
     </div>
 
+    <hr class="mx-4 my-5 px-3" />
+
     <!-- User Stats -->
-    <div class="flex flex-wrap gap-4 gap-y-3 md:gap-4">
+    <div class="flex flex-wrap gap-4 gap-y-3 self-center px-3 md:gap-4">
       <div class="flex flex-col items-start gap-2 sm:items-center">
-        <div class="text-sm text-[#3f3f3f]">Wallet Balance</div>
+        <div class="text-xs text-[#3f3f3f] sm:text-sm">Wallet Balance</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2"
         >
@@ -109,7 +111,7 @@
       </div>
 
       <div class="flex flex-col items-start gap-2 sm:items-center">
-        <div class="text-xs text-[#3f3f3f]">Win / Loss / Tied</div>
+        <div class="text-xs text-[#3f3f3f] sm:text-sm">Win / Loss / Tied</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
@@ -126,7 +128,9 @@
       </div>
 
       <div class="flex flex-col items-start gap-2 sm:items-center">
-        <div class="text-xs text-[#3f3f3f]">Active Wagers / Games</div>
+        <div class="text-xs text-[#3f3f3f] sm:text-sm">
+          Active Wagers / Games
+        </div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
@@ -143,7 +147,7 @@
       </div>
 
       <div class="flex flex-col items-start gap-2 sm:items-center">
-        <div class="text-xs text-[#3f3f3f]">Total Bet / Won</div>
+        <div class="text-xs text-[#3f3f3f] sm:text-sm">Total Bet / Won</div>
         <div
           class="text-md flex items-center gap-2 rounded-full bg-[#ccccccbf] px-3 py-2 font-bold"
         >
@@ -161,10 +165,12 @@
       </div>
     </div>
 
-    <hr class="mx-4 my-1" />
+    <hr class="mx-4 mt-5 px-3" />
 
-    <div class="w-full max-w-[400px] self-center">
-      <div class="flex max-w-[400px] flex-col items-stretch gap-4 self-stretch">
+    <div class="w-full flex-grow overflow-y-auto px-3 pt-5">
+      <div
+        class="mx-auto flex h-full w-full max-w-[400px] flex-col items-stretch gap-4 self-stretch"
+      >
         {#if user.address}
           <div class="flex justify-center gap-3">
             <button
@@ -207,9 +213,8 @@
           What is Puzzle Bets?
         </button>
       </div>
+      <div class="h-[75px] md:h-10"></div>
     </div>
-
-    <div class="h-[60px] md:h-10"></div>
   </div>
 </div>
 
