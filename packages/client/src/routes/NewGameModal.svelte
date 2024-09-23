@@ -93,7 +93,7 @@
     }
   })
 
-  let createGame = $derived(async () => {
+  const createGame = async () => {
     let wagerEth = 0
     if (selectedCurrency === "ETH") {
       wagerEth = Number(currencyInput)
@@ -125,7 +125,7 @@
     }
 
     createGameLoading = false
-  })
+  }
 </script>
 
 <Modal bind:show={showCreate} class="px-6 pb-0 pt-6 sm:w-[450px]">
