@@ -83,7 +83,7 @@
     out:fade={{ duration: 500, easing: cubicOut }}
     bind:this={modal}
     tabindex="-1"
-    class="fixed left-0 top-0 z-50 flex h-screen w-screen items-end justify-center bg-black bg-opacity-30 sm:items-center"
+    class="fixed left-0 top-0 z-50 flex h-svh w-screen items-end justify-center bg-black bg-opacity-30 sm:items-center"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
     onclick={(e) => {
       clickOutside(e)
