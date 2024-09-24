@@ -36,18 +36,18 @@
 
 <div class="flex h-full w-full flex-col justify-between">
   <div
-    class="flex w-full flex-grow flex-col items-center justify-evenly gap-4 pt-4"
+    class="flex w-full flex-grow flex-col items-center justify-evenly gap-3 pt-0 sm:gap-4 sm:pt-4"
   >
-    <div class="overflow-none flex items-center gap-14 sm:hidden">
+    <div class="overflow-none flex items-center gap-16 sm:hidden">
       <img
-        class="w-[142px] -translate-x-4"
+        class="w-[120px] -translate-x-4"
         src="/character2.png"
         alt="Puzzle Character 2"
       />
-      <img class="w-[200px]" src="/character1.png" alt="Puzzle Character 1" />
+      <img class="w-[170px]" src="/character1.png" alt="Puzzle Character 1" />
     </div>
 
-    <div class="flex flex-col items-center gap-4">
+    <div class="flex flex-col items-center gap-2 sm:gap-4">
       <div class="rounded-full border-2 border-black px-2">
         Testnet <span class="font-bold">Beta</span>
       </div>

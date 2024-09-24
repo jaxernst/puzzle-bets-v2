@@ -6,6 +6,6 @@
   $effect(hideControls)
 </script>
 
-<div class="pt-4">
+<div class="h-full pt-4">
   {@render children()}
 </div>

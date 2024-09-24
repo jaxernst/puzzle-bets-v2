@@ -64,7 +64,7 @@
     </div>
   {/if}
 
-  <div class="flex-grow overflow-y-auto">
+  <div class="flex-grow overflow-y-auto overflow-x-hidden">
     {@render children()}
   </div>
 
