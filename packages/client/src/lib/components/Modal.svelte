@@ -68,7 +68,7 @@
   const initThemeColor = "rgb(255, 200, 0)"
   $effect(() => {
     if (show) {
-      browser && setThemeColor("rgb(76.5, 60, 0)")
+      browser && setThemeColor("rgb(178.5, 140, 0)")
     } else {
       browser && setThemeColor(initThemeColor)
     }
