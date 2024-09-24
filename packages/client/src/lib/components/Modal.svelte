@@ -65,10 +65,10 @@
   }
 
   // Hack to darken the notch area (by 30%) on ios
-  const initThemeColor = "rgb(230, 230, 232)"
+  const initThemeColor = "rgb(255, 200, 0)"
   $effect(() => {
     if (show) {
-      browser && setThemeColor("rgb(161, 161, 162.4)")
+      browser && setThemeColor("rgb(76.5, 60, 0)")
     } else {
       browser && setThemeColor(initThemeColor)
     }
