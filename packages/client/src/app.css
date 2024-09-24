@@ -9,6 +9,10 @@
   font-style: normal;
 }
 
+body {
+  background-color: #ffc700;
+}
+
 h1 {
   @apply text-4xl font-bold;
 }
