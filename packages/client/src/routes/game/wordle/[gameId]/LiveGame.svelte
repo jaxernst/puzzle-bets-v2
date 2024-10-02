@@ -390,7 +390,7 @@
     <div class="font-black leading-none">Game Canceled!</div>
 
     <div class="text-base leading-tight">
-      Your wager is been refunded to your wallet
+      Your wager has been refunded to your wallet
     </div>
 
     <div class="flex flex-col items-start gap-2">
