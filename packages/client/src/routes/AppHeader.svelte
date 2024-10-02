@@ -64,7 +64,7 @@
   <div class="flex flex-col">
     <div class="flex gap-3">
       <img
-        src="/avatar1.png"
+        src="/avatar-1.png"
         class="h-[50px] w-[50px] flex-shrink-0"
         alt="Avatar"
       />

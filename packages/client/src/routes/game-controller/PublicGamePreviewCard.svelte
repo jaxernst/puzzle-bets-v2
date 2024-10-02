@@ -43,7 +43,7 @@
       <div class="flex items-center gap-1.5">
         <img
           alt="Player Avatar"
-          src={"/avatar1.png"}
+          src={"/avatar-1.png"}
           class="h-[26px] w-[26px]"
         />
         <div class="flex flex-col gap-1 overflow-hidden">

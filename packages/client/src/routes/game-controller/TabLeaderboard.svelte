@@ -34,7 +34,7 @@
             <td class="p-3" style="box-shadow: 0px 5px 0px 0px #E3DDCD;">
               <div class="flex items-center">
                 <img
-                  src="/avatar1.png"
+                  src="/avatar-1.png"
                   alt="Avatar"
                   class="mr-2 h-6 w-6 rounded-full"
                 />

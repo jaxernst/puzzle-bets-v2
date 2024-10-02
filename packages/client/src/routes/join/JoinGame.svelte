@@ -67,7 +67,7 @@
 
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-2 text-base">
-      <img src={"/avatar1.png"} class="h-[28px] w-[28px]" alt="Avatar" />
+      <img src={"/avatar-1.png"} class="h-[28px] w-[28px]" alt="Avatar" />
 
       {#if creatorName}
         <div>
