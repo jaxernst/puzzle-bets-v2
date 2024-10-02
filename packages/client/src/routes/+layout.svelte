@@ -15,6 +15,18 @@
   import { user } from "$lib/userStore.svelte"
   import { toastError } from "$lib/toast"
 
+  /**
+   * TODO:
+   * - Fix Submit solution popup blocking
+   * - Fix images getting blanked out on mobile
+   * - Launch confetti after claiming
+   * - Add png characters to bgs
+   * - Add 'solve a praactice game for testnet eth'
+   * - Add 'back to Dashboard' button to results modal after claiming
+   * - Sort cancelled games (history) to bottom
+   * - Add notifications
+   */
+
   let { children } = $props()
 
   $effect(() => {
