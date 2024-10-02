@@ -25,6 +25,7 @@ export const mud = (function createMudStore() {
       synced: true,
       components: network.components,
       systemCalls: createSystemCalls(network),
+      world: network.worldContract,
     }
 
     /**

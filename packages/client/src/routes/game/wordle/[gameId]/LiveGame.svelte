@@ -134,11 +134,12 @@
   let showCancelGameSuccess = $state(false)
   let cancelGameState = $state<"loading" | "error" | null>(null)
   const cancelGame = async () => {
-    if (cancelGameState === "loading") return
+    // if (cancelGameState === "loading") return
 
     cancelGameState = "loading"
     try {
-      await mud.systemCalls?.cancelPendingGame(game.id)
+      // await mud.systemCalls?.cancelPendingGame(game.id)
+      await mud.world.write.v1__cancelPendingGame([gameId as `0x${string}`])
       showCancelGame = false
       showCancelGameSuccess = true
     } catch {
