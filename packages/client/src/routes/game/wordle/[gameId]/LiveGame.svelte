@@ -138,7 +138,6 @@
 
     cancelGameState = "loading"
     try {
-      await new Promise((resolve) => setTimeout(resolve, 50))
       const success = await mud.systemCalls?.cancelPendingGame(game.id)
 
       if (success) {
@@ -212,7 +211,9 @@
 
         <button
           class="mt-2 w-full rounded p-3 font-bold underline"
-          onclick={cancelGame}
+          onclick={() => {
+            showCancelGame = true
+          }}
         >
           Cancel Game
         </button>
@@ -244,7 +245,9 @@
 
         <LoadingButton
           class="w-full max-w-[375px] rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-          onClick={async () => await mud.systemCalls?.startTurn(gameId)}
+          onClick={async () => {
+            await mud.systemCalls?.startTurn(gameId)
+          }}
         >
           Start Turn
         </LoadingButton>
