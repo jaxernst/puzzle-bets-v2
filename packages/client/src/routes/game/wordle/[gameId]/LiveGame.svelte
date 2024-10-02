@@ -208,7 +208,7 @@
 
         <button
           class="mt-2 w-full rounded p-3 font-bold underline"
-          onclick={() => (showCancelGame = true)}
+          onclick={cancelGame}
         >
           Cancel Game
         </button>
@@ -373,7 +373,7 @@
   class="sm:w-[375px]"
 >
   {#snippet header()}
-    <div class="flex gap-1">
+    <div class="flex items-center gap-1">
       <Stars />
       Cancel Sucess
     </div>
