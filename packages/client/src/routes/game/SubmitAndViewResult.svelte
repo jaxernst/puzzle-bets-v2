@@ -63,32 +63,72 @@
   let puzzleDueIn = $derived(outcomes.mySubmissionTimeLeft)
 
   const confirmSubmit = async () => {
-    await verifyAndSubmitSolution()
-    showConfirmSubmit = false
-    showResults = true
+    const success = await submissionSolution()
+
+    if (success) {
+      showConfirmSubmit = false
+      showResults = true
+    }
   }
 
-  const verifyAndSubmitSolution = async () => {
+  const getPuzzleVerification = async () => {
+    const res = await fetch(`/api/${game.type}/verify-user-solution`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        gameId: parseInt(game.id, 16),
+      }),
+    })
+
+    return (await res.json()) as {
+      won: boolean
+      score: number
+      signature: `0x${string}`
+    }
+  }
+
+  let verificationFetching = false
+  let puzzleVerification: {
+    won: boolean
+    score: number
+    signature: `0x${string}`
+  } | null = $state(null)
+
+  // Fetch the verification as an effect (when the confirm modal is opened) so that the verification
+  // doesn't need to be fetched when the user goes to make the submission transaction (the async delay
+  // can cause the wallet popup to be blocked by the browser)
+  $effect(() => {
+    if (showConfirmSubmit && !puzzleVerification && !verificationFetching) {
+      verificationFetching = true
+      getPuzzleVerification()
+        .then((verification) => {
+          puzzleVerification = verification
+        })
+        .finally(() => {
+          verificationFetching = false
+        })
+    }
+  })
+
+  const submissionSolution = async () => {
     if (submitting || !mud.systemCalls) return
 
-    submitting = true
-    try {
-      const res = await fetch(`/api/${game.type}/verify-user-solution`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          gameId: parseInt(game.id, 16),
-        }),
-      })
+    if (!puzzleVerification) {
+      puzzleVerification = await getPuzzleVerification()
+    }
 
-      const { won, score, signature } = await res.json()
-      if (!won) {
+    try {
+      if (!puzzleVerification.won) {
         // submitError = "Puzzle not solved!"
-        await mud.systemCalls.submitSolution(game.id, 0, "0x")
+        return await mud.systemCalls.submitSolution(game.id, 0, "0x")
       } else {
-        await mud.systemCalls.submitSolution(game.id, score, signature)
+        return await mud.systemCalls.submitSolution(
+          game.id,
+          puzzleVerification.score,
+          puzzleVerification.signature,
+        )
       }
     } finally {
       submitting = false
@@ -295,7 +335,7 @@
         disabled={!outcomes.gameOutcome || outcomes.claimed}
         onclick={claim}
       >
-        {#if claiming}
+        {#if claiming || verificationFetching}
           <DotLoader class="fill-white " />
         {:else if outcomes.claimed}
           {formatSigFig(Number(formatEther(getClaimableAmount("user"))), 3)} ETH
