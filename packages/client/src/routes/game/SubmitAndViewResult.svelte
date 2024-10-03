@@ -322,7 +322,7 @@
   <hr />
 
   <div class="flex flex-col">
-    {#if outcomes.gameOutcome === "lose"}
+    {#if outcomes.gameOutcome === "lose" || outcomes.claimed}
       <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
         onclick={() => goto("/dashboard")}
@@ -337,9 +337,6 @@
       >
         {#if claiming || verificationFetching}
           <DotLoader class="fill-white " />
-        {:else if outcomes.claimed}
-          {formatSigFig(Number(formatEther(getClaimableAmount("user"))), 3)} ETH
-          Claimed
         {:else if outcomes.gameOutcome === "tie"}
           Withdraw {formatSigFig(Number(formatEther(game.buyInAmount)), 3)} ETH
         {:else if outcomes.gameOutcome === "win"}
@@ -358,6 +355,12 @@
           {PROTOCOL_FEE_PERCENTAGE}% protocol fee applied
         </p>
       {/if}
+    {/if}
+
+    {#if outcomes.claimed}
+      <p class="mt-1.5 self-center text-sm font-bold">
+        {formatSigFig(Number(formatEther(getClaimableAmount("user"))), 3)} ETH Claimed
+      </p>
     {/if}
 
     <!--  Rematch Button
