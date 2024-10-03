@@ -168,14 +168,16 @@
 </script>
 
 <div
-  class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 overflow-y-auto px-4"
+  class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 overflow-y-auto"
 >
-  <GameHeader
-    {game}
-    puzzle="wordle"
-    disableSubmit={!gameOver || submitted}
-    failedToSolve={puzzleState?.lost}
-  />
+  <div class="w-full px-4">
+    <GameHeader
+      {game}
+      puzzle="wordle"
+      disableSubmit={!gameOver || submitted}
+      failedToSolve={puzzleState?.lost}
+    />
+  </div>
 
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
@@ -301,9 +303,11 @@
     </div>
   {/if}
 
-  <div class="min-h-5"></div>
+  <div class="min-h-5 flex-grow"></div>
 
-  <div class="flex w-full grow items-end pb-1 md:hidden">
+  <div
+    class="absolute bottom-0 flex w-full grow items-end md:relative md:hidden"
+  >
     <SubmitAndViewResult
       class="w-full"
       {game}
