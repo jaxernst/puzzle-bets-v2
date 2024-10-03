@@ -70,7 +70,7 @@
     return ""
   })
 
-  const SIZE_CLOSED = 55
+  const SIZE_CLOSED = 60
   const SIZE_OPEN = 600
 
   const size = spring(SIZE_CLOSED, {
@@ -124,7 +124,7 @@
     <div class="flex items-center gap-2 font-extrabold">
       <PuzzlePiece class="h-5 w-5 sm:h-6 sm:w-6" />
 
-      <span class="e">{routeLabel}</span>
+      <div class="">{routeLabel}</div>
 
       <div
         class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs"
@@ -133,7 +133,7 @@
       </div>
 
       <div
-        class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs"
+        class="bg-pb-beige-1 hidden items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs md:flex"
       >
         {numLobbyGames} Public Game{numLobbyGames === 1 ? "" : "s"}
       </div>
