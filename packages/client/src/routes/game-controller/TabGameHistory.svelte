@@ -8,13 +8,16 @@
   import { getComponentValueStrict } from "@latticexyz/recs"
 
   let playerGames = $derived(
-    getPlayerGames(user.address, mud).filter((g) => {
-      const status = getComponentValueStrict(
-        mud.components!.GameStatus,
-        g.id,
-      ).value
-      return status === GameStatus.Complete || status === GameStatus.Inactive
-    }),
+    getPlayerGames(user.address, mud)
+      .filter(({ status }) => {
+        return status === GameStatus.Complete || status === GameStatus.Inactive
+      })
+      .sort(({ status: statusA }, { status: statusB }) => {
+        return (
+          (statusA === GameStatus.Inactive ? 1 : 0) -
+          (statusB === GameStatus.Inactive ? 1 : 0)
+        )
+      }),
   )
 </script>
 
