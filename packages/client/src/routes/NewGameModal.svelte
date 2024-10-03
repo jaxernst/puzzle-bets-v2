@@ -412,7 +412,7 @@
       <div class="mb-3 font-extrabold">Game Created!</div>
 
       <div class="leading-tight">
-        Your wager has been deposited in the smart contract and your game has
+        Your wager has been deposited into the smart contract and your game has
         been created.
       </div>
     </div>
