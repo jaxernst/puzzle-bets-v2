@@ -11,10 +11,9 @@ import { writeContract } from "@wagmi/core"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import { networkConfig } from "./networkConfig"
 import { wagmiConfig } from "$lib/walletStore.svelte"
+import { toastError } from "$lib/toast"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
-
-export const txErrorStore = writable<string | null>(null)
 
 const DEFAULT_PLAYBACK_WINDOW = 60 * 60 * 24 // 1 Day
 
@@ -155,18 +154,15 @@ const incerceptTxError = <T extends (...args: any[]) => Promise<void>>(
   return async (...args: Parameters<T>) => {
     try {
       await fn(...args)
-      txErrorStore.set(null)
       return true
     } catch (error: unknown) {
       // Catch viem error with .shortMessage fields
       console.error(error)
       if (typeof error === "object" && error !== null) {
         const errorObj = error as { shortMessage?: string; message?: string }
-        txErrorStore.set(
-          errorObj.shortMessage ?? errorObj.message ?? String(error),
-        )
+        toastError(errorObj.shortMessage ?? errorObj.message ?? String(error))
       } else {
-        txErrorStore.set(String(error))
+        toastError(String(error))
       }
 
       return false

@@ -10,7 +10,6 @@
   import WalletConnector from "$lib/components/WalletConnector.svelte"
   import NewGameModal from "./NewGameModal.svelte"
   import AboutModal from "./AboutModal.svelte"
-  import { txErrorStore } from "$lib/mud/createSystemCalls"
   import DisplayNameModal from "./DisplayNameModal.svelte"
   import { user } from "$lib/userStore.svelte"
   import { toastError } from "$lib/toast"
@@ -18,12 +17,10 @@
   /**
    * TODO:
    * - Fix Submit solution popup blocking
-   * - Fix images getting blanked out on mobile
    * - Launch confetti after claiming
    * - Add png characters to bgs
    * - Add 'solve a praactice game for testnet eth'
    * - Add 'back to Dashboard' button to results modal after claiming
-   * - Sort cancelled games (history) to bottom
    * - Add notifications
    */
 
@@ -44,12 +41,6 @@
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
       window.location.reload()
-    }
-  })
-
-  txErrorStore.subscribe((error) => {
-    if (error) {
-      toastError(error)
     }
   })
 
