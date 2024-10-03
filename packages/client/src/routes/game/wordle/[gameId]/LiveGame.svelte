@@ -170,7 +170,7 @@
 <div
   class="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center gap-4 overflow-y-auto"
 >
-  <div class="w-full px-4">
+  <div class="w-full px-2 sm:px-4">
     <GameHeader
       {game}
       puzzle="wordle"
@@ -181,127 +181,129 @@
 
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
-  {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
-    <div
-      class="mx-auto flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
-    >
-      <div class="font-black">
-        The Puzzle will be ready to reveal once your opponent joins.
-      </div>
-
+  <div class="mx-auto px-1">
+    {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
       <div
-        class="rounded-full border-2 border-black px-2 py-1.5 text-sm font-semibold"
+        class="flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
       >
-        {#if timers.inviteTimeLeft > 0}
-          Invite expires {formatTime(timers.inviteTimeLeft)}
-        {:else}
-          Invite Expired. Cancel Game to withdraw
-        {/if}
-      </div>
-
-      <div class="w-full max-w-[375px] text-base">
-        <button
-          class="w-full rounded border-2 border-black bg-black p-3 font-bold text-white"
-          onclick={() => copyInviteUrl(game.id)}
-        >
-          {#if inviteCopied}
-            Invite Copied!
-          {:else}
-            Copy Invite Link
-          {/if}
-        </button>
-
-        <button
-          class="mt-2 w-full rounded p-3 font-bold underline"
-          onclick={() => {
-            showCancelGame = true
-          }}
-        >
-          Cancel Game
-        </button>
-
-        {#if inviteCopyError}
-          <p class="mt-2 text-red-600">{inviteCopyError}</p>
-        {/if}
-      </div>
-    </div>
-  {:else if awaitingTurnStart}
-    <div
-      class="mx-auto flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
-    >
-      {#if timers.myPlaybackTime === 0}
-        <p class="font-bold">
-          You did not play your opponent back in time. Wager forfeited.
-        </p>
-      {:else if timers.myPlaybackTime > 0}
-        <div class="font-bold">
-          Your opponent has joined and started their timer. Your have {formatTime(
-            timers.myPlaybackTime ?? 0,
-          )}
-          to start your turn.
-          <div class="mt-2 text-sm font-normal">
-            (This will initiate a blockchain transaction to start your game
-            timer)
-          </div>
+        <div class="font-black">
+          The Puzzle will be ready to reveal once your opponent joins.
         </div>
 
-        <LoadingButton
-          class="w-full max-w-[375px] rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-          onClick={async () => {
-            await mud.systemCalls?.startTurn(gameId)
-          }}
+        <div
+          class="rounded-full border-2 border-black px-2 py-1.5 text-sm font-semibold"
         >
-          Start Turn
-        </LoadingButton>
-      {/if}
-    </div>
-  {:else if puzzleState}
-    <Wordle
-      {...puzzleState}
-      paused={Boolean(
-        gameOver || submitted || game?.status !== GameStatus.Active,
-      )}
-      onSubmitGuess={enterGuess}
-      onGameOver={() => {}}
-    />
-
-    {#if puzzleState.solved && !submitted && !expired}
-      <div class="w-full text-center">
-        Submit your solution before the deadline
-      </div>
-    {/if}
-
-    {#if puzzleState.solved || puzzleState.lost}
-      <div class="flex w-full justify-center">
-        <button
-          class="bg-pb-yellow rounded-md border-2 border-black px-2 py-1 font-semibold text-black"
-          onclick={() => copyBoard(puzzleState?.answers ?? [])}
-        >
-          {#if copied}
-            <div
-              in:slide={{ axis: "x", easing: cubicOut }}
-              class="whitespace-nowrap"
-            >
-              Copied
-            </div>
+          {#if timers.inviteTimeLeft > 0}
+            Invite expires {formatTime(timers.inviteTimeLeft)}
           {:else}
-            <div
-              in:slide={{ axis: "x", easing: cubicOut }}
-              class="whitespace-nowrap"
-            >
-              Share Board
-            </div>
+            Invite Expired. Cancel Game to withdraw
           {/if}
-        </button>
+        </div>
+
+        <div class="w-full max-w-[375px] text-base">
+          <button
+            class="w-full rounded border-2 border-black bg-black p-3 font-bold text-white"
+            onclick={() => copyInviteUrl(game.id)}
+          >
+            {#if inviteCopied}
+              Invite Copied!
+            {:else}
+              Copy Invite Link
+            {/if}
+          </button>
+
+          <button
+            class="mt-2 w-full rounded p-3 font-bold underline"
+            onclick={() => {
+              showCancelGame = true
+            }}
+          >
+            Cancel Game
+          </button>
+
+          {#if inviteCopyError}
+            <p class="mt-2 text-red-600">{inviteCopyError}</p>
+          {/if}
+        </div>
+      </div>
+    {:else if awaitingTurnStart}
+      <div
+        class="flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
+      >
+        {#if timers.myPlaybackTime === 0}
+          <p class="font-bold">
+            You did not play your opponent back in time. Wager forfeited.
+          </p>
+        {:else if timers.myPlaybackTime > 0}
+          <div class="font-bold">
+            Your opponent has joined and started their timer. Your have {formatTime(
+              timers.myPlaybackTime ?? 0,
+            )}
+            to start your turn.
+            <div class="mt-2 text-sm font-normal">
+              (This will initiate a blockchain transaction to start your game
+              timer)
+            </div>
+          </div>
+
+          <LoadingButton
+            class="w-full max-w-[375px] rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
+            onClick={async () => {
+              await mud.systemCalls?.startTurn(gameId)
+            }}
+          >
+            Start Turn
+          </LoadingButton>
+        {/if}
+      </div>
+    {:else if puzzleState}
+      <Wordle
+        {...puzzleState}
+        paused={Boolean(
+          gameOver || submitted || game?.status !== GameStatus.Active,
+        )}
+        onSubmitGuess={enterGuess}
+        onGameOver={() => {}}
+      />
+
+      {#if puzzleState.solved && !submitted && !expired}
+        <div class="w-full text-center">
+          Submit your solution before the deadline
+        </div>
+      {/if}
+
+      {#if puzzleState.solved || puzzleState.lost}
+        <div class="flex w-full justify-center">
+          <button
+            class="bg-pb-yellow rounded-md border-2 border-black px-2 py-1 font-semibold text-black"
+            onclick={() => copyBoard(puzzleState?.answers ?? [])}
+          >
+            {#if copied}
+              <div
+                in:slide={{ axis: "x", easing: cubicOut }}
+                class="whitespace-nowrap"
+              >
+                Copied
+              </div>
+            {:else}
+              <div
+                in:slide={{ axis: "x", easing: cubicOut }}
+                class="whitespace-nowrap"
+              >
+                Share Board
+              </div>
+            {/if}
+          </button>
+        </div>
+      {/if}
+    {:else if game.status === GameStatus.Inactive}
+      <p class="py-4 font-bold">Game Canceled</p>
+    {:else if !puzzleState}
+      <div class="flex h-[200px] items-center justify-center self-center">
+        <DotLoader class="h-10 w-10 fill-black" />
       </div>
     {/if}
-  {:else if game.status === GameStatus.Inactive}
-    <p class="py-4 font-bold">Game Canceled</p>
-  {:else if !puzzleState}
-    <div class="flex h-[200px] items-center justify-center self-center">
-      <DotLoader class="h-10 w-10 fill-black" />
-    </div>
-  {/if}
+  </div>
 
   <div class="min-h-5 flex-grow"></div>
 
