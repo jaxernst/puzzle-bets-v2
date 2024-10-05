@@ -3,9 +3,11 @@
   import Wordle from "$lib/game-components/Wordle.svelte"
   import { wordleGameStates } from "$lib/puzzleGameState.svelte"
   import { generateRandomID } from "$lib/util"
-  import type { Entity } from "@latticexyz/recs"
   import GameHeader from "../../GameHeader.svelte"
   import OpponentDisplay from "../../OpponentDisplay.svelte"
+  import { user } from "$lib/userStore.svelte"
+  import { parseEther } from "viem"
+  import { toastInfo } from "$lib/toast"
 
   const storedGameId = localStorage.getItem("wordleDemoGameId")
   const gameId = storedGameId ?? generateRandomID(32)
@@ -23,8 +25,16 @@
   const enterGuess = async (guess: string) => {
     await wordleGameStates.enterGuess(gameId, guess, true)
     const puzzleState = wordleGameStates.get(gameId)
+
     if (puzzleState?.solved) {
       launchConfetti()
+
+      if (user.authenticated && user.balance < parseEther(".01")) {
+        const res = await fetch("/api/drip", { method: "POST" })
+        if (res.ok) {
+          toastInfo("Nice win! We just sent .01 testnet ETH to your wallet.")
+        }
+      }
     }
   }
 

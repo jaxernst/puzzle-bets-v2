@@ -22,6 +22,8 @@
    * - Add png characters to bgs
    * - Add 'solve a practice game for testnet eth'
    * - Add notifications
+   * - Fix display name not changing after updating
+   * - Fix confetti
    */
 
   let { children } = $props()
@@ -41,21 +43,6 @@
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
       window.location.reload()
-    }
-  })
-
-  let dripGameModalShown = false
-  $effect(() => {
-    console.log("balance", user)
-    if (
-      !dripGameModalShown &&
-      user.authenticated &&
-      user.balanceFetched &&
-      user.balance < parseEther(".1")
-    ) {
-      console.log("showing drip game modal")
-      toggleDripGameModal()
-      dripGameModalShown = true
     }
   })
 

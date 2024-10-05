@@ -64,3 +64,27 @@ export async function setDisplayName(user: EvmAddress, displayName: string) {
 
   return [data, null]
 }
+
+export async function getEthDripped(user: EvmAddress): Promise<number> {
+  const { data } = await supabase
+    .from("drip-record")
+    .select("eth_dripped")
+    .eq("address", user)
+    .single()
+
+  return data?.eth_dripped ?? 0
+}
+
+export async function setEthDripped(user: EvmAddress, dripped: number) {
+  const { data, error } = await supabase
+    .from("drip-record")
+    .upsert({ address: user, eth_dripped: dripped })
+    .select()
+    .single()
+
+  if (error) {
+    console.error("Error setting drip record:", error)
+  }
+
+  return data
+}
