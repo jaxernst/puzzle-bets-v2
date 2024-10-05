@@ -10,6 +10,7 @@ const initialState = {
   address: undefined,
   authenticated: undefined,
   balance: 0n,
+  balanceFetched: false,
 }
 
 const makeBalanceSync = (setBalance: (balance: bigint) => any) => {
@@ -45,6 +46,7 @@ export const user = (() => {
     address: EvmAddress | undefined
     authenticated: EvmAddress | undefined
     balance: bigint
+    balanceFetched: boolean
     displayName?: string
   }>(initialState)
 
@@ -52,6 +54,7 @@ export const user = (() => {
     // Only update store when balance has changed
     if (balance !== userState.balance) {
       userState.balance = balance
+      userState.balanceFetched = true
     }
   })
 
@@ -98,10 +101,10 @@ export const user = (() => {
       // No address -> reset store and sign out
       if (userState.authenticated) await logout()
 
-      // userState = initialState; -> currently does not work. Will try again when Svelte 5 is official
       userState.address = undefined
       userState.authenticated = undefined
       userState.balance = 0n
+      userState.balanceFetched = false
       userState.displayName = undefined
     }
   }
@@ -127,6 +130,9 @@ export const user = (() => {
     },
     set authenticated(authenticated: EvmAddress | undefined) {
       userState.authenticated = authenticated
+    },
+    get balanceFetched() {
+      return userState.balanceFetched
     },
 
     updateDisplayName: async (displayName: string) => {
