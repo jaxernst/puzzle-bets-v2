@@ -105,7 +105,7 @@
   {/snippet}
 
   <div class="flex flex-grow flex-col gap-4">
-    <div style={"font-weight: 900"}>We're in TestnetBeta</div>
+    <div style={"font-weight: 900"}>We're in Beta!</div>
     <div class="text-sm leading-tight">
       Basically it's all “play money” and not real until launch. Connecting and
       playing games will NOT use your real ETH.
