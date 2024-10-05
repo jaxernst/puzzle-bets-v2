@@ -9,16 +9,18 @@
   import Confetti from "$lib/components/Confetti.svelte"
   import WalletConnector from "$lib/components/WalletConnector.svelte"
   import NewGameModal from "./NewGameModal.svelte"
-  import AboutModal from "./AboutModal.svelte"
+  import AboutModal, { toggleAboutModal } from "./AboutModal.svelte"
+  import DripGameModal from "./DripGameModal.svelte"
+  import { toggleDripGameModal } from "./DripGameModal.svelte"
   import DisplayNameModal from "./DisplayNameModal.svelte"
   import { user } from "$lib/userStore.svelte"
-  import { toastError } from "$lib/toast"
+  import { formatEther, parseEther } from "viem"
 
   /**
    * TODO:
    * - Launch confetti after claiming
    * - Add png characters to bgs
-   * - Add 'solve a praactice game for testnet eth'
+   * - Add 'solve a practice game for testnet eth'
    * - Add notifications
    */
 
@@ -42,12 +44,30 @@
     }
   })
 
+  let dripGameModalShown = false
+  $effect(() => {
+    console.log("balance", user)
+    if (
+      !dripGameModalShown &&
+      user.authenticated &&
+      user.balanceFetched &&
+      user.balance < parseEther(".1")
+    ) {
+      console.log("showing drip game modal")
+      toggleDripGameModal()
+      dripGameModalShown = true
+    }
+  })
+
   let isHomePage = $derived($page.url.pathname === "/")
   let isGamePath = $derived($page.url.pathname.startsWith("/game"))
 </script>
 
 <Confetti />
 <WalletConnector autoconnect />
+
+<DripGameModal />
+
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
