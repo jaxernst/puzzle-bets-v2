@@ -16,11 +16,9 @@
 
   /**
    * TODO:
-   * - Fix Submit solution popup blocking
    * - Launch confetti after claiming
    * - Add png characters to bgs
    * - Add 'solve a praactice game for testnet eth'
-   * - Add 'back to Dashboard' button to results modal after claiming
    * - Add notifications
    */
 
