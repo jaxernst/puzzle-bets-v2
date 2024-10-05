@@ -119,7 +119,7 @@
       </a>
 
       <a
-        href="https://github.com/jaxernst/puzzle-bets"
+        href="https://github.com/jaxernst/puzzle-bets-v2"
         target="_blank"
         class="h-8 w-8"
       >
