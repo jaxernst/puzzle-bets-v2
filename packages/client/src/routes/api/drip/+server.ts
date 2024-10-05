@@ -26,7 +26,7 @@ export const POST = async ({ locals }) => {
   }
 
   const tx = await dripClient.sendTransaction({
-    data: "0x",
+    to: user,
     value: parseEther(DRIP_AMOUNT_ETH.toString()),
   })
 

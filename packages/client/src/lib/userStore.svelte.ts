@@ -4,7 +4,7 @@ import { signInWithEthereum } from "./siwe"
 import { publicClient, type Wallet } from "./mud/setupNetwork"
 import { displayNameStore } from "./displayNameStore.svelte"
 import { prices } from "./prices.svelte"
-import { formatAsDollar } from "./util"
+import { formatAsDollar, formatSigFig } from "./util"
 
 const initialState = {
   address: undefined,
@@ -120,7 +120,7 @@ export const user = (() => {
       return userState.balance
     },
     get balanceEth() {
-      return Number(formatEther(userState.balance)).toFixed(2)
+      return formatSigFig(Number(formatEther(userState.balance)), 2)
     },
     get balanceUsd() {
       return formatAsDollar(Number(formatEther(userState.balance)) * prices.eth)

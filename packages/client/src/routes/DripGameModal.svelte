@@ -21,7 +21,7 @@
       !dripGameModalShown &&
       user.authenticated &&
       user.balanceFetched &&
-      user.balance < parseEther(".005")
+      user.balance < parseEther(".008")
     ) {
       toggleDripGameModal()
       dripGameModalShown = true
