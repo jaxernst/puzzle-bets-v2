@@ -17,15 +17,11 @@
   let dripGameModalShown = false
 
   $effect(() => {
-    const modalDismissed =
-      localStorage.getItem("dripGameModalDismissed") === "true"
-
     if (
       !dripGameModalShown &&
-      !modalDismissed &&
       user.authenticated &&
       user.balanceFetched &&
-      user.balance < parseEther(".1")
+      user.balance < parseEther(".005")
     ) {
       toggleDripGameModal()
       dripGameModalShown = true
