@@ -46,7 +46,10 @@ export async function getDisplayName(user: EvmAddress) {
   return data?.display_name ?? null
 }
 
-export async function setDisplayName(user: EvmAddress, displayName: string) {
+export async function setDisplayName(
+  user: EvmAddress,
+  displayName: string | null,
+) {
   const { data, error } = await supabase
     .from("display-names")
     .upsert({ address: user, display_name: displayName })
