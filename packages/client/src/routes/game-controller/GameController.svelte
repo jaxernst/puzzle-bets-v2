@@ -186,7 +186,7 @@
 
         {#if open}
           <div
-            class="mt-2 h-0.5 rounded-sm bg-black transition-all duration-300 ease-out"
+            class="bg-pb-beige-1 mt-2 h-0.5 rounded-sm transition-all duration-300 ease-out"
             style="width: {$tabUnderline.width}px; transform: translateX({$tabUnderline.left}px);"
           ></div>
         {/if}
@@ -249,7 +249,9 @@
       </button>
     </div>
 
-    <div class="mt-2 w-full text-center text-xs">{descriptions[tab]}</div>
+    <div class="mt-2 w-full text-center text-sm font-medium">
+      {descriptions[tab]}
+    </div>
 
     <div class="overflow-y-auto">
       {#if tab === "lobby"}
