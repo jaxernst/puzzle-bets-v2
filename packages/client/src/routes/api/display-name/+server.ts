@@ -6,11 +6,7 @@ export const POST = async ({ request, locals }) => {
   }
 
   const body = await request.json()
-  const { displayName } = body
-
-  if (!displayName) {
-    return new Response("Display name is required", { status: 400 })
-  }
+  const { displayName } = body as { displayName: string | null }
 
   const [result, error] = await setDisplayName(locals.user, displayName)
   if (result) {
