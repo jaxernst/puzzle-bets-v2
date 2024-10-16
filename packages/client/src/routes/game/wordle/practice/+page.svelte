@@ -46,7 +46,7 @@
 </script>
 
 <div class="flex flex-col gap-4 p-4">
-  <GameHeader puzzle="wordle" />
+  <GameHeader puzzle="wordle" onRestart={reset} />
   <OpponentDisplay opponent={null} />
 
   <Wordle
@@ -58,16 +58,17 @@
   />
 </div>
 
-{#if showRestart || game?.solved || game?.lost}
-  <div class="w-ful flex justify-center pb-4">
-    <button
-      class="rounded-lg bg-black p-2 font-semibold text-white"
-      onclick={() => {
-        reset()
-        showRestart = false
-      }}
-    >
-      Restart Demo Game
-    </button>
-  </div>
-{/if}
+<div class="flex w-full justify-center py-4">
+  <button
+    class="block rounded-lg bg-black p-2 font-semibold text-white md:hidden"
+    onclick={(e) => {
+      reset()
+      showRestart = false
+      if (e.target instanceof HTMLElement) {
+        e.target.blur()
+      }
+    }}
+  >
+    Restart
+  </button>
+</div>

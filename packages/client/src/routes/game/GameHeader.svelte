@@ -14,13 +14,15 @@
   import { getGameTimers } from "$lib/gameQueries"
   import { goto } from "$app/navigation"
 
-  let { game, puzzle, score, disableSubmit, failedToSolve } = $props<{
-    game?: PlayerGame
-    score?: number
-    puzzle: PuzzleType
-    disableSubmit?: boolean
-    failedToSolve?: boolean
-  }>()
+  let { game, puzzle, score, disableSubmit, failedToSolve, onRestart } =
+    $props<{
+      game?: PlayerGame
+      score?: number
+      puzzle: PuzzleType
+      disableSubmit?: boolean
+      failedToSolve?: boolean
+      onRestart?: () => void
+    }>()
 
   let betAmountDollar = game
     ? Number(formatEther(game.buyInAmount)) * prices.eth
@@ -90,10 +92,16 @@
         />
       {:else}
         <button
-          class="disabled:opacity-4 rounded bg-black px-6 py-2 font-black text-white opacity-70"
-          disabled={true}
+          class="rounded bg-black px-6 py-2 font-black text-white"
+          onclick={(e) => {
+            if (e.target instanceof HTMLElement) {
+              e.target.blur()
+            }
+
+            onRestart?.()
+          }}
         >
-          Submit Puzzle
+          Restart
         </button>
       {/if}
     </div>

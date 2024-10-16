@@ -99,9 +99,10 @@ export const wordleGameStates = (() => {
 
   let resetLoading = false
   const reset = async (gameId: GameId, isDemo: boolean) => {
-    if (resetLoading || !mud.components) return
+    if (resetLoading) return
+    if (!mud.components && !isDemo) return
 
-    const game = isDemo ? undefined : gameIdToGame(gameId, mud.components)
+    const game = isDemo ? undefined : gameIdToGame(gameId, mud.components!)
 
     const opponent = game
       ? user.address === game.p1
