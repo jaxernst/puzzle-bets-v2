@@ -18,10 +18,9 @@
 
   /**
    * TODO:
-   * - Launch confetti after claiming
-   * - Add png characters to bgs
    * - Add notifications
    * - Fix confetti
+   * - Add png characters to bgs
    * - Add link previews + other seo improvements
    */
 

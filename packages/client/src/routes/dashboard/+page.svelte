@@ -88,7 +88,7 @@
       {/if}
     </div>
 
-    <hr class="mx-4 my-5 px-3" />
+    <div class={user.address ? "h-5" : "h-7"}></div>
 
     <!-- User Stats -->
     <div class="flex flex-wrap gap-4 gap-y-3 self-center px-3 md:gap-4">
