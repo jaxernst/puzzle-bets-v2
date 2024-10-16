@@ -20,10 +20,9 @@
    * TODO:
    * - Launch confetti after claiming
    * - Add png characters to bgs
-   * - Add 'solve a practice game for testnet eth'
    * - Add notifications
-   * - Fix display name not changing after updating
    * - Fix confetti
+   * - Add link previews + other seo improvements
    */
 
   let { children } = $props()
