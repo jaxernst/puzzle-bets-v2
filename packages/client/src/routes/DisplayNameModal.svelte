@@ -8,18 +8,21 @@
 
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte"
+  import { updateDisplayName } from "$lib/displayNameStore.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
   import { user } from "$lib/userStore.svelte"
 
-  let displayNameTemp = $state("")
+  let displayNameTemp = $state<string | null>(null)
   let error = $state<string | null>(null)
 
   async function handleSave() {
     error = null
 
     try {
-      await user.updateDisplayName(displayNameTemp)
-      displayNameTemp = ""
+      if (!user.address) throw new Error("Not authenticated")
+
+      await updateDisplayName(user.address, displayNameTemp)
+      displayNameTemp = null
       toggleDisplayNameModal()
     } catch (_error: any) {
       error = _error.message ?? "Failed to set display name"
