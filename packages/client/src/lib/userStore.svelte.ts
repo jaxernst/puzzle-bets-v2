@@ -114,7 +114,8 @@ export const user = (() => {
       return userState.address
     },
     get displayName() {
-      return userState.displayName
+      if (!userState.address) return undefined
+      return displayNameStore.get(userState.address, false)
     },
     get balance() {
       return userState.balance
@@ -135,37 +136,8 @@ export const user = (() => {
       return userState.balanceFetched
     },
 
-    updateDisplayName: async (displayName: string) => {
-      if (!userState.authenticated || !userState.address) {
-        console.error("Cannot update display name: not authenticated")
-        return
-      }
-
-      userState.displayName = await updateDisplayName(displayName)
-      displayNameStore.set(userState.address, displayName)
-    },
-
     changeWallet: async (wallet: Wallet | null) => {
       await handleWalletChange(wallet)
     },
   }
 })()
-
-async function updateDisplayName(displayName: string) {
-  try {
-    const response = await fetch("/api/display-name", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ displayName }),
-    })
-
-    if (response.status === 409) throw new Error("Display name already taken")
-    if (!response.ok) throw new Error("Failed to set display name")
-
-    const data = await response.json()
-    return data.displayName as string
-  } catch (error) {
-    console.error("Error setting display name:", error)
-    return undefined
-  }
-}
