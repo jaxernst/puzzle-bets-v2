@@ -48,6 +48,9 @@
   import TabLobbyGames from "./TabLobby.svelte"
   import TabGameHistory from "./TabGameHistory.svelte"
   import TabLeaderboard from "./TabLeaderboard.svelte"
+  import { tweened } from "svelte/motion"
+  import { cubicOut } from "svelte/easing"
+  import { onMount } from "svelte"
 
   const descriptions: Record<Tab, string> = {
     active: "Your active onchain games.",
@@ -90,13 +93,10 @@
   let numActiveGames = $derived(getActivePlayerGames(user.address, mud).length)
   let numLobbyGames = $derived(getPublicGames(mud).length)
 
-  import { tweened } from "svelte/motion"
-  import { cubicOut } from "svelte/easing"
-
   const tabUnderline = tweened(
     { left: 0, width: 0 },
     {
-      duration: 300,
+      duration: 120,
       easing: cubicOut,
     },
   )
@@ -108,14 +108,15 @@
     top: null,
   }
 
+  const TAB_UNDERLINE_WIDTH = 26
   function updateTabUnderline(name: Tab) {
     const activeTab = tabRefs[name]
     if (activeTab) {
       const { offsetLeft, offsetWidth } = activeTab
 
       tabUnderline.set({
-        left: offsetLeft + offsetWidth * 0.125,
-        width: offsetWidth * 0.75,
+        left: offsetLeft + offsetWidth / 2 - TAB_UNDERLINE_WIDTH / 2,
+        width: TAB_UNDERLINE_WIDTH,
       })
     }
   }
@@ -123,16 +124,22 @@
   $effect(() => {
     updateTabUnderline(tab)
   })
+
+  onMount(() => {
+    const handleResize = () => updateTabUnderline(tab)
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  })
 </script>
 
-{#snippet TabButton(name: Tab)}
+{#snippet TabButton(name: Tab, numGames?: number)}
   <button
     bind:this={tabRefs[name]}
     onclick={() => {
       tab = name
       updateTabUnderline(name)
     }}
-    class={`flex items-center justify-center gap-1 text-sm leading-none transition-all sm:text-[15px] ${
+    class={`flex items-center justify-center gap-1 text-sm leading-none tracking-tight transition-all sm:text-[15px] ${
       open && tab === name ? "scale-110 font-black" : "font-bold"
     }`}
   >
@@ -141,6 +148,10 @@
       class={tab === name ? "stroke-4" : ""}
     />
     <div>{capitalized(name)}</div>
+
+    {#if typeof numGames === "number"}
+      <div class="text-xs sm:text-sm">({numGames})</div>
+    {/if}
   </button>
 {/snippet}
 
@@ -151,7 +162,7 @@
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div
     tabindex="0"
-    class=" bg-pb-beige-2 flex max-w-[1160px] flex-grow flex-col gap-6 rounded-t-xl border-x-2 border-t-2 border-black p-4"
+    class=" bg-pb-beige-2 flex max-w-[1160px] flex-grow flex-col gap-4 rounded-t-xl border-x-2 border-t-2 border-black p-4"
     style={`height: ${$size}px;`}
     onclick={() => openControls()}
     onkeydown={(event) => {
@@ -164,18 +175,18 @@
       },
     }}
   >
-    <div class="flex items-center gap-5 font-extrabold">
+    <div class="flex items-center gap-1 font-extrabold">
       <div>
         <div class="relative flex gap-4 sm:gap-6">
-          {@render TabButton("lobby")}
-          {@render TabButton("active")}
+          {@render TabButton("lobby", numLobbyGames)}
+          {@render TabButton("active", numActiveGames)}
           {@render TabButton("history")}
           {@render TabButton("top")}
         </div>
 
         {#if open}
           <div
-            class="mt-2 h-[2px] rounded-sm bg-black transition-all duration-300 ease-out"
+            class="mt-2 h-0.5 rounded-sm bg-black transition-all duration-300 ease-out"
             style="width: {$tabUnderline.width}px; transform: translateX({$tabUnderline.left}px);"
           ></div>
         {/if}
@@ -211,9 +222,7 @@
       </button>
     </div>
 
-    <div class="flex gap-2 self-center">
-      <div class="text-xs">{descriptions[tab]}</div>
-
+    <div class="flex gap-2 self-center pt-1">
       <button
         class="bg-pb-yellow w-[167px] rounded-md p-3 text-center text-base font-bold"
         style={"box-shadow: 0px 6px 0px 0px #DDAC00;"}
@@ -239,6 +248,8 @@
         Practice Game
       </button>
     </div>
+
+    <div class="mt-2 w-full text-center text-xs">{descriptions[tab]}</div>
 
     <div class="overflow-y-auto">
       {#if tab === "lobby"}
