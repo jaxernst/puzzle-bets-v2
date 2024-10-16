@@ -89,15 +89,58 @@
 
   let numActiveGames = $derived(getActivePlayerGames(user.address, mud).length)
   let numLobbyGames = $derived(getPublicGames(mud).length)
+
+  import { tweened } from "svelte/motion"
+  import { cubicOut } from "svelte/easing"
+
+  const tabUnderline = tweened(
+    { left: 0, width: 0 },
+    {
+      duration: 300,
+      easing: cubicOut,
+    },
+  )
+
+  let tabRefs: Record<Tab, HTMLElement | null> = {
+    lobby: null,
+    active: null,
+    history: null,
+    top: null,
+  }
+
+  function updateTabUnderline(name: Tab) {
+    const activeTab = tabRefs[name]
+    if (activeTab) {
+      const { offsetLeft, offsetWidth } = activeTab
+
+      tabUnderline.set({
+        left: offsetLeft + offsetWidth * 0.125,
+        width: offsetWidth * 0.75,
+      })
+    }
+  }
+
+  $effect(() => {
+    updateTabUnderline(tab)
+  })
 </script>
 
 {#snippet TabButton(name: Tab)}
   <button
-    onclick={() => (tab = name)}
-    class={`flex w-full flex-col items-center justify-center gap-1 p-4 font-extrabold leading-none sm:flex-row ${tab === name ? "bg-black text-white" : "text-black"}`}
+    bind:this={tabRefs[name]}
+    onclick={() => {
+      tab = name
+      updateTabUnderline(name)
+    }}
+    class={`flex items-center justify-center gap-1 text-sm leading-none transition-all sm:text-[15px] ${
+      open && tab === name ? "scale-110 font-black" : "font-bold"
+    }`}
   >
-    <svelte:component this={logos[name]} class={tab === name && "invert"} />
-    {capitalized(name)}
+    <svelte:component
+      this={logos[name]}
+      class={tab === name ? "stroke-4" : ""}
+    />
+    <div>{capitalized(name)}</div>
   </button>
 {/snippet}
 
@@ -121,12 +164,26 @@
       },
     }}
   >
-    <div class="flex items-center gap-2 font-extrabold">
-      <PuzzlePiece class="h-5 w-5 sm:h-6 sm:w-6" />
+    <div class="flex items-center gap-5 font-extrabold">
+      <div>
+        <div class="relative flex gap-4 sm:gap-6">
+          {@render TabButton("lobby")}
+          {@render TabButton("active")}
+          {@render TabButton("history")}
+          {@render TabButton("top")}
+        </div>
 
-      <div class="">{routeLabel}</div>
+        {#if open}
+          <div
+            class="mt-2 h-[2px] rounded-sm bg-black transition-all duration-300 ease-out"
+            style="width: {$tabUnderline.width}px; transform: translateX({$tabUnderline.left}px);"
+          ></div>
+        {/if}
+      </div>
 
-      <div
+      <!-- <div class="">{routeLabel}</div> -->
+
+      <!-- <div
         class="bg-pb-beige-1 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs"
       >
         {numActiveGames} Active Game{numActiveGames === 1 ? "" : "s"}
@@ -136,7 +193,7 @@
         class="bg-pb-beige-1 hidden items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-1 sm:text-xs md:flex"
       >
         {numLobbyGames} Public Game{numLobbyGames === 1 ? "" : "s"}
-      </div>
+      </div> -->
 
       <button
         onclick={(e) => {
@@ -154,23 +211,9 @@
       </button>
     </div>
 
-    <div class="flex flex-col items-center justify-center gap-2">
-      <div
-        class="flex w-full items-center justify-evenly rounded-md border-2 border-black sm:w-3/4"
-      >
-        {@render TabButton("lobby")}
-        <div class="h-full border border-black"></div>
-        {@render TabButton("active")}
-        <div class="h-full border border-black"></div>
-        {@render TabButton("history")}
-        <div class="h-full border border-black"></div>
-        {@render TabButton("top")}
-      </div>
-
-      <div class="text-xs">{descriptions[tab]}</div>
-    </div>
-
     <div class="flex gap-2 self-center">
+      <div class="text-xs">{descriptions[tab]}</div>
+
       <button
         class="bg-pb-yellow w-[167px] rounded-md p-3 text-center text-base font-bold"
         style={"box-shadow: 0px 6px 0px 0px #DDAC00;"}
