@@ -4,6 +4,6 @@ Onchain compeitive puzzle arenas. Solve puzzles, challenge friends, and wager on
 
 Currently in open development...
 
-Live testnet preview (Base Sepolia): [beta.puzzlebets.xyz](https://beta.puzzlebets.xyz)
+Live testnet preview (Base Sepolia): [Puzzle Bets Beta](https://beta.puzzlebets.xyz/)
 
 Build with SvelteKit x [Mud](mud.dev)
