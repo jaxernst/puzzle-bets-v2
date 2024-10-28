@@ -186,7 +186,7 @@
 
         {#if open}
           <div
-            class="bg-pb-beige-1 mt-2 h-0.5 rounded-sm transition-all duration-300 ease-out"
+            class="mt-2 h-0.5 rounded-sm bg-black/50 transition-all duration-300 ease-out"
             style="width: {$tabUnderline.width}px; transform: translateX({$tabUnderline.left}px);"
           ></div>
         {/if}
