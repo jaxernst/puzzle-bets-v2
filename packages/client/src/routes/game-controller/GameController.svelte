@@ -249,11 +249,11 @@
       </button>
     </div>
 
-    <div class="mt-2 w-full text-center text-sm font-medium">
+    <div class="mt-1 w-full text-center text-sm font-medium">
       {descriptions[tab]}
     </div>
 
-    <div class="overflow-y-auto">
+    <div class="mt-1 overflow-y-auto">
       {#if tab === "lobby"}
         <TabLobbyGames />
       {:else if tab === "active"}
