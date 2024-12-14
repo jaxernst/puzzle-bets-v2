@@ -1,6 +1,6 @@
 # Puzzle Bets
 
-Onchain compeitive puzzle arenas. Solve puzzles, challenge friends, and wager on who wins.
+Onchain competitive puzzle arenas. Solve puzzles, challenge friends, and wager on who wins.
 
 Currently in open development...
 
