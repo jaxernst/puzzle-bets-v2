@@ -1,5 +1,5 @@
 {
-  "name": "mud-template-vanilla",
+  "name": "puzzle-bets-mud-repo",
   "private": true,
   "scripts": {
     "build": "pnpm --filter=client run build",
