@@ -7,6 +7,6 @@
   - set() -> takes in array of all address -> percentage amounts 
   - receive() -> takes in the value and distrbutres it among the split addresses
 */
-contract FeeReciever {
+contract FeeSplits {
 
 }
