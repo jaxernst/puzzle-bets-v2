@@ -55,6 +55,13 @@ export const walletStore = (() => {
     return walletClient
   }
 
+  const connectFrameProvider = async () => {
+    const { frameConnector } = await import(
+      "./connectors/farcasterFramesConnector"
+    )
+    const framesConnector = frameConnector()
+  }
+
   return {
     get connecting() {
       return connecting

@@ -29,6 +29,12 @@
   $effect(() => {
     console.log("pre-auth address:", $page.data.user)
     user.authenticated = $page.data.user
+    ;(async () => {
+      const framesSdk = await import("@farcaster/frame-sdk")
+      console.log("frames sdk", framesSdk)
+      console.log("frames context", framesSdk.sdk.context)
+      framesSdk.sdk.actions.ready()
+    })()
   })
 
   let walletWasSet = false
