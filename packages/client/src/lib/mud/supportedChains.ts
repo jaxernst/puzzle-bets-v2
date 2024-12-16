@@ -1,5 +1,5 @@
 import { type MUDChain, mudFoundry } from "@latticexyz/common/chains"
-import { baseSepolia, type Chain } from "viem/chains"
+import { base, baseSepolia, type Chain } from "viem/chains"
 
 // Override default lattice chain with 'miner.testnet' (from follower.testnet)
 export const latticeTestnet = {

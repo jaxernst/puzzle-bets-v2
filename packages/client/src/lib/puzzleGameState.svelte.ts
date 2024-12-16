@@ -2,7 +2,7 @@ import { user } from "$lib/userStore.svelte"
 import { mud } from "./mudStore.svelte"
 import type { EvmAddress, PuzzleType } from "$lib/types"
 import { entityToInt } from "$lib/util"
-import { Map } from "svelte/reactivity"
+import { SvelteMap as Map } from "svelte/reactivity"
 import { gameIdToGame } from "./gameQueries"
 import type { Entity } from "@latticexyz/recs"
 
@@ -52,6 +52,10 @@ export const wordleGameStates = (() => {
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
         body: JSON.stringify({ gameId: gameIdParam, opponent, isDemo }),
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
 
       if (!res.ok) return
@@ -81,6 +85,10 @@ export const wordleGameStates = (() => {
           guess,
           isDemo,
         }),
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
 
       if (!res.ok) return
@@ -137,6 +145,10 @@ export const wordleGameStates = (() => {
           otherPlayer: opponent,
           isDemo,
         }),
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
 
       // A reset can fail if the other player reset the game first, in this case,

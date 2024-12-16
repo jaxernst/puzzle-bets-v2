@@ -7,7 +7,9 @@ let nonce: string | null = null
 
 if (browser) {
   ;(async () => {
-    nonce = await (await fetch("/api/siwe-auth/nonce")).text()
+    nonce = await (
+      await fetch("/api/siwe-auth/nonce", { credentials: "include" })
+    ).text()
   })()
 }
 
@@ -33,7 +35,14 @@ export async function signInWithEthereum(
   const result = await fetch("/api/siwe-auth/verify", {
     method: "POST",
     body: JSON.stringify({ message, signature }),
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
+
+  console.log("result", result)
+  console.log("result.ok", await result.text())
 
   return result.ok
 }

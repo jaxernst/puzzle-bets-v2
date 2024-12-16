@@ -47,6 +47,7 @@ export const walletStore = (() => {
   const connectSmartWallet = async () => {
     await connect(wagmiConfig, {
       connector: cbWalletConnector,
+      chainId: networkConfig.chainId,
     })
 
     const walletClient = await getWalletClient(wagmiConfig)
@@ -60,6 +61,14 @@ export const walletStore = (() => {
       "./connectors/farcasterFramesConnector"
     )
     const framesConnector = frameConnector()
+
+    await connect(wagmiConfig, {
+      connector: framesConnector,
+    })
+
+    const walletClient = await getWalletClient(wagmiConfig)
+    wallet = walletClient
+    return walletClient
   }
 
   return {
@@ -79,7 +88,7 @@ export const walletStore = (() => {
       if (networkConfig.chainId === 31337) {
         return connectBurner()
       } else {
-        return connectSmartWallet()
+        return connectFrameProvider()
       }
     },
 
