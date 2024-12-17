@@ -58,19 +58,12 @@ export function createSystemCalls({
   ) => {
     let tx: `0x${string}`
     if (password) {
-      tx = await writeContract(wagmiConfig, {
-        address: networkConfig.worldAddress as Hex,
-        abi: IWorldAbi,
-        functionName: "v1__joinGame",
-        args: [gameId as `0x${string}`, password],
-        value: parseEther(wagerEth.toString()),
-      })
+      tx = await worldContract.write.v1__joinGame(
+        [gameId as `0x${string}`, password],
+        { value: parseEther(wagerEth.toString()) },
+      )
     } else {
-      tx = await writeContract(wagmiConfig, {
-        address: networkConfig.worldAddress as Hex,
-        abi: IWorldAbi,
-        functionName: "v1__joinGame",
-        args: [gameId as `0x${string}`],
+      tx = await worldContract.write.v1__joinGame([gameId as `0x${string}`], {
         value: parseEther(wagerEth.toString()),
       })
     }
@@ -79,12 +72,9 @@ export function createSystemCalls({
   }
 
   const startTurn = async (gameId: Entity) => {
-    const tx = await writeContract(wagmiConfig, {
-      address: networkConfig.worldAddress as Hex,
-      abi: IWorldAbi,
-      functionName: "v1__startTurn",
-      args: [gameId as `0x${string}`],
-    })
+    const tx = await worldContract.write.v1__startTurn([
+      gameId as `0x${string}`,
+    ])
 
     await waitForTransaction(tx)
   }
@@ -94,45 +84,33 @@ export function createSystemCalls({
     score: number,
     solutionSignature: `0x${string}`,
   ) => {
-    const tx = await writeContract(wagmiConfig, {
-      address: networkConfig.worldAddress as Hex,
-      abi: IWorldAbi,
-      functionName: "v1__submitSolution",
-      args: [gameId as `0x${string}`, score, solutionSignature],
-    })
+    const tx = await worldContract.write.v1__submitSolution([
+      gameId as `0x${string}`,
+      score,
+      solutionSignature,
+    ])
 
     await waitForTransaction(tx)
   }
 
   const claim = async (gameId: Entity) => {
-    const tx = await writeContract(wagmiConfig, {
-      address: networkConfig.worldAddress as Hex,
-      abi: IWorldAbi,
-      functionName: "v1__claim",
-      args: [gameId as `0x${string}`],
-    })
+    const tx = await worldContract.write.v1__claim([gameId as `0x${string}`])
 
     await waitForTransaction(tx)
   }
 
   const voteRematch = async (gameId: Entity) => {
-    const tx = await writeContract(wagmiConfig, {
-      address: networkConfig.worldAddress as Hex,
-      abi: IWorldAbi,
-      functionName: "v1__voteRematch",
-      args: [gameId as `0x${string}`],
-    })
+    const tx = await worldContract.write.v1__voteRematch([
+      gameId as `0x${string}`,
+    ])
 
     await waitForTransaction(tx)
   }
 
   const cancelPendingGame = async (gameId: Entity) => {
-    const tx = await writeContract(wagmiConfig, {
-      address: networkConfig.worldAddress as Hex,
-      abi: IWorldAbi,
-      functionName: "v1__cancelPendingGame",
-      args: [gameId as `0x${string}`],
-    })
+    const tx = await worldContract.write.v1__cancelPendingGame([
+      gameId as `0x${string}`,
+    ])
 
     await waitForTransaction(tx)
   }
