@@ -18,7 +18,9 @@ export async function signInWithEthereum(
   signMessage: ({ message }: { message: string }) => Promise<string>,
 ) {
   if (!nonce) {
-    nonce = await (await fetch("/api/siwe-auth/nonce")).text()
+    nonce = await (
+      await fetch("/api/siwe-auth/nonce", { credentials: "include" })
+    ).text()
   }
 
   const message = createSiweMessage({

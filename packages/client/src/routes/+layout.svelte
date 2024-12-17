@@ -32,7 +32,6 @@
     ;(async () => {
       const framesSdk = (await import("@farcaster/frame-sdk")).sdk
 
-      console.log("location", await framesSdk.context)
       framesSdk.actions.ready()
     })()
   })

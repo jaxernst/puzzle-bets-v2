@@ -11,9 +11,14 @@ import {
   getWalletClient,
   reconnect,
 } from "@wagmi/core"
+
 import { coinbaseWallet } from "@wagmi/connectors"
 
 if (browser) window.process = { env: {}, version } as any
+
+/** Wallet Store Farcaster Frame V2 Support:
+When connecting to a wallet, we check to see if we've launched in the farcaster client, and so we use the frames connector.
+ */
 
 export const wagmiConfig = createConfig({
   chains: [networkConfig.chain],
@@ -26,6 +31,22 @@ const cbWalletConnector = coinbaseWallet({
   appName: "Puzzle Bets",
   preference: "smartWalletOnly",
 })
+
+const getPrimaryConnector = async () => {
+  if (!browser) throw new Error("Not in browser")
+
+  const framesSdk = (await import("@farcaster/frame-sdk")).sdk
+  const framesCtx = await framesSdk.context
+
+  if (framesCtx) {
+    const { frameConnector } = await import(
+      "./connectors/farcasterFramesConnector"
+    )
+    return frameConnector()
+  }
+
+  return cbWalletConnector
+}
 
 export const chain = networkConfig.chain
 
@@ -44,26 +65,11 @@ export const walletStore = (() => {
     return walletClient
   }
 
-  const connectSmartWallet = async () => {
-    await connect(wagmiConfig, {
-      connector: cbWalletConnector,
-      chainId: networkConfig.chainId,
-    })
-
-    const walletClient = await getWalletClient(wagmiConfig)
-
-    wallet = walletClient
-    return walletClient
-  }
-
-  const connectFrameProvider = async () => {
-    const { frameConnector } = await import(
-      "./connectors/farcasterFramesConnector"
-    )
-    const framesConnector = frameConnector()
+  const connectWallet = async () => {
+    const connector = await getPrimaryConnector()
 
     await connect(wagmiConfig, {
-      connector: framesConnector,
+      connector,
     })
 
     const walletClient = await getWalletClient(wagmiConfig)
@@ -88,7 +94,7 @@ export const walletStore = (() => {
       if (networkConfig.chainId === 31337) {
         return connectBurner()
       } else {
-        return connectFrameProvider()
+        return connectWallet()
       }
     },
 
@@ -97,7 +103,7 @@ export const walletStore = (() => {
         return connectBurner()
       } else {
         const [account] = await reconnect(wagmiConfig, {
-          connectors: [cbWalletConnector],
+          connectors: [await getPrimaryConnector()],
         })
 
         if (account) {
