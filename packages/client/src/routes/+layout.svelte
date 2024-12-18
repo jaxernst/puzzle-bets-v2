@@ -1,3 +1,34 @@
+<script module>
+  // Setup for Farcaster Frame sdk and connect when launched as a frame
+  let frameSdk: FrameSDK
+  if (browser) {
+    frameSdk = (await import("@farcaster/frame-sdk")).sdk
+  }
+
+  const maybeInitAsFarcasterFrame = async (
+    authedUserAddr: EvmAddress | undefined,
+  ) => {
+    if (!frameSdk) throw new Error("Frame SDK import not available")
+
+    console.log("getting frame ctx:", frameSdk.context)
+    const ctx = await frameSdk.context
+    console.log("frame ctx:", ctx)
+    if (!ctx) return
+
+    if (authedUserAddr) {
+      const fcName = ctx.user.displayName || ctx.user.username
+      const pbName = await displayNameStore.fetch(authedUserAddr)
+
+      if (!pbName && fcName) {
+        updateDisplayName(authedUserAddr, fcName)
+      }
+    }
+
+    await frameSdk.actions.ready()
+    console.log("Frame launched!")
+  }
+</script>
+
 <script lang="ts">
   import "../app.css"
   import { walletStore } from "$lib/walletStore.svelte"
@@ -20,6 +51,8 @@
     updateDisplayName,
   } from "$lib/displayNameStore.svelte"
   import type { EvmAddress } from "$lib"
+  import type { FrameSDK } from "@farcaster/frame-sdk/dist/types"
+  import { browser } from "$app/environment"
 
   /**
    * TODO:
@@ -31,37 +64,9 @@
 
   let { children } = $props()
 
-  // If launched in a frame context, extract FC user info and call ready on the frames sdk
-  const maybeInitAsFarcasterFrame = async (
-    authedUserAddr: EvmAddress | undefined,
-  ) => {
-    console.log("Maybe init sdk")
-
-    const framesSdk = (await import("@farcaster/frame-sdk")).sdk
-    console.log(framesSdk)
-    const ctx = await framesSdk.context
-    console.log("Frame context:", ctx)
-
-    if (!ctx) return
-
-    if (authedUserAddr) {
-      const fcName = ctx.user.displayName || ctx.user.username
-      const pbName = await displayNameStore.fetch(authedUserAddr)
-
-      if (!pbName && fcName) {
-        updateDisplayName(authedUserAddr, fcName)
-      }
-    }
-
-    console.log("Frame launched!")
-
-    framesSdk.actions.ready()
-  }
-
   $effect(() => {
     console.log("pre-auth address:", $page.data.user)
     user.authenticated = $page.data.user
-
     maybeInitAsFarcasterFrame($page.data.user)
   })
 
