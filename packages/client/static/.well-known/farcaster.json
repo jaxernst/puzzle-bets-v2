@@ -11,7 +11,7 @@
     "homeUrl": "https://puzzlebets.xyz",
     "imageUrl": "https://puzzlebets.xyz/home-splash-landscape.png",
     "buttonTitle": "Launch Game",
-    "splashImageUrl": "https://puzzlebets.xyz/hand-up.png",
+    "splashImageUrl": "https://puzzlebets.xyz/character1.png",
     "splashBackgroundColor": "#FFC700",
     "webhookUrl": "https://puzzlebets.xyz/api/webhook"
   }

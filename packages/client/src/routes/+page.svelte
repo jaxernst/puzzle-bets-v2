@@ -34,7 +34,7 @@
           name: "launch",
           url: "https://puzzlebets.xyz",
           iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
-          splashImageUrl: `https://puzzlebets.xyz/character-logo.png`,
+          splashImageUrl: `https://puzzlebets.xyz/character1.png`,
           splashBackgroundColor: "#FFC700",
         },
       },
