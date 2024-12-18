@@ -4,7 +4,6 @@
   ) => {
     const frameSdk = (await import("@farcaster/frame-sdk")).sdk
 
-    console.log("getting frame ctx:", frameSdk.context)
     const ctx = await frameSdk.context
     console.log("frame ctx:", ctx)
     if (!ctx) return
