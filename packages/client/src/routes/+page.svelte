@@ -21,6 +21,25 @@
     name="description"
     content="Play competitive Wordle matches with friends"
   />
+
+  <meta
+    name="fc:frame"
+    content={JSON.stringify({
+      version: "next",
+      imageUrl: `https://puzzlebets.xyz/home-splash-landscape.png`,
+      button: {
+        title: "Launch",
+        action: {
+          type: "launch_frame",
+          name: "launch",
+          url: "https://puzzlebets.xyz",
+          iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
+          splashImageUrl: `https://puzzlebets.xyz/character-logo.png`,
+          splashBackgroundColor: "#FFC700",
+        },
+      },
+    })}
+  />
 </svelte:head>
 
 <img
