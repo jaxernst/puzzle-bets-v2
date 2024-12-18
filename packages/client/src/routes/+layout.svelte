@@ -1,14 +1,8 @@
 <script module>
-  // Setup for Farcaster Frame sdk and connect when launched as a frame
-  let frameSdk: FrameSDK
-  if (browser) {
-    frameSdk = (await import("@farcaster/frame-sdk")).sdk
-  }
-
   const maybeInitAsFarcasterFrame = async (
     authedUserAddr: EvmAddress | undefined,
   ) => {
-    if (!frameSdk) throw new Error("Frame SDK import not available")
+    const frameSdk = (await import("@farcaster/frame-sdk")).sdk
 
     console.log("getting frame ctx:", frameSdk.context)
     const ctx = await frameSdk.context
