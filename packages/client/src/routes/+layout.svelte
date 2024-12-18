@@ -2,11 +2,7 @@
   const maybeInitAsFarcasterFrame = async (
     authedUserAddr: EvmAddress | undefined,
   ) => {
-    if (typeof frame === "undefined") {
-      throw new Error("FC frame sdk unavailable")
-    }
-
-    const frameSdk = frame.sdk
+    const frameSdk = (await import("@farcaster/frame-sdk")).sdk
 
     console.log("getting frame ctx:", frameSdk.context)
     const ctx = await frameSdk.context
@@ -49,6 +45,8 @@
     updateDisplayName,
   } from "$lib/displayNameStore.svelte"
   import type { EvmAddress } from "$lib"
+  import type { FrameSDK } from "@farcaster/frame-sdk/dist/types"
+  import { browser } from "$app/environment"
 
   /**
    * TODO:
