@@ -36,7 +36,6 @@
     authedUserAddr: EvmAddress | undefined,
   ) => {
     const framesSdk = (await import("@farcaster/frame-sdk")).sdk
-    framesSdk.actions.ready()
 
     const ctx = await framesSdk.context
     if (ctx && authedUserAddr) {
@@ -47,6 +46,9 @@
       if (!pbName && fcName) {
         updateDisplayName(authedUserAddr, fcName)
       }
+
+      console.log("Frame launched!")
+      framesSdk.actions.ready()
     }
   }
 
