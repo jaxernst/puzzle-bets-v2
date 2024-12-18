@@ -17,11 +17,6 @@ import { frameStore } from "./farcaster/frameStore.svelte"
 
 if (browser) window.process = { env: {}, version } as any
 
-/** 
-Wallet Store Farcaster Frame V2 Support:
- - When connecting to a wallet, we check to see if we've launched in the farcaster client, and so we use the frames connector.
-*/
-
 export const wagmiConfig = createConfig({
   chains: [networkConfig.chain],
   transports: {
