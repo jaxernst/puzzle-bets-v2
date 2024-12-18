@@ -5,11 +5,11 @@
     "signature": "MHhkYmU2MjgyMmQ4ZjM2OWNkM2U4NWQwN2RhZjUyNzYxZTlkNGYyNjhiZWM4ZTUzZjQ4MjkyZDQ3YzQzYzdiNjhmNjcxYzk5NjYwMTI5M2IzMmRlYjQ4NTQ0OTY1ODU0NTBmMjAyZGZiMjhiZjk4MjU2MzhjNzlhMzdlNWY0NTUwOTFj"
   },
   "frame": {
-    "version": "2",
+    "version": "1",
     "name": "Puzzle Bets",
-    "iconUrl": "https://puzzlebets.xyz/icon.png",
+    "iconUrl": "https://puzzlebets.xyz/character-logo.png",
     "homeUrl": "https://puzzlebets.xyz",
-    "imageUrl": "https://puzzlebets.xyz/character1.png",
+    "imageUrl": "https://puzzlebets.xyz/home-splash-landscape.png",
     "buttonTitle": "Launch Game",
     "splashImageUrl": "https://puzzlebets.xyz/hand-up.png",
     "splashBackgroundColor": "#FFC700",
