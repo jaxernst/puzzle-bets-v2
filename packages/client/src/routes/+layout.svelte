@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
   const maybeInitAsFarcasterFrame = async (
     authedUserAddr: EvmAddress | undefined,
   ) => {
