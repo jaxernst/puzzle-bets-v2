@@ -52,7 +52,6 @@
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
       window.location.reload()
-      frameStore.initialized && frameStore.actions?.close()
     }
   })
 
