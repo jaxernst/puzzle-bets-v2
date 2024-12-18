@@ -6,12 +6,5 @@ export default defineConfig({
   define: {
     global: {},
   },
-  resolve: {
-    alias: {
-      crypto: "crypto-browserify",
-      stream: "stream-browserify",
-      zlib: "browserify-zlib",
-    },
-  },
   cacheDir: "./.vite-cache",
 })
