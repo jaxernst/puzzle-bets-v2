@@ -35,13 +35,16 @@
   const maybeInitAsFarcasterFrame = async (
     authedUserAddr: EvmAddress | undefined,
   ) => {
+    console.log("Maybe init sdk")
+
     const framesSdk = (await import("@farcaster/frame-sdk")).sdk
+    console.log(framesSdk)
     const ctx = await framesSdk.context
+    console.log("Frame context:", ctx)
 
     if (!ctx) return
 
     if (authedUserAddr) {
-      console.log("Frame context:", ctx)
       const fcName = ctx.user.displayName || ctx.user.username
       const pbName = await displayNameStore.fetch(authedUserAddr)
 
@@ -80,7 +83,7 @@
 </script>
 
 <Confetti />
-<WalletConnector autoconnect />
+<WalletConnector autoconnect={$page.data.user} />
 
 <DripGameModal />
 
