@@ -13,6 +13,7 @@ import {
 } from "@wagmi/core"
 
 import { coinbaseWallet } from "@wagmi/connectors"
+import { frameStore } from "./farcaster/frameStore.svelte"
 
 if (browser) window.process = { env: {}, version } as any
 
@@ -36,12 +37,9 @@ const cbWalletConnector = coinbaseWallet({
 const getPrimaryConnector = async () => {
   if (!browser) throw new Error("Not in browser")
 
-  const framesSdk = (await import("@farcaster/frame-sdk")).sdk
-  const framesCtx = await framesSdk.context
-
-  if (framesCtx) {
+  if (frameStore.initialized) {
     const { frameConnector } = await import(
-      "./connectors/farcasterFramesConnector"
+      "./farcaster/farcasterFramesConnector"
     )
     return frameConnector()
   }

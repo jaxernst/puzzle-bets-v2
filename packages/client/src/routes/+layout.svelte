@@ -1,27 +1,3 @@
-<script module lang="ts">
-  const maybeInitAsFarcasterFrame = async (
-    authedUserAddr: EvmAddress | undefined,
-  ) => {
-    const frameSdk = (await import("@farcaster/frame-sdk")).sdk
-
-    const ctx = await frameSdk.context
-    console.log("frame ctx:", ctx)
-    if (!ctx) return
-
-    if (authedUserAddr) {
-      const fcName = ctx.user.displayName || ctx.user.username
-      const pbName = await displayNameStore.fetch(authedUserAddr)
-
-      if (!pbName && fcName) {
-        updateDisplayName(authedUserAddr, fcName)
-      }
-    }
-
-    await frameSdk.actions.ready()
-    console.log("Frame launched!")
-  }
-</script>
-
 <script lang="ts">
   import "../app.css"
   import { walletStore } from "$lib/walletStore.svelte"
@@ -43,9 +19,7 @@
     displayNameStore,
     updateDisplayName,
   } from "$lib/displayNameStore.svelte"
-  import type { EvmAddress } from "$lib"
-  import type { FrameSDK } from "@farcaster/frame-sdk/dist/types"
-  import { browser } from "$app/environment"
+  import { frameStore } from "$lib/farcaster/frameStore.svelte"
 
   /**
    * TODO:
@@ -60,7 +34,12 @@
   $effect(() => {
     console.log("pre-auth address:", $page.data.user)
     user.authenticated = $page.data.user
-    maybeInitAsFarcasterFrame($page.data.user)
+  })
+
+  $effect(() => {
+    if (!frameStore.initialized) {
+      frameStore.init()
+    }
   })
 
   let walletWasSet = false
@@ -73,6 +52,7 @@
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
       window.location.reload()
+      frameStore.initialized && frameStore.actions?.close()
     }
   })
 
