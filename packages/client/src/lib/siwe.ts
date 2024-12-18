@@ -43,8 +43,5 @@ export async function signInWithEthereum(
     },
   })
 
-  console.log("result", result)
-  console.log("result.ok", await result.text())
-
   return result.ok
 }
