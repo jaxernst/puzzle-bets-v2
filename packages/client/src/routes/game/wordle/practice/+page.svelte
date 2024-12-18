@@ -30,7 +30,14 @@
       launchConfetti()
 
       if (user.authenticated && user.balance < parseEther(".01")) {
-        const res = await fetch("/api/drip", { method: "POST" })
+        const res = await fetch("/api/drip", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+
         if (res.ok) {
           toastInfo("Nice win! We just sent .01 testnet ETH to your wallet.")
         }
