@@ -21,25 +21,6 @@
     name="description"
     content="Play competitive Wordle matches with friends"
   />
-
-  <meta
-    name="fc:frame"
-    content={JSON.stringify({
-      version: "next",
-      imageUrl: `https://rewards.warpcast.com/og.png`,
-      button: {
-        title: "Launch",
-        action: {
-          type: "launch_frame",
-          name: "Rewards",
-          url: "https://puzzlebets.xyz",
-          iconImageUrl: `https://rewards.warpcast.com/splash.png`,
-          splashImageUrl: `https://rewards.warpcast.com/splash.png`,
-          splashBackgroundColor: "#FFC700",
-        },
-      },
-    })}
-  />
 </svelte:head>
 
 <img
