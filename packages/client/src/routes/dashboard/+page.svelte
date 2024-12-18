@@ -91,7 +91,7 @@
     <div class={user.address ? "h-5" : "h-7"}></div>
 
     <!-- User Stats -->
-    <div class="flex flex-wrap gap-4 gap-y-3 self-center px-3 md:gap-4">
+    <div class="flex flex-wrap gap-4 gap-y-3 self-center px-5 md:gap-4">
       <div class="flex flex-col items-start gap-2 sm:items-center">
         <div class="text-xs text-[#3f3f3f] sm:text-sm">Wallet Balance</div>
         <div
