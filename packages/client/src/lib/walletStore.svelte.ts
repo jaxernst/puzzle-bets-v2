@@ -36,7 +36,7 @@ const cbWalletConnector = coinbaseWallet({
 const getPrimaryConnector = async () => {
   if (!browser) throw new Error("Not in browser")
 
-  const framesSdk = (await import("@farcaster/frame-sdk")).sdk
+  const framesSdk = frame.sdk
   const framesCtx = await framesSdk.context
 
   if (framesCtx) {

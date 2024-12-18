@@ -1,4 +1,3 @@
-import sdk from "@farcaster/frame-sdk"
 import { SwitchChainError, fromHex, getAddress, numberToHex } from "viem"
 import { ChainNotConfiguredError, createConnector } from "@wagmi/core"
 
@@ -6,6 +5,7 @@ frameConnector.type = "frameConnector"
 
 export function frameConnector() {
   let connected = true
+  const sdk = frame.sdk
 
   return createConnector<typeof sdk.wallet.ethProvider>((config) => ({
     id: "farcaster",

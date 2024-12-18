@@ -19,9 +19,6 @@ importers:
 
   packages/client:
     dependencies:
-      '@farcaster/frame-sdk':
-        specifier: ^0.0.16
-        version: 0.0.16(typescript@5.4.2)(zod@3.23.8)
       '@neoconfetti/svelte':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1121,27 +1118,6 @@ packages:
       '@ethereumjs/rlp': 4.0.1
       ethereum-cryptography: 2.2.1
       micro-ftch: 0.3.1
-    dev: false
-
-  /@farcaster/frame-core@0.0.15(typescript@5.4.2):
-    resolution: {integrity: sha512-WQfAEqyQAz3EzEdfqAMV7s2VMIYBGWz0Qt5CUUkmSelvv0a+8A61YmBnpemCi3NEwWzEJBTc/IxzQ29w2axPBg==}
-    dependencies:
-      ox: 0.4.2(typescript@5.4.2)(zod@3.24.1)
-      zod: 3.24.1
-    transitivePeerDependencies:
-      - typescript
-    dev: false
-
-  /@farcaster/frame-sdk@0.0.16(typescript@5.4.2)(zod@3.23.8):
-    resolution: {integrity: sha512-043j2EiCOaHvS1ox0yVx7KZQU5LB1P+39waK3xtX0knNKQ54wZxCOTcca0kUcJfTBN5db7iVPOh/E+LJ5kjDew==}
-    dependencies:
-      '@farcaster/frame-core': 0.0.15(typescript@5.4.2)
-      comlink: 4.4.2
-      eventemitter3: 5.0.1
-      ox: 0.4.2(typescript@5.4.2)(zod@3.23.8)
-    transitivePeerDependencies:
-      - typescript
-      - zod
     dev: false
 
   /@improbable-eng/grpc-web@0.15.0(google-protobuf@3.21.4):
@@ -3619,21 +3595,6 @@ packages:
       typescript: 5.4.2
       zod: 3.23.8
 
-  /abitype@1.0.7(typescript@5.4.2)(zod@3.24.1):
-    resolution: {integrity: sha512-ZfYYSktDQUwc2eduYu8C4wOs+RDPmnRYMh7zNfzeMtGGgb0U+6tLGjixUic6mXf5xKKCcgT5Qp6cv39tOARVFw==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-      zod: ^3 >=3.22.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-      zod:
-        optional: true
-    dependencies:
-      typescript: 5.4.2
-      zod: 3.24.1
-    dev: false
-
   /abort-controller-x@0.4.3:
     resolution: {integrity: sha512-VtUwTNU8fpMwvWGn4xE93ywbogTYsuT+AUxAXOeelbXuQVIwNmC5YLeho9sH4vZ4ITW8414TTAOG1nW6uIVHCA==}
     dev: true
@@ -4114,10 +4075,6 @@ packages:
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
-
-  /comlink@4.4.2:
-    resolution: {integrity: sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g==}
-    dev: false
 
   /commander@2.18.0:
     resolution: {integrity: sha512-6CYPa+JP2ftfRU2qkDK+UTVeQYosOg/2GbcjIcKPHfinyOLPVGXu/ovN86RP49Re5ndJK1N0kuiidFFuepc4ZQ==}
@@ -6220,46 +6177,6 @@ packages:
     transitivePeerDependencies:
       - zod
 
-  /ox@0.4.2(typescript@5.4.2)(zod@3.23.8):
-    resolution: {integrity: sha512-X3Ho21mTtJiCU2rWmfaheh2b0CG70Adre7Da/XQ0ECy+QppI6pLqdbGAJHiu/cTjumVXfwDGfv48APqePCU+ow==}
-    peerDependencies:
-      typescript: '>=5.4.0'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
-      '@scure/bip32': 1.6.0
-      '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.4.2)(zod@3.23.8)
-      eventemitter3: 5.0.1
-      typescript: 5.4.2
-    transitivePeerDependencies:
-      - zod
-    dev: false
-
-  /ox@0.4.2(typescript@5.4.2)(zod@3.24.1):
-    resolution: {integrity: sha512-X3Ho21mTtJiCU2rWmfaheh2b0CG70Adre7Da/XQ0ECy+QppI6pLqdbGAJHiu/cTjumVXfwDGfv48APqePCU+ow==}
-    peerDependencies:
-      typescript: '>=5.4.0'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
-      '@scure/bip32': 1.6.0
-      '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.4.2)(zod@3.24.1)
-      eventemitter3: 5.0.1
-      typescript: 5.4.2
-    transitivePeerDependencies:
-      - zod
-    dev: false
-
   /p-limit@2.3.0:
     resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
     engines: {node: '>=6'}
@@ -8243,10 +8160,6 @@ packages:
 
   /zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-
-  /zod@3.24.1:
-    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
-    dev: false
 
   /zustand@4.5.5(react@18.3.1):
     resolution: {integrity: sha512-+0PALYNJNgK6hldkgDq2vLrw5f6g/jCInz52n9RTpropGgeAf/ioFUCdtsjCqu4gNhW9D01rUQBROoRjdzyn2Q==}

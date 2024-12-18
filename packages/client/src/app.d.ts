@@ -10,6 +10,8 @@ declare global {
     // interface PageState {}
     // interface Platform {}
   }
+
+  var frame: any
 }
 
 export {}
