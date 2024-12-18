@@ -167,7 +167,7 @@
 
     <hr class="mx-4 mt-5 px-3" />
 
-    <div class="w-full flex-grow overflow-y-auto px-3 pt-5">
+    <div class="w-full flex-grow overflow-y-auto px-5 pt-5">
       <div
         class="mx-auto flex h-full w-full max-w-[400px] flex-col items-stretch gap-4 self-stretch"
       >
