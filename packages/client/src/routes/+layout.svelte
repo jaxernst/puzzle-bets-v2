@@ -1,12 +1,8 @@
-<!-- Farcaster Frame V2 Support -->
 <script module lang="ts">
   const maybeInitAsFarcasterFrame = async (
     authedUserAddr: EvmAddress | undefined,
   ) => {
     const frameSdk = (await import("@farcaster/frame-sdk")).sdk
-    console.log("frame sdk:", frameSdk)
-    await frameSdk.actions.ready()
-    console.log("frame sdk ready")
 
     console.log("getting frame ctx:", frameSdk.context)
     const ctx = await frameSdk.context
