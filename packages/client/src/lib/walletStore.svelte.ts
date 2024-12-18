@@ -10,6 +10,7 @@ import {
   fallback,
   getWalletClient,
   reconnect,
+  type Connector,
 } from "@wagmi/core"
 
 import { coinbaseWallet } from "@wagmi/connectors"
@@ -47,6 +48,7 @@ export const chain = networkConfig.chain
 export const walletStore = (() => {
   let wallet = $state<Wallet | undefined>()
   let connecting = $state(false)
+  let connector = $state<any>()
 
   const connectBurner = () => {
     const burnerAccount = createBurnerAccount(getBurnerPrivateKey())
@@ -60,7 +62,7 @@ export const walletStore = (() => {
   }
 
   const connectWallet = async () => {
-    const connector = await getPrimaryConnector()
+    connector = await getPrimaryConnector()
 
     await connect(wagmiConfig, {
       connector,
@@ -110,7 +112,7 @@ export const walletStore = (() => {
     },
 
     disconnect: async () => {
-      disconnect(wagmiConfig)
+      disconnect(wagmiConfig, { connector })
       wallet = undefined
     },
   }
