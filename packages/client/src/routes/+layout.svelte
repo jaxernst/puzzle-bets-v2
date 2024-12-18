@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import "../app.css"
   import { walletStore } from "$lib/walletStore.svelte"
   import { page } from "$app/stores"
@@ -15,10 +15,15 @@
   import DisplayNameModal from "./DisplayNameModal.svelte"
   import { user } from "$lib/userStore.svelte"
   import { formatEther, parseEther } from "viem"
+  import {
+    displayNameStore,
+    updateDisplayName,
+  } from "$lib/displayNameStore.svelte"
+  import type { EvmAddress } from "$lib"
 
   /**
    * TODO:
-   * - Add notifications
+   * - Add notifications (web push + farcaster frames)
    * - Fix confetti
    * - Add png characters to bgs
    * - Add link previews + other seo improvements
@@ -26,18 +31,34 @@
 
   let { children } = $props()
 
+  // If launched in a frame context, extract FC user info and call ready on the frames sdk
+  const maybeInitAsFarcasterFrame = async (
+    authedUserAddr: EvmAddress | undefined,
+  ) => {
+    const framesSdk = (await import("@farcaster/frame-sdk")).sdk
+    framesSdk.actions.ready()
+
+    const ctx = await framesSdk.context
+    if (ctx && authedUserAddr) {
+      console.log("Frame context:", ctx)
+      const fcName = ctx.user.displayName || ctx.user.username
+      const pbName = await displayNameStore.fetch(authedUserAddr)
+
+      if (!pbName && fcName) {
+        updateDisplayName(authedUserAddr, fcName)
+      }
+    }
+  }
+
   $effect(() => {
     console.log("pre-auth address:", $page.data.user)
     user.authenticated = $page.data.user
-    ;(async () => {
-      const framesSdk = (await import("@farcaster/frame-sdk")).sdk
 
-      framesSdk.actions.ready()
-    })()
+    maybeInitAsFarcasterFrame($page.data.user)
   })
 
   let walletWasSet = false
-  $effect(async () => {
+  $effect(() => {
     if (walletStore.walletClient) {
       walletWasSet = true
     }
