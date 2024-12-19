@@ -11,7 +11,6 @@ import {
   getWalletClient,
   reconnect,
   watchAccount,
-  type Connector,
 } from "@wagmi/core"
 
 import { coinbaseWallet, metaMask } from "@wagmi/connectors"
@@ -50,13 +49,6 @@ export const chain = networkConfig.chain
 export const walletStore = (() => {
   let wallet = $state<Wallet | undefined>()
   let connecting = $state(false)
-  let connector: Connector
-
-  if (browser) {
-    getPrimaryConnector().then((c: any) => {
-      connector = c
-    })
-  }
 
   const connectBurner = () => {
     const burnerAccount = createBurnerAccount(getBurnerPrivateKey())
@@ -71,7 +63,7 @@ export const walletStore = (() => {
 
   const connectWallet = async () => {
     await connect(wagmiConfig, {
-      connector,
+      connector: await getPrimaryConnector(),
     })
 
     const walletClient = await getWalletClient(wagmiConfig)
@@ -114,7 +106,7 @@ export const walletStore = (() => {
           return connectBurner()
         } else {
           const [account] = await reconnect(wagmiConfig, {
-            connectors: [connector],
+            connectors: [await getPrimaryConnector()],
           })
 
           if (account) {
