@@ -108,7 +108,7 @@
     top: null,
   }
 
-  const TAB_UNDERLINE_WIDTH = 26
+  const TAB_UNDERLINE_WIDTH = 22
   function updateTabUnderline(name: Tab) {
     const activeTab = tabRefs[name]
     if (activeTab) {
@@ -186,7 +186,7 @@
 
         {#if open}
           <div
-            class="mt-2 h-0.5 rounded-sm bg-black/50 transition-all duration-300 ease-out"
+            class="mt-2 h-0.5 rounded-sm bg-black/90 transition-all duration-300 ease-out"
             style="width: {$tabUnderline.width}px; transform: translateX({$tabUnderline.left}px);"
           ></div>
         {/if}
