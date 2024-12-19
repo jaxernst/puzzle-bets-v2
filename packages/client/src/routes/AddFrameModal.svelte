@@ -10,6 +10,7 @@
   $effect(() => {
     if (
       frameStore.initialized &&
+      !frameStore.context.client.added &&
       user.address &&
       user.authenticated === user.address &&
       !shown
