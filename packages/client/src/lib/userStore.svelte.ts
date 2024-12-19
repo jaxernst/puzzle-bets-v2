@@ -52,7 +52,6 @@ export const user = (() => {
 
   const balanceSync = makeBalanceSync((balance: bigint) => {
     userState.balanceFetched = true
-
     if (balance !== userState.balance) {
       userState.balance = balance
     }
@@ -72,23 +71,30 @@ export const user = (() => {
     }
   }
 
+  const authenticate = async () => {
+    if (!userState.address) throw new Error("No user address to authenticate")
+
+    try {
+      const success = await signInWithEthereum(userState.address)
+
+      if (success) {
+        userState.authenticated = userState.address
+      }
+    } catch (error) {
+      console.error("Failed to sign in with Ethereum", error)
+    }
+  }
+
   const handleAccountChange = async (address: EvmAddress | undefined) => {
     balanceSync.stop()
 
     if (address) {
-      if (address !== userState.authenticated) {
-        try {
-          const success = await signInWithEthereum(address)
+      userState.address = address
 
-          if (success) {
-            userState.authenticated = address
-          }
-        } catch (error) {
-          console.error("Failed to sign in with Ethereum", error)
-        }
+      if (address !== userState.authenticated) {
+        await authenticate()
       }
 
-      userState.address = address
       balanceSync.start(address)
       userState.displayName = await displayNameStore.fetch(address)
     } else {
@@ -129,6 +135,8 @@ export const user = (() => {
     get balanceFetched() {
       return userState.balanceFetched
     },
+
+    authenticate,
 
     changeAccount: async ({ address }: { address: EvmAddress | undefined }) => {
       await handleAccountChange(address)

@@ -1,9 +1,9 @@
 import { browser } from "$app/environment"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import type { EvmAddress } from "$lib/types"
-import { getConnectors, signMessage } from "@wagmi/core"
 import { createSiweMessage } from "viem/siwe"
 import { wagmiConfig } from "./walletStore.svelte"
+import { signMessage } from "@wagmi/core"
 
 let nonce: string | null = null
 
@@ -31,10 +31,7 @@ export async function signInWithEthereum(address: EvmAddress) {
     version: "1",
   })
 
-  const signature = await signMessage(wagmiConfig, {
-    message,
-    connector: getConnectors(wagmiConfig)[0],
-  })
+  const signature = await signMessage(wagmiConfig, { message })
 
   const result = await fetch("/api/siwe-auth/verify", {
     method: "POST",

@@ -23,12 +23,6 @@
 </script>
 
 <script lang="ts">
-  /**
-   -> connect wallet, get client 
-   -> authenticate user (the request for thisneeds to happen immediately after the first step)
-   -> setup mud
-
-   */
   let { autoconnect } = $props<{ autoconnect?: boolean }>()
 
   const autoConnectWallet = async () => {
@@ -47,20 +41,6 @@
     }
 
     mud.setup(walletClient)
-
-    /*    try {
-      if (user.authenticated) {
-        mud.setup(walletClient)
-        walletConnectSuccess(walletClient as Wallet)
-        showModal = false
-      } else {
-        walletStore.disconnect()
-        throw new Error("User not authenticated")
-      }
-    } catch (err) {
-      walletConnectFail("Error signing in with Ethereum")
-    }
-      */
   }
 
   let autoconnectAttempted = false
@@ -76,6 +56,15 @@
     if (walletStore.walletClient && user.authenticated) {
       walletConnectSuccess(walletStore.walletClient as Wallet)
       showModal = false
+    }
+  })
+
+  $effect(() => {
+    if (
+      !showModal &&
+      walletStore.walletClient?.account.address !== user.authenticated
+    ) {
+      showModal = true
     }
   })
 </script>
@@ -107,16 +96,19 @@
     <div class="text-sm"></div>
   </div>
 
-  <button
-    class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
-    onclick={handleConnect}
-  >
-    {#if !walletStore.walletClient}
+  {#if !walletStore.walletClient?.account.address}
+    <button
+      class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
+      onclick={handleConnect}
+    >
       Connect
-    {:else if !user.authenticated}
+    </button>
+  {:else if user.authenticated !== walletStore.walletClient.account.address}
+    <button
+      class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
+      onclick={user.authenticate}
+    >
       Sign in
-    {:else if !mud.synced}
-      Syncing blockchain state...
-    {/if}
-  </button>
+    </button>
+  {/if}
 </Modal>

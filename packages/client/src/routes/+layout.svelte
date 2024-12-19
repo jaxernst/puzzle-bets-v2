@@ -51,9 +51,7 @@
     // There is an issue where the mud network sync won't stop properly,
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
-      setTimeout(() => {
-        window.location.reload()
-      }, 400)
+      // window.location.reload()
     }
   })
 

@@ -6,11 +6,6 @@ import type { SetupNetworkResult } from "./setupNetwork"
 import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "$lib/types"
 import { padHex, parseEther, type Hex } from "viem"
 import { hashString, systemTimestamp } from "$lib/util"
-import { writable } from "svelte/store"
-import { writeContract } from "@wagmi/core"
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
-import { networkConfig } from "./networkConfig"
-import { wagmiConfig } from "$lib/walletStore.svelte"
 import { toastError } from "$lib/toast"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>

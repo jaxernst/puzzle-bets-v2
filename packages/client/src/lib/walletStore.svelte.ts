@@ -12,7 +12,6 @@ import {
   injected,
   reconnect,
   watchAccount,
-  watchClient,
   type Connector,
 } from "@wagmi/core"
 
@@ -52,10 +51,10 @@ export const chain = networkConfig.chain
 export const walletStore = (() => {
   let wallet = $state<Wallet | undefined>()
   let connecting = $state(false)
-  let connector = $state<any>()
+  let connector: Connector
 
   if (browser) {
-    getPrimaryConnector().then((c) => {
+    getPrimaryConnector().then((c: any) => {
       connector = c
     })
   }
@@ -95,36 +94,48 @@ export const walletStore = (() => {
     },
 
     connect: async () => {
-      if (networkConfig.chainId === 31337) {
-        return connectBurner()
-      } else {
-        return connectWallet()
+      connecting = true
+
+      try {
+        if (networkConfig.chainId === 31337) {
+          return connectBurner()
+        } else {
+          return connectWallet()
+        }
+      } finally {
+        connecting = false
       }
     },
 
     autoConnect: async () => {
-      if (networkConfig.chainId === 31337) {
-        return connectBurner()
-      } else {
-        const [account] = await reconnect(wagmiConfig, {
-          connectors: [connector],
-        })
+      connecting = true
 
-        if (account) {
-          const walletClient = await getWalletClient(wagmiConfig)
-          wallet = walletClient
+      try {
+        if (networkConfig.chainId === 31337) {
+          return connectBurner()
+        } else {
+          const [account] = await reconnect(wagmiConfig, {
+            connectors: [connector],
+          })
 
-          return walletClient
+          if (account) {
+            const walletClient = await getWalletClient(wagmiConfig)
+            wallet = walletClient
+
+            return walletClient
+          }
         }
+      } finally {
+        connecting = false
       }
     },
 
     disconnect: async () => {
       try {
         await disconnect(wagmiConfig, { connector })
+        await user.changeAccount({ address: undefined })
       } catch (err) {
-        console.error("Disconnect failed: ", err)
-        // Manually remove the account from the user store when disconnecting fails (not all connectors support disconnecting)
+        console.warn("Wallet disconnect failed")
         user.changeAccount({ address: undefined })
       }
       wallet = undefined
@@ -132,17 +143,12 @@ export const walletStore = (() => {
   }
 })()
 
-let changingAccount = false
 watchAccount(wagmiConfig, {
-  onChange: async (account) => {
-    if (changingAccount) return
-
-    console.log("changing account:", account)
-    changingAccount = true
-    try {
-      await user.changeAccount({ address: account.address })
-    } finally {
-      changingAccount = false
+  onChange: async (account, prevAccount) => {
+    const isTransient = account.isConnecting || account.isReconnecting
+    if (account.address !== user.address && !isTransient) {
+      console.log("detected account change", account)
+      user.changeAccount({ address: account.address })
     }
   },
 })
