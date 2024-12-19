@@ -31,8 +31,8 @@
   <p class="text-base font-bold">Get the most out of Puzzle Bets!</p>
 
   <p class="text-sm leading-tight">
-    Add Puzzle Bets as a frame to receive notifications when your opponents join
-    your game.
+    Add Puzzle Bets as a frame to receive notifications when opponents join your
+    games.
   </p>
 
   <hr />
