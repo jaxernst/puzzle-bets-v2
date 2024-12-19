@@ -55,7 +55,7 @@ export const POST: RequestHandler = async ({
   const lost = game.answers.length >= 6 && !solved
 
   // Update cache
-  cookies.set(wordleGameCacheKey(gameId), game.toString(), {
+  cookies.set(wordleGameCacheKey(gameId, locals.user), game.toString(), {
     path: "/",
   })
 
