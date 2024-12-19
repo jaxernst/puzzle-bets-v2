@@ -1,4 +1,4 @@
-import { formatEther } from "viem"
+import { formatEther, type Account } from "viem"
 import type { EvmAddress } from "./types"
 import { signInWithEthereum } from "./siwe"
 import { publicClient, type Wallet } from "./mud/setupNetwork"
@@ -51,10 +51,10 @@ export const user = (() => {
   }>(initialState)
 
   const balanceSync = makeBalanceSync((balance: bigint) => {
-    // Only update store when balance has changed
+    userState.balanceFetched = true
+
     if (balance !== userState.balance) {
       userState.balance = balance
-      userState.balanceFetched = true
     }
   })
 
@@ -72,19 +72,13 @@ export const user = (() => {
     }
   }
 
-  const handleWalletChange = async (wallet: Wallet | null) => {
-    const address = wallet?.account.address
-
+  const handleAccountChange = async (address: EvmAddress | undefined) => {
     balanceSync.stop()
 
     if (address) {
       if (address !== userState.authenticated) {
         try {
-          if (!wallet.signMessage) {
-            throw new Error("No SIWE Signer Available")
-          }
-
-          const success = await signInWithEthereum(address, wallet.signMessage)
+          const success = await signInWithEthereum(address)
 
           if (success) {
             userState.authenticated = address
@@ -136,8 +130,8 @@ export const user = (() => {
       return userState.balanceFetched
     },
 
-    changeWallet: async (wallet: Wallet | null) => {
-      await handleWalletChange(wallet)
+    changeAccount: async ({ address }: { address: EvmAddress | undefined }) => {
+      await handleAccountChange(address)
     },
   }
 })()

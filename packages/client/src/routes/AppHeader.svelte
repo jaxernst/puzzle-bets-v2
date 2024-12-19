@@ -104,7 +104,6 @@
     <button
       onclick={() => {
         walletStore.disconnect()
-        user.changeWallet(null)
         showAccountModal = false
       }}
       class="rounded border-2 border-black p-3 text-center text-base font-bold"

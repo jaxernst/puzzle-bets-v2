@@ -23,41 +23,44 @@
 </script>
 
 <script lang="ts">
+  /**
+   -> connect wallet, get client 
+   -> authenticate user (the request for thisneeds to happen immediately after the first step)
+   -> setup mud
+
+   */
   let { autoconnect } = $props<{ autoconnect?: boolean }>()
 
   const autoConnectWallet = async () => {
     const walletClient = await walletStore.autoConnect()
 
-    if (walletClient?.account.address) {
-      await user.changeWallet(walletClient)
-
-      if (user.authenticated) {
-        await mud.setup(walletClient)
-      } else {
-        walletStore.disconnect()
-        await user.changeWallet(null)
-      }
+    if (walletClient) {
+      await mud.setup(walletClient)
     }
   }
 
   const handleConnect = async () => {
     const walletClient = await walletStore.connect()
+    if (!walletClient?.account.address) {
+      walletConnectFail("No wallet connected")
+      return
+    }
 
-    try {
-      await user.changeWallet(walletClient)
+    mud.setup(walletClient)
 
+    /*    try {
       if (user.authenticated) {
         mud.setup(walletClient)
         walletConnectSuccess(walletClient as Wallet)
         showModal = false
       } else {
         walletStore.disconnect()
-        await user.changeWallet(null)
         throw new Error("User not authenticated")
       }
     } catch (err) {
       walletConnectFail("Error signing in with Ethereum")
     }
+      */
   }
 
   let autoconnectAttempted = false
@@ -69,21 +72,11 @@
     }
   })
 
-  let showModalPrev = false
   $effect(() => {
-    const wasClosed = !showModal && showModalPrev
-
-    if (wasClosed && walletStore.address) {
-      console.log("Wallet connect success")
+    if (walletStore.walletClient && user.authenticated) {
       walletConnectSuccess(walletStore.walletClient as Wallet)
+      showModal = false
     }
-
-    if (wasClosed && !walletStore.address) {
-      console.log("Wallet connect failed")
-      walletConnectFail("No wallet connected")
-    }
-
-    showModalPrev = showModal
   })
 </script>
 
@@ -118,6 +111,12 @@
     class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
     onclick={handleConnect}
   >
-    Connect
+    {#if !walletStore.walletClient}
+      Connect
+    {:else if !user.authenticated}
+      Sign in
+    {:else if !mud.synced}
+      Syncing blockchain state...
+    {/if}
   </button>
 </Modal>

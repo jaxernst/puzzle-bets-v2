@@ -31,10 +31,10 @@
 
   let { children } = $props()
 
-  $effect(() => {
-    console.log("pre-auth address:", $page.data.user)
+  console.log("pre-auth address:", $page.data.user)
+  if (!user.authenticated && $page.data.user) {
     user.authenticated = $page.data.user
-  })
+  }
 
   $effect(() => {
     if (!frameStore.initialized) {
@@ -51,7 +51,9 @@
     // There is an issue where the mud network sync won't stop properly,
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
-      window.location.reload()
+      setTimeout(() => {
+        window.location.reload()
+      }, 400)
     }
   })
 

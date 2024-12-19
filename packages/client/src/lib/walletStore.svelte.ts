@@ -9,12 +9,16 @@ import {
   disconnect,
   fallback,
   getWalletClient,
+  injected,
   reconnect,
+  watchAccount,
+  watchClient,
   type Connector,
 } from "@wagmi/core"
 
-import { coinbaseWallet } from "@wagmi/connectors"
+import { coinbaseWallet, metaMask } from "@wagmi/connectors"
 import { frameStore } from "./farcaster/frameStore.svelte"
+import { user } from "./userStore.svelte"
 
 if (browser) window.process = { env: {}, version } as any
 
@@ -40,7 +44,7 @@ const getPrimaryConnector = async () => {
     return frameConnector()
   }
 
-  return cbWalletConnector
+  return injected()
 }
 
 export const chain = networkConfig.chain
@@ -49,6 +53,12 @@ export const walletStore = (() => {
   let wallet = $state<Wallet | undefined>()
   let connecting = $state(false)
   let connector = $state<any>()
+
+  if (browser) {
+    getPrimaryConnector().then((c) => {
+      connector = c
+    })
+  }
 
   const connectBurner = () => {
     const burnerAccount = createBurnerAccount(getBurnerPrivateKey())
@@ -62,8 +72,6 @@ export const walletStore = (() => {
   }
 
   const connectWallet = async () => {
-    connector = await getPrimaryConnector()
-
     await connect(wagmiConfig, {
       connector,
     })
@@ -99,7 +107,7 @@ export const walletStore = (() => {
         return connectBurner()
       } else {
         const [account] = await reconnect(wagmiConfig, {
-          connectors: [await getPrimaryConnector()],
+          connectors: [connector],
         })
 
         if (account) {
@@ -112,8 +120,29 @@ export const walletStore = (() => {
     },
 
     disconnect: async () => {
-      disconnect(wagmiConfig, { connector })
+      try {
+        await disconnect(wagmiConfig, { connector })
+      } catch (err) {
+        console.error("Disconnect failed: ", err)
+        // Manually remove the account from the user store when disconnecting fails (not all connectors support disconnecting)
+        user.changeAccount({ address: undefined })
+      }
       wallet = undefined
     },
   }
 })()
+
+let changingAccount = false
+watchAccount(wagmiConfig, {
+  onChange: async (account) => {
+    if (changingAccount) return
+
+    console.log("changing account:", account)
+    changingAccount = true
+    try {
+      await user.changeAccount({ address: account.address })
+    } finally {
+      changingAccount = false
+    }
+  },
+})
