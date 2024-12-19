@@ -13,6 +13,7 @@
   import DripGameModal from "./DripGameModal.svelte"
   import { toggleDripGameModal } from "./DripGameModal.svelte"
   import DisplayNameModal from "./DisplayNameModal.svelte"
+  import AddFrameModal from "./AddFrameModal.svelte"
   import { user } from "$lib/userStore.svelte"
   import { formatEther, parseEther } from "viem"
   import {
@@ -65,6 +66,7 @@
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
+<AddFrameModal />
 
 <div class="text-base leading-snug">
   <SvelteToast />
