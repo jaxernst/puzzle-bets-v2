@@ -135,9 +135,10 @@ export const walletStore = (() => {
 
 watchAccount(wagmiConfig, {
   onChange: async (account) => {
+    console.log("detected account change", account)
     const isTransient = account.isConnecting || account.isReconnecting
     if (account.address !== user.address && !isTransient) {
-      console.log("detected account change", account)
+      console.log("applying account change")
       user.changeAccount({ address: account.address })
     }
 
