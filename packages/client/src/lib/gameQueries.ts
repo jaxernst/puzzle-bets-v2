@@ -81,7 +81,8 @@ export function getActivePlayerGames(
     NotValue(c.GameStatus, { value: GameStatus.Complete }),
   ])
 
-  return Array.from([...p1Games, ...p2Games]).map((gameId) => {
+  // Enure there are no duplicate game ids from the union of p1 and p2 games
+  return Array.from(new Set([...p1Games, ...p2Games])).map((gameId) => {
     const game = gameIdToGame(gameId, c)
     return {
       ...game,
