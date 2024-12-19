@@ -7,7 +7,9 @@
   let show = $state(false)
 
   let shown = false
+
   $effect(() => {
+    console.log(frameStore.context)
     if (
       frameStore.initialized &&
       !frameStore.context.client.added &&
