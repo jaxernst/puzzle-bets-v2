@@ -36,7 +36,7 @@
   const handleConnect = async () => {
     const walletClient = await walletStore.connect()
     if (!walletClient?.account.address) {
-      walletConnectFail("No wallet connected")
+      walletConnectFail("No wallet account available")
       return
     }
 
@@ -60,10 +60,7 @@
   })
 
   $effect(() => {
-    if (
-      !showModal &&
-      walletStore.walletClient?.account.address !== user.authenticated
-    ) {
+    if (!showModal && user.address && user.address !== user.authenticated) {
       showModal = true
     }
   })
@@ -96,19 +93,28 @@
     <div class="text-sm"></div>
   </div>
 
-  {#if !walletStore.walletClient?.account.address}
+  {#if !user.address}
     <button
-      class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
+      class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
       onclick={handleConnect}
     >
       Connect
     </button>
-  {:else if user.authenticated !== walletStore.walletClient.account.address}
-    <button
-      class="w-full rounded-md bg-black px-3 py-2 text-center font-bold text-white"
-      onclick={user.authenticate}
-    >
-      Sign in
-    </button>
+  {:else if user.authenticated !== user.address}
+    <div class="flex flex-col gap-2">
+      <button
+        class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
+        onclick={user.authenticate}
+      >
+        Sign in
+      </button>
+
+      <button
+        class="w-full rounded-md border-2 border-black px-3 py-2 text-center font-bold text-black"
+        onclick={walletStore.disconnect}
+      >
+        Disconnect
+      </button>
+    </div>
   {/if}
 </Modal>

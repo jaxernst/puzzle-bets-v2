@@ -60,7 +60,7 @@
 </script>
 
 <Confetti />
-<WalletConnector autoconnect={$page.data.user} />
+<WalletConnector autoconnect />
 <DripGameModal />
 <NewGameModal />
 <AboutModal />
