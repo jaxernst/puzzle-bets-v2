@@ -5,20 +5,22 @@
   import { user } from "$lib/userStore.svelte"
 
   let show = $state(false)
-
   let shown = false
 
   $effect(() => {
-    console.log(frameStore.context)
+    const hasShownModal = localStorage.getItem("puzzleBets_frameModalShown")
+
     if (
       frameStore.initialized &&
       !frameStore.context.client.added &&
       user.address &&
       user.authenticated === user.address &&
-      !shown
+      !shown &&
+      !hasShownModal
     ) {
       shown = true
       show = true
+      localStorage.setItem("puzzleBets_frameModalShown", "true")
     }
   })
 </script>
