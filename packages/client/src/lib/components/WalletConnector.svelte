@@ -6,6 +6,7 @@
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
+  import { toastError } from "$lib/toast"
 
   let showModal = $state(false)
 
@@ -65,6 +66,17 @@
       showModal = true
     }
   })
+
+  // The siwe prompt should be shown automatically, but it can be triggered manually in case of an issue
+  const manualSignIn = async () => {
+    try {
+      await user.authenticate()
+    } catch (e) {
+      toastError(
+        "Failed to sign in with your wallet. Disconnect and try again.",
+      )
+    }
+  }
 </script>
 
 <Modal bind:show={showModal} class="sm:w-[375px]">
@@ -105,7 +117,7 @@
     <div class="flex flex-col gap-2">
       <button
         class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
-        onclick={user.authenticate}
+        onclick={manualSignIn}
       >
         Sign in with your wallet
       </button>
