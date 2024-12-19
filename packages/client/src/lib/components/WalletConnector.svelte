@@ -27,7 +27,6 @@
 
   const autoConnectWallet = async () => {
     const walletClient = await walletStore.autoConnect()
-
     if (walletClient) {
       await mud.setup(walletClient)
     }
@@ -43,15 +42,17 @@
     mud.setup(walletClient)
   }
 
+  // Autoconnect
   let autoconnectAttempted = false
   $effect(() => {
-    if (autoconnect && !walletStore.address && !autoconnectAttempted) {
+    if (autoconnect && !user.address && !autoconnectAttempted) {
       autoConnectWallet().finally(() => {
         autoconnectAttempted = true
       })
     }
   })
 
+  // Auto close once authenticated
   $effect(() => {
     if (walletStore.walletClient && user.authenticated) {
       walletConnectSuccess(walletStore.walletClient as Wallet)
@@ -74,8 +75,8 @@
       <div class="flex items-center gap-2 text-sm">
         <WalletIcon class="h-6 w-6 stroke-white" />
 
-        {#if walletStore.address}
-          Welcome {shortenAddress(walletStore?.address ?? "")}
+        {#if user.address}
+          Welcome {shortenAddress(user.address)}
         {:else}
           Wallet Sign In
         {/if}
@@ -106,7 +107,7 @@
         class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
         onclick={user.authenticate}
       >
-        Sign in
+        Sign in with your wallet
       </button>
 
       <button
