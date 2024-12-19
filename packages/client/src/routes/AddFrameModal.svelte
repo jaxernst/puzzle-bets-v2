@@ -10,6 +10,7 @@
   $effect(() => {
     if (
       frameStore.initialized &&
+      user.address &&
       user.authenticated === user.address &&
       !shown
     ) {
