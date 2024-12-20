@@ -7,6 +7,7 @@ import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "$lib/types"
 import { padHex, parseEther, type Hex } from "viem"
 import { hashString, systemTimestamp } from "$lib/util"
 import { toastError } from "$lib/toast"
+import { user } from "$lib/userStore.svelte"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
@@ -40,7 +41,7 @@ export function createSystemCalls({
         env.PUBLIC_PUZZLE_MASTER_ADDRESS as EvmAddress,
         passwordHash,
       ],
-      { value: parseEther(wagerEth.toString()) },
+      { value: parseEther(wagerEth.toString()), account: user.address },
     )
 
     await waitForTransaction(tx)
@@ -55,11 +56,12 @@ export function createSystemCalls({
     if (password) {
       tx = await worldContract.write.v1__joinGame(
         [gameId as `0x${string}`, password],
-        { value: parseEther(wagerEth.toString()) },
+        { value: parseEther(wagerEth.toString()), account: user.address },
       )
     } else {
       tx = await worldContract.write.v1__joinGame([gameId as `0x${string}`], {
         value: parseEther(wagerEth.toString()),
+        account: user.address,
       })
     }
 
@@ -67,9 +69,10 @@ export function createSystemCalls({
   }
 
   const startTurn = async (gameId: Entity) => {
-    const tx = await worldContract.write.v1__startTurn([
-      gameId as `0x${string}`,
-    ])
+    const tx = await worldContract.write.v1__startTurn(
+      [gameId as `0x${string}`],
+      { account: user.address },
+    )
 
     await waitForTransaction(tx)
   }
@@ -79,33 +82,36 @@ export function createSystemCalls({
     score: number,
     solutionSignature: `0x${string}`,
   ) => {
-    const tx = await worldContract.write.v1__submitSolution([
-      gameId as `0x${string}`,
-      score,
-      solutionSignature,
-    ])
+    const tx = await worldContract.write.v1__submitSolution(
+      [gameId as `0x${string}`, score, solutionSignature],
+      { account: user.address },
+    )
 
     await waitForTransaction(tx)
   }
 
   const claim = async (gameId: Entity) => {
-    const tx = await worldContract.write.v1__claim([gameId as `0x${string}`])
+    const tx = await worldContract.write.v1__claim([gameId as `0x${string}`], {
+      account: user.address,
+    })
 
     await waitForTransaction(tx)
   }
 
   const voteRematch = async (gameId: Entity) => {
-    const tx = await worldContract.write.v1__voteRematch([
-      gameId as `0x${string}`,
-    ])
+    const tx = await worldContract.write.v1__voteRematch(
+      [gameId as `0x${string}`],
+      { account: user.address },
+    )
 
     await waitForTransaction(tx)
   }
 
   const cancelPendingGame = async (gameId: Entity) => {
-    const tx = await worldContract.write.v1__cancelPendingGame([
-      gameId as `0x${string}`,
-    ])
+    const tx = await worldContract.write.v1__cancelPendingGame(
+      [gameId as `0x${string}`],
+      { account: user.address },
+    )
 
     await waitForTransaction(tx)
   }

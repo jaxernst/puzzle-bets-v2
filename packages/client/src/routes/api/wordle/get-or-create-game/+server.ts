@@ -28,18 +28,22 @@ export const POST = async ({ request, cookies, locals }): Promise<Response> => {
     if (!inputParamsValid) return new Response(null, { status: 400 })
   }
 
-  const cachedGame = cookies.get(wordleGameCacheKey(gameId))
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId, user))
 
   let game: Game
   if (cachedGame) {
     game = new Game(cachedGame)
   } else if (isDemo) {
     game = await getOrCreateDemo(gameId)
-    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" })
+    cookies.set(wordleGameCacheKey(gameId, user), game.toString(), {
+      path: "/",
+    })
   } else {
     if (!user || !opponent) throw new Error("Invariant error")
     game = await getOrCreateLiveGame(gameId, user, opponent)
-    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" })
+    cookies.set(wordleGameCacheKey(gameId, user), game.toString(), {
+      path: "/",
+    })
   }
 
   const resetCount = await getGameResetCount(gameId)

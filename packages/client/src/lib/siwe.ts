@@ -4,6 +4,7 @@ import type { EvmAddress } from "$lib/types"
 import { createSiweMessage } from "viem/siwe"
 import { wagmiConfig } from "./walletStore.svelte"
 import { signMessage } from "@wagmi/core"
+import { toastError } from "./toast"
 
 let nonce: string | null = null
 
@@ -42,5 +43,6 @@ export async function signInWithEthereum(address: EvmAddress) {
     },
   })
 
+  nonce = null
   return result.ok
 }

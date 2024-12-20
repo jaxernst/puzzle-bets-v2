@@ -13,6 +13,7 @@
   import DripGameModal from "./DripGameModal.svelte"
   import { toggleDripGameModal } from "./DripGameModal.svelte"
   import DisplayNameModal from "./DisplayNameModal.svelte"
+  import AddFrameModal from "./AddFrameModal.svelte"
   import { user } from "$lib/userStore.svelte"
   import { formatEther, parseEther } from "viem"
   import {
@@ -51,7 +52,9 @@
     // There is an issue where the mud network sync won't stop properly,
     // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
-      window.location.reload()
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
     }
   })
 
@@ -65,6 +68,7 @@
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
+<AddFrameModal />
 
 <div class="text-base leading-snug">
   <SvelteToast />

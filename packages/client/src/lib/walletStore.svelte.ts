@@ -9,7 +9,9 @@ import {
   disconnect,
   fallback,
   getWalletClient,
+  injected,
   reconnect,
+  switchChain,
   watchAccount,
 } from "@wagmi/core"
 
@@ -41,7 +43,7 @@ const getPrimaryConnector = async () => {
     return frameConnector()
   }
 
-  return cbWalletConnector
+  return injected()
 }
 
 export const chain = networkConfig.chain
@@ -67,6 +69,7 @@ export const walletStore = (() => {
     })
 
     const walletClient = await getWalletClient(wagmiConfig)
+
     wallet = walletClient
     return walletClient
   }
@@ -74,10 +77,6 @@ export const walletStore = (() => {
   return {
     get connecting() {
       return connecting
-    },
-
-    get address() {
-      return wallet?.account.address
     },
 
     get walletClient() {
@@ -126,9 +125,9 @@ export const walletStore = (() => {
         await disconnect(wagmiConfig)
       } catch (err) {
         console.warn("Wallet disconnect failed")
+        user.changeAccount({ address: undefined })
       }
 
-      user.changeAccount({ address: undefined })
       wallet = undefined
     },
   }
@@ -136,10 +135,15 @@ export const walletStore = (() => {
 
 watchAccount(wagmiConfig, {
   onChange: async (account) => {
+    console.log("detected account change", account)
     const isTransient = account.isConnecting || account.isReconnecting
     if (account.address !== user.address && !isTransient) {
-      console.log("detected account change", account)
+      console.log("applying account change")
       user.changeAccount({ address: account.address })
+    }
+
+    if (account.isConnected && account.chainId !== networkConfig.chainId) {
+      switchChain(wagmiConfig, { chainId: networkConfig.chainId })
     }
   },
 })

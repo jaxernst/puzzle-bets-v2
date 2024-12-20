@@ -6,6 +6,7 @@
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
+  import { toastError } from "$lib/toast"
 
   let showModal = $state(false)
 
@@ -25,10 +26,12 @@
 <script lang="ts">
   let { autoconnect } = $props<{ autoconnect?: boolean }>()
 
+  let setupCalled = false
+
   const autoConnectWallet = async () => {
     const walletClient = await walletStore.autoConnect()
-
-    if (walletClient) {
+    if (walletClient && !setupCalled) {
+      setupCalled = true
       await mud.setup(walletClient)
     }
   }
@@ -40,18 +43,23 @@
       return
     }
 
-    mud.setup(walletClient)
+    if (!setupCalled) {
+      setupCalled = true
+      await mud.setup(walletClient)
+    }
   }
 
+  // Autoconnect
   let autoconnectAttempted = false
   $effect(() => {
-    if (autoconnect && !walletStore.address && !autoconnectAttempted) {
+    if (autoconnect && !user.address && !autoconnectAttempted) {
       autoConnectWallet().finally(() => {
         autoconnectAttempted = true
       })
     }
   })
 
+  // Auto close once authenticated
   $effect(() => {
     if (walletStore.walletClient && user.authenticated) {
       walletConnectSuccess(walletStore.walletClient as Wallet)
@@ -64,6 +72,17 @@
       showModal = true
     }
   })
+
+  // The siwe prompt should be shown automatically, but it can be triggered manually in case of an issue
+  const manualSignIn = async () => {
+    try {
+      await user.authenticate()
+    } catch (e) {
+      toastError(
+        "Failed to sign in with your wallet. Disconnect and try again.",
+      )
+    }
+  }
 </script>
 
 <Modal bind:show={showModal} class="sm:w-[375px]">
@@ -74,8 +93,8 @@
       <div class="flex items-center gap-2 text-sm">
         <WalletIcon class="h-6 w-6 stroke-white" />
 
-        {#if walletStore.address}
-          Welcome {shortenAddress(walletStore?.address ?? "")}
+        {#if user.address}
+          Welcome {shortenAddress(user.address)}
         {:else}
           Wallet Sign In
         {/if}
@@ -104,9 +123,9 @@
     <div class="flex flex-col gap-2">
       <button
         class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
-        onclick={user.authenticate}
+        onclick={manualSignIn}
       >
-        Sign in
+        Sign in with your wallet
       </button>
 
       <button

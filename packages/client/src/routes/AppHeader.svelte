@@ -1,6 +1,5 @@
 <script lang="ts">
-  let { class: className } = $props<{ class?: string }>()
-  import { formatAsDollar, formatSigFig, shortenAddress } from "$lib/util"
+  import { shortenAddress } from "$lib/util"
   import { page } from "$app/stores"
   import { user } from "$lib/userStore.svelte"
   import PuzzleBetsSmall from "$lib/assets/PuzzleBetsSmall.svelte"

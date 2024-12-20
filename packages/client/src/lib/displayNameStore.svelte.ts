@@ -3,8 +3,11 @@ import { SvelteMap as Map } from "svelte/reactivity"
 
 export const displayNameStore = (() => {
   let store = $state(new Map<EvmAddress, string>())
+  const pendingFetches = new Set<EvmAddress>()
 
   const fetchName = async (user: EvmAddress) => {
+    if (pendingFetches.has(user)) return
+
     try {
       const response = await fetch(`/api/display-name/${user}`)
       if (!response.ok) throw new Error("Failed to fetch display name")
@@ -23,7 +26,12 @@ export const displayNameStore = (() => {
       const name = store.get(user)
       if (name) return name
 
-      fetchName(user)
+      if (!pendingFetches.has(user)) {
+        pendingFetches.add(user)
+        fetchName(user).finally(() => {
+          pendingFetches.delete(user)
+        })
+      }
 
       return fallback ? user : undefined
     },
