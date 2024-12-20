@@ -20,8 +20,8 @@ importers:
   packages/client:
     dependencies:
       '@farcaster/frame-sdk':
-        specifier: ^0.0.16
-        version: 0.0.16(typescript@5.4.2)(zod@3.23.8)
+        specifier: ^0.0.20
+        version: 0.0.20(typescript@5.4.2)(zod@3.23.8)
       '@neoconfetti/svelte':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1123,8 +1123,8 @@ packages:
       micro-ftch: 0.3.1
     dev: false
 
-  /@farcaster/frame-core@0.0.15(typescript@5.4.2):
-    resolution: {integrity: sha512-WQfAEqyQAz3EzEdfqAMV7s2VMIYBGWz0Qt5CUUkmSelvv0a+8A61YmBnpemCi3NEwWzEJBTc/IxzQ29w2axPBg==}
+  /@farcaster/frame-core@0.0.19(typescript@5.4.2):
+    resolution: {integrity: sha512-/0XjVZa/rUuUR16GVhhKnAQI33SXI61bB24jNA1DD0L0ytcKsM14wBptW9CF4RDiYIXxtt4mXmnQ+rMhO38RcA==}
     dependencies:
       ox: 0.4.2(typescript@5.4.2)(zod@3.24.1)
       zod: 3.24.1
@@ -1132,10 +1132,10 @@ packages:
       - typescript
     dev: false
 
-  /@farcaster/frame-sdk@0.0.16(typescript@5.4.2)(zod@3.23.8):
-    resolution: {integrity: sha512-043j2EiCOaHvS1ox0yVx7KZQU5LB1P+39waK3xtX0knNKQ54wZxCOTcca0kUcJfTBN5db7iVPOh/E+LJ5kjDew==}
+  /@farcaster/frame-sdk@0.0.20(typescript@5.4.2)(zod@3.23.8):
+    resolution: {integrity: sha512-9EbB3A9V1ZSH4NvhHVbylcDVNevJqpuGkwz4I+0bKF2936qxvMlcWclDZVEmfO/woYH0ZQgy47YYRIiS3YpIQw==}
     dependencies:
-      '@farcaster/frame-core': 0.0.15(typescript@5.4.2)
+      '@farcaster/frame-core': 0.0.19(typescript@5.4.2)
       comlink: 4.4.2
       eventemitter3: 5.0.1
       ox: 0.4.2(typescript@5.4.2)(zod@3.23.8)

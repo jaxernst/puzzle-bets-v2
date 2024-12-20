@@ -35,7 +35,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@farcaster/frame-sdk": "^0.0.16",
+    "@farcaster/frame-sdk": "^0.0.20",
     "@neoconfetti/svelte": "^1.0.0",
     "@supabase/supabase-js": "^2.47.8",
     "@types/jsonwebtoken": "^9.0.7",
