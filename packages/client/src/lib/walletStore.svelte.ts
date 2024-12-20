@@ -125,9 +125,9 @@ export const walletStore = (() => {
         await disconnect(wagmiConfig)
       } catch (err) {
         console.warn("Wallet disconnect failed")
+        user.changeAccount({ address: undefined })
       }
 
-      user.changeAccount({ address: undefined })
       wallet = undefined
     },
   }
