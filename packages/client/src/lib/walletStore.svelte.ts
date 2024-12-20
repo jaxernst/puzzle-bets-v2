@@ -43,7 +43,7 @@ const getPrimaryConnector = async () => {
     return frameConnector()
   }
 
-  return injected()
+  return cbWalletConnector
 }
 
 export const chain = networkConfig.chain
@@ -88,9 +88,9 @@ export const walletStore = (() => {
 
       try {
         if (networkConfig.chainId === 31337) {
-          return connectBurner()
+          return await connectBurner()
         } else {
-          return connectWallet()
+          return await connectWallet()
         }
       } finally {
         connecting = false

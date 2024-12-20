@@ -7,11 +7,12 @@
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import { toastError } from "$lib/toast"
+  import DotLoader from "./DotLoader.svelte"
 
   let showModal = $state(false)
 
   let walletConnectSuccess = $state<(wallet: Wallet) => any>(() => {})
-  let walletConnectFail = $state<(err: string) => void>(() => {})
+  let walletConnectFail = $state<(err: string) => void>(() => {}) // Not used currently
 
   export async function promptConnectWallet() {
     showModal = true
@@ -37,9 +38,16 @@
   }
 
   const handleConnect = async () => {
-    const walletClient = await walletStore.connect()
+    let walletClient: Wallet | undefined
+    try {
+      walletClient = await walletStore.connect()
+    } catch (e: any) {
+      toastError(`Connect failed: ${e.message ?? "Unknown error"}`)
+      return
+    }
+
     if (!walletClient?.account.address) {
-      walletConnectFail("No wallet account available")
+      toastError("No wallet account available")
       return
     }
 
@@ -83,6 +91,8 @@
       )
     }
   }
+
+  $inspect(walletStore.connecting)
 </script>
 
 <Modal bind:show={showModal} class="sm:w-[375px]">
@@ -114,10 +124,14 @@
 
   {#if !user.address}
     <button
-      class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
+      class="flex w-full justify-center rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
       onclick={handleConnect}
     >
-      Connect
+      {#if walletStore.connecting}
+        <DotLoader class="fill-white" />
+      {:else}
+        Connect
+      {/if}
     </button>
   {:else if user.authenticated !== user.address}
     <div class="flex flex-col gap-2">
