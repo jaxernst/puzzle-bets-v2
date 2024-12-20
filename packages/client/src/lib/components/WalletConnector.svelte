@@ -26,9 +26,12 @@
 <script lang="ts">
   let { autoconnect } = $props<{ autoconnect?: boolean }>()
 
+  let setupCalled = false
+
   const autoConnectWallet = async () => {
     const walletClient = await walletStore.autoConnect()
-    if (walletClient) {
+    if (walletClient && !setupCalled) {
+      setupCalled = true
       await mud.setup(walletClient)
     }
   }
@@ -40,7 +43,10 @@
       return
     }
 
-    mud.setup(walletClient)
+    if (!setupCalled) {
+      setupCalled = true
+      await mud.setup(walletClient)
+    }
   }
 
   // Autoconnect
