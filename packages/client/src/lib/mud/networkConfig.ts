@@ -32,13 +32,6 @@ import { fallback, http } from "viem"
 import { transportObserver } from "@latticexyz/common"
 import type { MUDChain } from "@latticexyz/common/chains"
 
-export type SignInMode = "burner" | "embedded"
-
-const chainConnectMethod = {
-  31337: "burner",
-  84532: "burner",
-} as const
-
 export const networkConfig = (() => {
   const params = new URLSearchParams("") // window.location.search);
 
@@ -92,7 +85,6 @@ export const networkConfig = (() => {
     faucetServiceUrl: params.get("faucet") ?? (chain as MUDChain).faucetUrl,
     worldAddress,
     initialBlockNumber,
-    connectMode: (chainConnectMethod as any)[chainId],
     transport: transportObserver(fallback([http()])),
   }
 })()
