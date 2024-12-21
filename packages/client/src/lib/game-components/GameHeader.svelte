@@ -1,5 +1,7 @@
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import SubmitAndViewResult from "$lib/game-components/SubmitAndViewResult.svelte"
+
   import { prices } from "$lib/prices.svelte"
   import { type PlayerGame, type PuzzleType } from "$lib/types"
   import {
@@ -10,7 +12,6 @@
   } from "$lib/util"
   import { formatEther } from "viem"
   import { user } from "$lib/userStore.svelte"
-  import SubmitAndViewResult from "./SubmitAndViewResult.svelte"
   import { getGameTimers } from "$lib/gameQueries"
   import { goto } from "$app/navigation"
 

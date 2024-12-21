@@ -6,12 +6,10 @@
     formatAsDollar,
     formatSigFig,
     formatTime,
-    formatTimeAbbr,
-    intToEntity,
     shortenAddress,
   } from "$lib/util"
   import { formatEther } from "viem"
-  import { gameNumberToType, type Game } from "$lib/types"
+  import { type Game } from "$lib/types"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import type { EvmAddress } from "$lib"
   import Clock from "$lib/icons/Clock.svelte"

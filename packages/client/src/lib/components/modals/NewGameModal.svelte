@@ -1,22 +1,23 @@
-<script context="module" lang="ts">
-  import { goto } from "$app/navigation"
+<script module lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
-  import Modal from "$lib/components/Modal.svelte"
-  import { prices } from "$lib/prices.svelte"
   import Clock from "$lib/icons/Clock.svelte"
   import Lock from "$lib/icons/Lock.svelte"
   import Smiley from "$lib/icons/Smiley.svelte"
   import Stars from "$lib/icons/Stars.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
+  import Modal from "$lib/components/Modal.svelte"
+  import Link from "$lib/icons/Link.svelte"
+
+  import { goto } from "$app/navigation"
+  import { prices } from "$lib/prices.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import type { PuzzleType } from "$lib/types"
   import { capitalized, entityToInt, formatSigFig } from "$lib/util"
-  import { openControls } from "./game-controller/GameController.svelte"
+  import { openControls } from "$lib/components/game-controller/GameController.svelte"
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { user } from "$lib/userStore.svelte"
   import { gameInviteUrls } from "$lib/inviteUrls"
-  import Link from "$lib/icons/Link.svelte"
   import { type Entity } from "@latticexyz/recs"
 
   let showCreate = $state(false)
@@ -29,7 +30,6 @@
 </script>
 
 <script lang="ts">
-  // Input params
   let puzzleType: PuzzleType = $state("wordle")
   let visibility: "public" | "private" = $state("public")
   let currencyInput = $state("2.00")

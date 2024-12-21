@@ -4,7 +4,7 @@
   import Modal from "$lib/components/Modal.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { user } from "$lib/userStore.svelte"
-  import { toggleAboutModal } from "./AboutModal.svelte"
+  import { toggleAboutModal } from "$lib/components/modals/AboutModal.svelte"
 
   const connect = async () => {
     try {

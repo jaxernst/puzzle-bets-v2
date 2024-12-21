@@ -5,7 +5,7 @@
   import { goto } from "$app/navigation"
   import { user } from "$lib/userStore.svelte"
   import { intToEntity } from "$lib/util"
-  import LiveGame from "./LiveGame.svelte"
+  import LiveGame from "$lib/game-components/LiveGame.svelte"
 
   let gameEntity = intToEntity($page.params.gameId)
 

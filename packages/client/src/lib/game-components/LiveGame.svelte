@@ -1,5 +1,13 @@
 <script lang="ts">
+  import DotLoader from "$lib/components/DotLoader.svelte"
+  import GameHeader from "$lib/game-components/GameHeader.svelte"
+  import OpponentDisplay from "$lib/game-components/OpponentDisplay.svelte"
   import Wordle from "$lib/game-components/Wordle.svelte"
+  import Modal from "$lib/components/Modal.svelte"
+  import Stars from "$lib/icons/Stars.svelte"
+  import Wallet from "$lib/icons/Wallet.svelte"
+  import LoadingButton from "$lib/components/LoadingButton.svelte"
+
   import {
     gameIdToGame,
     getGameTimers,
@@ -14,17 +22,11 @@
     formatTime,
   } from "$lib/util"
   import { wordleGameStates } from "$lib/puzzleGameState.svelte"
-  import { exportWordleBoard } from "../exportBoard"
+  import { exportWordleBoard } from "$lib/game-components/Wordle.svelte"
   import { launchConfetti } from "$lib/components/Confetti.svelte"
   import { GameStatus, type EvmAddress, type PlayerGame } from "$lib/types"
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
-  import DotLoader from "$lib/components/DotLoader.svelte"
-  import GameHeader from "../../GameHeader.svelte"
-  import OpponentDisplay from "../../OpponentDisplay.svelte"
-  import Modal from "$lib/components/Modal.svelte"
-  import Stars from "$lib/icons/Stars.svelte"
-  import Wallet from "$lib/icons/Wallet.svelte"
   import { formatEther } from "viem"
   import { prices } from "$lib/prices.svelte"
   import { goto } from "$app/navigation"
@@ -32,8 +34,7 @@
   import type { Entity } from "@latticexyz/recs"
   import SubmitAndViewResult, {
     openSubmitModal,
-  } from "../../SubmitAndViewResult.svelte"
-  import LoadingButton from "$lib/components/LoadingButton.svelte"
+  } from "$lib/game-components/SubmitAndViewResult.svelte"
 
   let { user, game } = $props<{
     user: EvmAddress

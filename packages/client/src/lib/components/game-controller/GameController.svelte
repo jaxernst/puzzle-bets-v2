@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   type Tab = "lobby" | "active" | "history" | "top"
   let tab = $state<Tab>("active")
   let open = $state(false)
@@ -22,35 +22,29 @@
 
 <script lang="ts">
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
-  import { spring } from "svelte/motion"
-  import PuzzlePiece from "$lib/icons/PuzzlePiece.svelte"
-  import { clickOutside } from "$lib/actions/clickOutside"
-  import { capitalized, entityToInt, shortenAddress } from "$lib/util"
-  import type { Component } from "svelte"
-
   import Smiley from "$lib/icons/Smiley.svelte"
   import Clock from "$lib/icons/Clock.svelte"
   import Book from "$lib/icons/Book.svelte"
   import Crown from "$lib/icons/Crown.svelte"
-  import { page } from "$app/stores"
-  import { user } from "$lib/userStore.svelte"
-  import { mud } from "$lib/mudStore.svelte"
-  import {
-    getActivePlayerGames,
-    getPlayerGames,
-    getPublicGames,
-  } from "$lib/gameQueries"
-  import { toggleNewGameModal } from "../NewGameModal.svelte"
-  import { goto } from "$app/navigation"
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import { type Game, GameStatus } from "$lib/types"
   import TabActiveGames from "./TabActiveGames.svelte"
   import TabLobbyGames from "./TabLobby.svelte"
   import TabGameHistory from "./TabGameHistory.svelte"
   import TabLeaderboard from "./TabLeaderboard.svelte"
+
+  import { page } from "$app/stores"
+  import { user } from "$lib/userStore.svelte"
+  import { mud } from "$lib/mudStore.svelte"
+  import { spring } from "svelte/motion"
+  import type { Component } from "svelte"
+  import { clickOutside } from "$lib/actions/clickOutside"
+  import { capitalized } from "$lib/util"
+  import { toggleNewGameModal } from "$lib/components/modals/NewGameModal.svelte"
+  import { goto } from "$app/navigation"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { tweened } from "svelte/motion"
   import { cubicOut } from "svelte/easing"
   import { onMount } from "svelte"
+  import { getActivePlayerGames, getPublicGames } from "$lib/gameQueries"
 
   const descriptions: Record<Tab, string> = {
     active: "Your active onchain games.",

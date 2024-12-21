@@ -1,21 +1,23 @@
 <script lang="ts">
   import "../app.css"
+
+  import GameController from "$lib/components/game-controller/GameController.svelte"
+  import AppHeader from "$lib/components/AppHeader.svelte"
+  import Confetti from "$lib/components/Confetti.svelte"
+  import WalletConnector from "$lib/components/WalletConnector.svelte"
+  import NewGameModal from "$lib/components/modals/NewGameModal.svelte"
+  import DripGameModal from "$lib/components/modals/DripGameModal.svelte"
+  import DisplayNameModal from "$lib/components/modals/DisplayNameModal.svelte"
+  import AddFrameModal from "$lib/components/modals/AddFrameModal.svelte"
+  import AboutModal, {
+    toggleAboutModal,
+  } from "$lib/components/modals/AboutModal.svelte"
+
   import { walletStore } from "$lib/walletStore.svelte"
   import { page } from "$app/stores"
   import { slide } from "svelte/transition"
   import { SvelteToast, toast } from "@zerodevx/svelte-toast"
-  import GameController from "./game-controller/GameController.svelte"
-  import AppHeader from "./AppHeader.svelte"
-  import Confetti from "$lib/components/Confetti.svelte"
-  import WalletConnector from "$lib/components/WalletConnector.svelte"
-  import NewGameModal from "./NewGameModal.svelte"
-  import AboutModal, { toggleAboutModal } from "./AboutModal.svelte"
-  import DripGameModal from "./DripGameModal.svelte"
-  import { toggleDripGameModal } from "./DripGameModal.svelte"
-  import DisplayNameModal from "./DisplayNameModal.svelte"
-  import AddFrameModal from "./AddFrameModal.svelte"
   import { user } from "$lib/userStore.svelte"
-  import { formatEther, parseEther } from "viem"
   import {
     displayNameStore,
     updateDisplayName,
@@ -26,10 +28,10 @@
 
   /**
    * TODO:
+   * - Add link previews + other seo improvements
    * - Add notifications (web push + farcaster frames)
    * - Fix confetti
    * - Add png characters to bgs
-   * - Add link previews + other seo improvements
    */
 
   let { children } = $props()

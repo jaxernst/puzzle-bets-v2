@@ -4,22 +4,22 @@
   import Coins from "$lib/icons/Coins.svelte"
   import Edit from "$lib/icons/Edit.svelte"
   import Star from "$lib/icons/Star.svelte"
-  import Stars from "$lib/icons/Stars.svelte"
   import Trophy from "$lib/icons/Trophy.svelte"
   import Wallet from "$lib/icons/Wallet.svelte"
+
   import { mud } from "$lib/mudStore.svelte"
   import { prices } from "$lib/prices.svelte"
   import { getPlayerStats } from "$lib/statsQueries"
   import type { PuzzleType } from "$lib/types"
   import { user } from "$lib/userStore.svelte"
-  import { capitalized, shortenAddress, weiToDollarFormatted } from "$lib/util"
-  import { toggleAboutModal } from "../AboutModal.svelte"
-  import { toggleDisplayNameModal } from "../DisplayNameModal.svelte"
-  import GameController, {
+  import { shortenAddress, weiToDollarFormatted } from "$lib/util"
+  import { toggleAboutModal } from "../../lib/components/modals/AboutModal.svelte"
+  import { toggleDisplayNameModal } from "../../lib/components/modals/DisplayNameModal.svelte"
+  import { toggleNewGameModal } from "$lib/components/modals/NewGameModal.svelte"
+  import {
     openControls,
     showControls,
-  } from "../game-controller/GameController.svelte"
-  import { toggleNewGameModal } from "../NewGameModal.svelte"
+  } from "$lib/components/game-controller/GameController.svelte"
 
   $effect(showControls)
 

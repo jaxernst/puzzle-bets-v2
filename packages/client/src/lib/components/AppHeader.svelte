@@ -8,7 +8,7 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import { walletStore } from "$lib/walletStore.svelte"
-  import { toggleDisplayNameModal } from "./DisplayNameModal.svelte"
+  import { toggleDisplayNameModal } from "./modals/DisplayNameModal.svelte"
   import Edit from "$lib/icons/Edit.svelte"
 
   let showAccountModal = $state(false)

@@ -51,7 +51,7 @@ const getPrimaryConnector = () => {
     return frameConnector
   }
 
-  return cbWalletConnector
+  return injected()
 }
 
 export const chain = networkConfig.chain

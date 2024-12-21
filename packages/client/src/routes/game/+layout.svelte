@@ -1,5 +1,5 @@
 <script>
-  import { hideControls } from "../game-controller/GameController.svelte"
+  import { hideControls } from "$lib/components/game-controller/GameController.svelte"
 
   let { children } = $props()
 
