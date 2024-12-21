@@ -74,6 +74,7 @@ export const walletStore = (() => {
 
   const connectWallet = async () => {
     await connect(wagmiConfig, {
+      chainId: networkConfig.chainId,
       connector: getPrimaryConnector(),
     })
 
