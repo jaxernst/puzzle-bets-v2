@@ -1,6 +1,6 @@
 import { browser, version } from "$app/environment"
 import { coinbaseWallet } from "@wagmi/connectors"
-import { injected, type CreateConnectorFn } from "@wagmi/core"
+import { injected, type Connector, type CreateConnectorFn } from "@wagmi/core"
 import { frameStore } from "./farcaster/frameStore.svelte"
 
 // TODO: Remove this (temporarily added for cbsw connector)
@@ -18,13 +18,20 @@ export const injectedConnector = injected()
  * This means we need to pull some tricks to import a export the frame
  * connector:
  *
- * The frameConnector is initially assigned with a dummy variable so it
+ * The frameConnector is initially assigned with a dummy connector so it
  * can be exported in the connectors array, but the assigment will be overwritten
  * with the real connector once the import resolves
  *
  * This may lead to race conditions but is currently the best solution I've found
  */
-let frameConnector: CreateConnectorFn = (() => null) as any
+let frameConnector: CreateConnectorFn = () =>
+  ({
+    // Returns a dummy 'getProvider' function because wagmi's 'reconnect'
+    // function will always try to call this immediately if included
+    // in the connectors array
+    getProvider: () => new Promise((_res, reject) => reject()),
+  }) as Connector
+
 if (browser) {
   import("./farcaster/farcasterFramesConnector").then(
     ({ frameConnector: createConnector }) => {

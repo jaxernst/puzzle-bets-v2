@@ -30,6 +30,7 @@
    * TODO:
    * - Add link previews + other seo improvements
    * - Add notifications (web push + farcaster frames)
+   * - Get frame reconnect working
    * - Fix confetti
    * - Add png characters to bgs
    */
