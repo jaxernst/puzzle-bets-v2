@@ -83,11 +83,8 @@ export const user = (() => {
   }
 
   walletStore.onAccountChange((account) => {
-    console.log("detected account change", account)
     const isTransient = account.isConnecting || account.isReconnecting
-
     if (account.address !== user.address && !isTransient) {
-      console.log("applying account change")
       handleAccountChange(account.address)
     }
   })
