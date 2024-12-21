@@ -1,15 +1,16 @@
 <script lang="ts">
+  import PuzzleBetsSmall from "$lib/svg-components/PuzzleBetsSmall.svelte"
+  import Avatar1 from "$lib/svg-components/Avatar1.svelte"
+  import Wallet from "$lib/icons/Wallet.svelte"
+  import Modal from "$lib/components/Modal.svelte"
+  import Edit from "$lib/icons/Edit.svelte"
+
   import { shortenAddress } from "$lib/util"
   import { page } from "$app/stores"
   import { user } from "$lib/userStore.svelte"
-  import PuzzleBetsSmall from "$lib/assets/PuzzleBetsSmall.svelte"
-  import Avatar1 from "$lib/assets/Avatar1.svelte"
-  import Wallet from "$lib/icons/Wallet.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import Modal from "$lib/components/Modal.svelte"
   import { walletStore } from "$lib/walletStore.svelte"
   import { toggleDisplayNameModal } from "./modals/DisplayNameModal.svelte"
-  import Edit from "$lib/icons/Edit.svelte"
 
   let showAccountModal = $state(false)
 </script>

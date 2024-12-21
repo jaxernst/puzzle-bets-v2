@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script module lang="ts">
   let showConfirmSubmit = $state(false)
   let showResults = $state(false)
 
@@ -14,8 +14,8 @@
 <script lang="ts">
   import { getPlayerOutcomes } from "$lib/gameQueries"
   import type { EvmAddress } from "$lib"
-  import Avatar1 from "$lib/assets/Avatar1.svelte"
-  import Avatar2 from "$lib/assets/Avatar2.svelte"
+  import Avatar1 from "$lib/svg-components/Avatar1.svelte"
+  import Avatar2 from "$lib/svg-components/Avatar2.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import Modal from "$lib/components/Modal.svelte"
   import LoadingButton from "$lib/components/LoadingButton.svelte"

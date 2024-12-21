@@ -1,9 +1,8 @@
 <script lang="ts">
-  import Avatar1 from "$lib/assets/Avatar1.svelte"
-  import Avatar2 from "$lib/assets/Avatar2.svelte"
+  import Avatar1 from "$lib/svg-components/Avatar1.svelte"
+  import Avatar2 from "$lib/svg-components/Avatar2.svelte"
   import { type EvmAddress } from "$lib/types"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
-  import { isAddress } from "viem"
   import { shortenAddress } from "$lib/util"
 
   let { opponent, pending } = $props<{

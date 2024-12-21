@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { GameStatus, type PlayerGame } from "$lib/types"
+  import Avatar1 from "$lib/svg-components/Avatar1.svelte"
+  import Avatar2 from "$lib/svg-components/Avatar2.svelte"
+  import Clock from "$lib/icons/Clock.svelte"
+
   import {
     entityToInt,
     formatTimeAbbr,
@@ -8,13 +11,9 @@
     formatSigFig,
     capitalized,
     timeRemaining,
-    systemTimestamp,
   } from "$lib/util"
+  import { GameStatus, type PlayerGame } from "$lib/types"
   import { getPlayerOutcomes } from "$lib/gameQueries"
-
-  import Avatar1 from "$lib/assets/Avatar1.svelte"
-  import Avatar2 from "$lib/assets/Avatar2.svelte"
-  import Clock from "$lib/icons/Clock.svelte"
   import { prices } from "$lib/prices.svelte"
   import { formatEther } from "viem"
 

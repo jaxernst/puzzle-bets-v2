@@ -1,11 +1,12 @@
 <script lang="ts">
+  import AnimatedArrow from "./AnimatedArrow.svelte"
+  import HandUp from "$lib/svg-components/HandUp.svelte"
+
   import { browser } from "$app/environment"
   import { onMount, type Snippet } from "svelte"
   import { cubicInOut, cubicOut } from "svelte/easing"
   import { fade, fly } from "svelte/transition"
   import { twMerge } from "tailwind-merge"
-  import AnimatedArrow from "./AnimatedArrow.svelte"
-  import HandUp from "$lib/assets/HandUp.svelte"
 
   let {
     show = $bindable(),

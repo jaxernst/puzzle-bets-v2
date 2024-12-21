@@ -1,7 +1,6 @@
 <script lang="ts">
+  import PuzzleBetsMoneyLogo from "$lib/svg-components/PuzzleBetsMoneyLogo.svelte"
   import { goto } from "$app/navigation"
-  import PuzzleBetsMoneyLogo from "$lib/assets/PuzzleBetsMoneyLogo.svelte"
-  import Modal from "$lib/components/Modal.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { user } from "$lib/userStore.svelte"
   import { toggleAboutModal } from "$lib/components/modals/AboutModal.svelte"
