@@ -21,6 +21,8 @@
     updateDisplayName,
   } from "$lib/displayNameStore.svelte"
   import { frameStore } from "$lib/farcaster/frameStore.svelte"
+  import type { FrameContext } from "@farcaster/frame-sdk"
+  import type { EvmAddress } from "$lib"
 
   /**
    * TODO:
@@ -37,20 +39,40 @@
     user.authenticated = $page.data.user
   }
 
+  // App can be run as a farcaster frame app, so we need to initialize the frame sdk if launched as a frame
   $effect(() => {
     if (!frameStore.initialized) {
       frameStore.init()
     }
   })
 
+  // When launched as a frame app, we can auto-set the user's display name to match their farcaster name
+  const maybeSetFarcasterName = async (
+    forUser: EvmAddress,
+    ctx: FrameContext,
+  ) => {
+    const fcName = ctx.user.displayName || ctx.user.username
+    const pbName = await displayNameStore.fetch(forUser)
+
+    if (!pbName && fcName) {
+      updateDisplayName(forUser, fcName)
+    }
+  }
+
+  $effect(() => {
+    if (frameStore.initialized && user.authenticated) {
+      maybeSetFarcasterName(user.authenticated, frameStore.context!)
+    }
+  })
+
+  // There is an issue where the mud network sync won't stop properly,
+  // so we reload the page when we identify a disconnect.
   let walletWasSet = false
   $effect(() => {
     if (walletStore.walletClient) {
       walletWasSet = true
     }
 
-    // There is an issue where the mud network sync won't stop properly,
-    // so we reload the page after as a workaround.
     if (walletWasSet && !walletStore.walletClient) {
       setTimeout(() => {
         window.location.reload()

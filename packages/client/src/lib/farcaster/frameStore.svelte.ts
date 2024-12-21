@@ -21,22 +21,15 @@ export const frameStore = (() => {
 
       sdk = (await import("@farcaster/frame-sdk")).sdk
       ctx = await sdk.context
+
       console.log("frame ctx:", ctx)
-
       if (!ctx) return
-
-      if (user.authenticated) {
-        const fcName = ctx.user.displayName || ctx.user.username
-        const pbName = await displayNameStore.fetch(user.authenticated)
-
-        if (!pbName && fcName) {
-          updateDisplayName(user.authenticated, fcName)
-        }
-      }
 
       await sdk.actions.ready()
       console.log("Frame launched!")
       initialized = true
+
+      return ctx
     },
 
     get actions() {

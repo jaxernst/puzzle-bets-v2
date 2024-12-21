@@ -13,6 +13,7 @@ import {
   reconnect,
   switchChain,
   watchAccount,
+  type CreateConnectorFn,
 } from "@wagmi/core"
 
 import { coinbaseWallet, metaMask } from "@wagmi/connectors"
@@ -33,14 +34,21 @@ const cbWalletConnector = coinbaseWallet({
   preference: "smartWalletOnly",
 })
 
-const getPrimaryConnector = async () => {
+let frameConnector: CreateConnectorFn
+if (browser) {
+  // Frame connector must be imported dynamically on client
+  import("./farcaster/farcasterFramesConnector").then(
+    ({ frameConnector: createConnector }) => {
+      frameConnector = createConnector()
+    },
+  )
+}
+
+const getPrimaryConnector = () => {
   if (!browser) throw new Error("Not in browser")
 
   if (frameStore.initialized) {
-    const { frameConnector } = await import(
-      "./farcaster/farcasterFramesConnector"
-    )
-    return frameConnector()
+    return frameConnector
   }
 
   return cbWalletConnector
@@ -52,6 +60,7 @@ export const walletStore = (() => {
   let wallet = $state<Wallet | undefined>()
   let connecting = $state(false)
 
+  // Burner account keys are not stored securely and should not be used to directlylhold funds
   const connectBurner = () => {
     const burnerAccount = createBurnerAccount(getBurnerPrivateKey())
     const walletClient = createWalletClient({
@@ -65,7 +74,7 @@ export const walletStore = (() => {
 
   const connectWallet = async () => {
     await connect(wagmiConfig, {
-      connector: await getPrimaryConnector(),
+      connector: getPrimaryConnector(),
     })
 
     const walletClient = await getWalletClient(wagmiConfig)
@@ -88,7 +97,7 @@ export const walletStore = (() => {
 
       try {
         if (networkConfig.chainId === 31337) {
-          return await connectBurner()
+          return connectBurner()
         } else {
           return await connectWallet()
         }
@@ -105,13 +114,13 @@ export const walletStore = (() => {
           return connectBurner()
         } else {
           const [account] = await reconnect(wagmiConfig, {
-            connectors: [await getPrimaryConnector()],
+            connectors: [getPrimaryConnector()],
           })
 
           if (account) {
             const walletClient = await getWalletClient(wagmiConfig)
-            wallet = walletClient
 
+            wallet = walletClient
             return walletClient
           }
         }

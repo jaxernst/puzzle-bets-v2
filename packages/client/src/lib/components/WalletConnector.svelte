@@ -91,8 +91,6 @@
       )
     }
   }
-
-  $inspect(walletStore.connecting)
 </script>
 
 <Modal bind:show={showModal} class="sm:w-[375px]">
