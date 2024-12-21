@@ -1,16 +1,22 @@
 <script lang="ts">
   import { twMerge } from "tailwind-merge"
 
-  let className = ""
-  export { className as class }
-  export let direction: "up" | "down" | "left" | "right"
+  const {
+    class: className,
+    direction,
+  }: {
+    class: string
+    direction: "up" | "down" | "left" | "right"
+  } = $props()
 
-  $: rotation = {
-    up: "rotate-90",
-    right: "rotate-180",
-    down: "-rotate-90",
-    left: "",
-  }[direction]
+  let rotation = $derived(
+    {
+      up: "rotate-90",
+      right: "rotate-180",
+      down: "-rotate-90",
+      left: "",
+    }[direction],
+  )
 </script>
 
 <svg
