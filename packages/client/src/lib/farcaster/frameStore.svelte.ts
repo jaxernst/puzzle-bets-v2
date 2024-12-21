@@ -1,8 +1,3 @@
-import {
-  displayNameStore,
-  updateDisplayName,
-} from "$lib/displayNameStore.svelte"
-import { user } from "$lib/userStore.svelte"
 import { browser } from "$app/environment"
 import type { FrameContext } from "@farcaster/frame-sdk"
 import type { FrameSDK } from "@farcaster/frame-sdk/dist/types"
