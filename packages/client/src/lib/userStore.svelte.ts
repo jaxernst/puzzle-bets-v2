@@ -5,40 +5,13 @@ import { publicClient, type Wallet } from "./mud/setupNetwork"
 import { displayNameStore } from "./displayNameStore.svelte"
 import { prices } from "./prices.svelte"
 import { formatAsDollar, formatSigFig } from "./util"
+import { walletStore } from "./walletStore.svelte"
 
 const initialState = {
   address: undefined,
   authenticated: undefined,
   balance: 0n,
   balanceFetched: false,
-}
-
-const makeBalanceSync = (setBalance: (balance: bigint) => any) => {
-  let started = false
-  let syncInterval: NodeJS.Timeout | null = null
-
-  async function updateBalance(address: EvmAddress) {
-    const balance = await publicClient.getBalance({ address })
-    setBalance(balance)
-  }
-
-  return {
-    start: async (address: EvmAddress, interval = 4000) => {
-      if (started) return
-      started = true
-
-      updateBalance(address)
-
-      syncInterval = setInterval(() => {
-        updateBalance(address)
-      }, interval)
-    },
-
-    stop: () => {
-      if (syncInterval) clearInterval(syncInterval)
-      started = false
-    },
-  }
 }
 
 export const user = (() => {
@@ -109,6 +82,16 @@ export const user = (() => {
     }
   }
 
+  walletStore.onAccountChange((account) => {
+    console.log("detected account change", account)
+    const isTransient = account.isConnecting || account.isReconnecting
+
+    if (account.address !== user.address && !isTransient) {
+      console.log("applying account change")
+      handleAccountChange(account.address)
+    }
+  })
+
   return {
     get address() {
       return userState.address
@@ -137,9 +120,33 @@ export const user = (() => {
     },
 
     authenticate,
-
-    changeAccount: async ({ address }: { address: EvmAddress | undefined }) => {
-      await handleAccountChange(address)
-    },
   }
 })()
+
+function makeBalanceSync(setBalance: (balance: bigint) => any) {
+  let started = false
+  let syncInterval: NodeJS.Timeout | null = null
+
+  async function updateBalance(address: EvmAddress) {
+    const balance = await publicClient.getBalance({ address })
+    setBalance(balance)
+  }
+
+  return {
+    start: async (address: EvmAddress, interval = 4000) => {
+      if (started) return
+      started = true
+
+      updateBalance(address)
+
+      syncInterval = setInterval(() => {
+        updateBalance(address)
+      }, interval)
+    },
+
+    stop: () => {
+      if (syncInterval) clearInterval(syncInterval)
+      started = false
+    },
+  }
+}
