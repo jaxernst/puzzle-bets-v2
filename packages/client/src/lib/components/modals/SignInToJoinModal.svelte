@@ -1,5 +1,12 @@
 <script>
+  import Modal from "../Modal.svelte"
+  import Stars from "$lib/icons/Stars.svelte"
+  import { capitalized } from "$lib/util"
+  import { promptConnectWallet } from "../WalletConnector.svelte"
+
   const { show } = $props()
+
+  const puzzleType = "wordle"
 </script>
 
 <Modal {show} class="sm:w-[375px]" onClose={() => (showNoUser = true)}>

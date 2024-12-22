@@ -30,9 +30,14 @@
    * - Add notifications (web push + farcaster frames)
    * - Get frame reconnect working
    * - Get frame to render at dashboard, create game, and join game pages
+   * - FIx invite link not copying after creating a private game
    * - Fix leaderboard
    * - Fix confetti
    * - Add png characters to bgs
+   *
+   * - getOrCreateGame cache issue is still present, where you can switch your wallet and get the solution from your opponent.
+   *    i think this happens because after switching wallet, the backend will still serve with the cache key from
+   *    the previous wallet. Maybe this could be fixed my forcing a logout when the wallet switches
    */
 
   let { children } = $props()

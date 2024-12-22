@@ -227,6 +227,7 @@
             name="key"
             value="backspace"
             class="flex items-center justify-center"
+            aria-label="go back"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
