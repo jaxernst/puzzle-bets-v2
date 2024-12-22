@@ -1,13 +1,15 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import Modal from "./Modal.svelte"
+  import WalletIcon from "$lib/icons/Wallet.svelte"
+  import DotLoader from "./DotLoader.svelte"
+
   import { walletStore } from "$lib/walletStore.svelte"
   import { shortenAddress } from "$lib/util"
-  import Modal from "./Modal.svelte"
   import type { Wallet } from "$lib/mud/setupNetwork"
-  import WalletIcon from "$lib/icons/Wallet.svelte"
   import { user } from "$lib/userStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import { toastError } from "$lib/toast"
-  import DotLoader from "./DotLoader.svelte"
+  import { frameStore } from "$lib/farcaster/frameStore.svelte"
 
   let showModal = $state(false)
 
@@ -60,7 +62,10 @@
   // Autoconnect
   let autoconnectAttempted = false
   $effect(() => {
-    if (autoconnect && !user.address && !autoconnectAttempted) {
+    const triedFrameStoreInit = frameStore.initialized || frameStore.unavailable
+    const shouldAutoconnect = autoconnect && !autoconnectAttempted
+
+    if (!user.address && shouldAutoconnect && triedFrameStoreInit) {
       autoConnectWallet().finally(() => {
         autoconnectAttempted = true
       })

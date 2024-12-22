@@ -2,6 +2,7 @@ import { browser, version } from "$app/environment"
 import { coinbaseWallet } from "@wagmi/connectors"
 import { injected, type Connector, type CreateConnectorFn } from "@wagmi/core"
 import { frameStore } from "./farcaster/frameStore.svelte"
+import { inkSepolia } from "viem/chains"
 
 // TODO: Remove this (temporarily added for cbsw connector)
 if (browser) window.process = { env: {}, version } as any
@@ -24,14 +25,7 @@ export const injectedConnector = injected()
  *
  * This may lead to race conditions but is currently the best solution I've found
  */
-let frameConnector: CreateConnectorFn = () =>
-  ({
-    // Returns a dummy 'getProvider' function because wagmi's 'reconnect'
-    // function will always try to call this immediately if included
-    // in the connectors array
-    getProvider: () => new Promise((_res, reject) => reject()),
-  }) as Connector
-
+let frameConnector: CreateConnectorFn
 if (browser) {
   import("./farcaster/farcasterFramesConnector").then(
     ({ frameConnector: createConnector }) => {
@@ -40,11 +34,13 @@ if (browser) {
   )
 }
 
-export const connectors = [
-  cbWalletConnector,
-  injectedConnector,
-  frameConnector,
-] as const
+export const getConnectors = (): Array<Connector | CreateConnectorFn> => {
+  if (frameStore.initialized && browser) {
+    return [frameConnector]
+  }
+
+  return [injectedConnector, cbWalletConnector]
+}
 
 export function getDefaultConnector() {
   if (!browser) throw new Error("Not in browser")
@@ -52,5 +48,5 @@ export function getDefaultConnector() {
     return frameConnector
   }
 
-  return injected()
+  return injectedConnector
 }

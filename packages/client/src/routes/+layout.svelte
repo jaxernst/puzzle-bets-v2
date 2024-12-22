@@ -9,14 +9,12 @@
   import DripGameModal from "$lib/components/modals/DripGameModal.svelte"
   import DisplayNameModal from "$lib/components/modals/DisplayNameModal.svelte"
   import AddFrameModal from "$lib/components/modals/AddFrameModal.svelte"
-  import AboutModal, {
-    toggleAboutModal,
-  } from "$lib/components/modals/AboutModal.svelte"
+  import AboutModal from "$lib/components/modals/AboutModal.svelte"
 
   import { walletStore } from "$lib/walletStore.svelte"
   import { page } from "$app/stores"
   import { slide } from "svelte/transition"
-  import { SvelteToast, toast } from "@zerodevx/svelte-toast"
+  import { SvelteToast } from "@zerodevx/svelte-toast"
   import { user } from "$lib/userStore.svelte"
   import {
     displayNameStore,
@@ -31,6 +29,8 @@
    * - Add link previews + other seo improvements
    * - Add notifications (web push + farcaster frames)
    * - Get frame reconnect working
+   * - Get frame to render at dashboard, create game, and join game pages
+   * - Fix leaderboard
    * - Fix confetti
    * - Add png characters to bgs
    */

@@ -6,25 +6,31 @@ export const frameStore = (() => {
   let sdk = $state<FrameSDK | null>(null)
   let ctx = $state<FrameContext | null>(null)
   let initialized = $state(false)
+  let unavailable = $state(false)
 
   return {
     /**
      * Initialize the frame sdk and set the user's display name to match their farcaster name (if not already set)
      */
     init: async () => {
-      if (!browser) return
-
       sdk = (await import("@farcaster/frame-sdk")).sdk
+
       ctx = await sdk.context
+      if (!ctx) {
+        unavailable = true
+        return
+      }
 
+      sdk.actions.ready()
       console.log("frame ctx:", ctx)
-      if (!ctx) return
-
-      await sdk.actions.ready()
       console.log("Frame launched!")
       initialized = true
 
       return ctx
+    },
+
+    get unavailable() {
+      return unavailable
     },
 
     get actions() {

@@ -14,7 +14,7 @@ import {
   type CreateConnectorFn,
   type GetAccountReturnType,
 } from "@wagmi/core"
-import { connectors, getDefaultConnector } from "./walletConnectors"
+import { getConnectors, getDefaultConnector } from "./walletConnectors"
 
 export type WagmiConfig = typeof wagmiConfig
 
@@ -71,7 +71,10 @@ function makeWalletStore(wagmiConfig: WagmiConfig) {
       connecting = true
 
       try {
-        const [account] = await reconnect(wagmiConfig, { connectors })
+        console.log(getConnectors())
+        const [account] = await reconnect(wagmiConfig, {
+          connectors: getConnectors(),
+        })
 
         if (account) {
           const walletClient = await getWalletClient(wagmiConfig)
