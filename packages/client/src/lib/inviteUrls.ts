@@ -1,6 +1,7 @@
 import { get, writable } from "svelte/store"
 import type { PuzzleType } from "./types"
 import { toast } from "@zerodevx/svelte-toast"
+import { toastError } from "./toast"
 
 interface InviteUrlParams {
   puzzleType: PuzzleType
@@ -52,6 +53,7 @@ export const gameInviteUrls = (() => {
   const getOrLoadInviteUrl = (gameId: number): string | null => {
     const loadedUrl = get(urls)[gameId]
     if (loadedUrl) return loadedUrl
+
     return localStorage.getItem(`gameInviteUrl-${gameId}`)
   }
 
@@ -77,10 +79,12 @@ export const gameInviteUrls = (() => {
 
     copyForGame: (gameId: number) => {
       const url = getOrLoadInviteUrl(gameId)
-      if (url) {
-        toast.push(
+
+      if (!url) {
+        toastError(
           "No invite link found. Please create a new game to generate a new link.",
         )
+        return
       }
 
       navigator.clipboard.writeText(url)

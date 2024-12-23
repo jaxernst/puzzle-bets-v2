@@ -63,7 +63,7 @@
   }
 
   let createGameLoading = $state(false)
-  let createdGameId = $derived.by(() => {
+  let createdGameId: Entity | undefined = $derived.by(() => {
     if (!showCreated || !mud.components) return
 
     const entities = runQuery([
@@ -125,6 +125,10 @@
     }
 
     createGameLoading = false
+  }
+
+  const copyInviteLink = () => {
+    gameInviteUrls.copyForGame(Number(entityToInt(createdGameId)))
   }
 </script>
 
@@ -457,8 +461,7 @@
         {:else}
           <button
             class="flex items-center justify-center gap-2 rounded-md border-2 border-black bg-black py-2 text-white"
-            onclick={() =>
-              gameInviteUrls.copyForGame(entityToInt(createdGameId))}
+            onclick={copyInviteLink}
           >
             Copy Invite Link
             <Link />
