@@ -27,17 +27,22 @@
   /**
    * TODO:
    * - Add link previews + other seo improvements
-   * - Add notifications (web push + farcaster frames)
-   * - Get frame reconnect working
+   * - Fix invite link not copying after creating a private game
    * - Get frame to render at dashboard, create game, and join game pages
-   * - FIx invite link not copying after creating a private game
+   * - Add notifications (web push + farcaster frames)
    * - Fix leaderboard
+   * - Set frame to add to the dashboard url
    * - Fix confetti
    * - Add png characters to bgs
    *
    * - getOrCreateGame cache issue is still present, where you can switch your wallet and get the solution from your opponent.
    *    i think this happens because after switching wallet, the backend will still serve with the cache key from
    *    the previous wallet. Maybe this could be fixed my forcing a logout when the wallet switches
+   *
+   * - On 'liveGame' the 'back' button should include all the top left text
+   * - popup window stil fails to open on mobile
+   * - Should stop the user from creating a game with 0 balance
+   * - It is weird/inconvenient to newcomers when you need a wallet popup for every action
    */
 
   let { children } = $props()
