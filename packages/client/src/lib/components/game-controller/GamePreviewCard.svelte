@@ -15,7 +15,8 @@
   import { GameStatus, type PlayerGame } from "$lib/types"
   import { getPlayerOutcomes } from "$lib/gameQueries"
   import { prices } from "$lib/prices.svelte"
-  import { formatEther } from "viem"
+  import { formatEther, isAddress } from "viem"
+  import { displayNameStore } from "$lib/displayNameStore.svelte"
 
   let { game } = $props<{ game: PlayerGame }>()
 
@@ -23,6 +24,14 @@
   let buyInEth = $derived(Number(formatEther(game.buyInAmount)))
   let buyInUsd = $derived(formatAsDollar(buyInEth * prices.eth))
   let outcomes = $derived(getPlayerOutcomes(game))
+
+  let opponentDisplay = $derived.by(() => {
+    if (!game.opponent) return "Pending"
+
+    const nameOrAddr = displayNameStore.get(game.opponent)
+    if (isAddress(nameOrAddr!)) return shortenAddress(nameOrAddr)
+    return nameOrAddr
+  })
 
   let inviteTimeLeft = $derived(
     game.status === GameStatus.Pending
@@ -140,7 +149,9 @@
 
       <div class="flex items-center gap-1">
         <Avatar2 />
-        <div>{game.opponent ? shortenAddress(game.opponent) : "Pending"}</div>
+        <div>
+          {opponentDisplay}
+        </div>
       </div>
     </div>
 

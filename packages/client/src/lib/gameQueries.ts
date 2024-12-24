@@ -46,7 +46,7 @@ export function getPlayerGames(
     }),
   ])
 
-  return Array.from([...p1Games, ...p2Games]).map((gameId) => {
+  return Array.from(new Set([...p1Games, ...p2Games])).map((gameId) => {
     const game = gameIdToGame(gameId, c)
 
     return {
