@@ -6,8 +6,6 @@ export const displayNameStore = (() => {
   const pendingFetches = new Set<EvmAddress>()
 
   const fetchName = async (user: EvmAddress) => {
-    if (pendingFetches.has(user)) return
-
     try {
       const response = await fetch(`/api/display-name/${user}`)
       if (!response.ok) throw new Error("Failed to fetch display name")
