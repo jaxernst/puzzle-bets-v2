@@ -22,6 +22,10 @@ export const displayNameStore = (() => {
   }
 
   return {
+    get all() {
+      return store
+    },
+
     get: (user: EvmAddress, fallback: boolean = true) => {
       const name = store.get(user)
       if (name) return name
@@ -35,8 +39,12 @@ export const displayNameStore = (() => {
 
       return fallback ? user : undefined
     },
-    set: (user: EvmAddress, displayName: string) => {
-      store.set(user, displayName)
+    set: (user: EvmAddress, displayName: string | undefined) => {
+      if (displayName === undefined) {
+        store.delete(user)
+      } else {
+        store.set(user, displayName)
+      }
     },
 
     fetch: fetchName,
@@ -59,8 +67,7 @@ export async function updateDisplayName(
 
     const data = await response.json()
 
-    displayNameStore.set(user, data.displayName ?? undefined)
-    console.log("Display name set:", data.displayName)
+    displayNameStore.set(user, displayName ?? undefined)
     return data.displayName as string
   } catch (error) {
     console.error("Error setting display name:", error)
