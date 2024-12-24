@@ -48,5 +48,5 @@ export function getDefaultConnector() {
     return frameConnector
   }
 
-  return injectedConnector
+  return cbWalletConnector
 }
