@@ -128,7 +128,9 @@ function makeWalletStore(wagmiConfig: WagmiConfig) {
       connecting = true
 
       try {
-        const [account] = await reconnect(wagmiConfig)
+        const [account] = await reconnect(wagmiConfig, {
+          connectors: getConnectors(),
+        })
 
         if (account) {
           const walletClient = await getWalletClient(wagmiConfig)
