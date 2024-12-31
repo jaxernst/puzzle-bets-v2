@@ -37,6 +37,8 @@
   "dependencies": {
     "@farcaster/frame-sdk": "^0.0.20",
     "@neoconfetti/svelte": "^1.0.0",
+    "@reown/appkit": "^1.6.3",
+    "@reown/appkit-adapter-wagmi": "^1.6.3",
     "@supabase/supabase-js": "^2.47.8",
     "@types/jsonwebtoken": "^9.0.7",
     "@wagmi/connectors": "^5.7.0",

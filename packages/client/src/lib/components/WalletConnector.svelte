@@ -133,7 +133,7 @@
       {#if walletStore.connecting}
         <DotLoader class="fill-white" />
       {:else}
-        Connect
+        Continue
       {/if}
     </button>
   {:else if user.authenticated !== user.address}

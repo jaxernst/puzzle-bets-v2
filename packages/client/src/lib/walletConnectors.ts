@@ -34,6 +34,11 @@ if (browser) {
   )
 }
 
+export const getFrameConnector = () => {
+  if (!browser || !frameConnector) throw new Error("Not in frame environment")
+  return frameConnector
+}
+
 export const getConnectors = (): Array<Connector | CreateConnectorFn> => {
   if (frameStore.initialized && browser) {
     return [frameConnector]
