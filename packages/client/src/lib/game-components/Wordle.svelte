@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
   // Answers array: max length 6 with each string containing the response to a worlde guess
   // "x" = correct letter in correct position
   // "c" = correct letter in wrong position
