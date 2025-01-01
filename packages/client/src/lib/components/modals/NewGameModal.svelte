@@ -127,8 +127,14 @@
     createGameLoading = false
   }
 
+  let showInviteCopied = $state(false)
+
   const copyInviteLink = () => {
     gameInviteUrls.copyForGame(Number(entityToInt(createdGameId)))
+    showInviteCopied = true
+    setTimeout(() => {
+      showInviteCopied = false
+    }, 2000)
   }
 </script>
 
@@ -463,8 +469,12 @@
             class="flex items-center justify-center gap-2 rounded-md border-2 border-black bg-black py-2 text-white"
             onclick={copyInviteLink}
           >
-            Copy Invite Link
-            <Link />
+            {#if showInviteCopied}
+              Invite Copied!
+            {:else}
+              Copy Invite Link
+              <Link />
+            {/if}
           </button>
           <button
             class="rounded-md border-2 border-black py-2"
