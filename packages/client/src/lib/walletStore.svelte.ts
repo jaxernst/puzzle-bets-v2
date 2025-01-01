@@ -1,6 +1,6 @@
 import { networkConfig } from "./mud/networkConfig"
 import { type Wallet } from "./mud/setupNetwork"
-import { getConnectors, getFrameConnector } from "./walletConnectors"
+import { getDefaultConnector, getFrameConnector } from "./walletConnectors"
 import {
   connect,
   disconnect,
@@ -21,6 +21,13 @@ import { frameStore } from "./farcaster/frameStore.svelte"
 // Wallet connect modal config
 const projectId = "226a30717601f2bb0c6782d18597f828"
 
+const metadata = {
+  name: "Puzzle Bets",
+  description: "Play wagered puzzle games with your friends.",
+  url: "https://beta.puzzlebets.xyz",
+  icons: ["https://beta.puzzlebets.xyz/favicon.ico"],
+}
+
 const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks: [networkConfig.chain],
@@ -28,13 +35,6 @@ const wagmiAdapter = new WagmiAdapter({
     [networkConfig.chainId]: fallback([webSocket(), http()]),
   },
 })
-
-const metadata = {
-  name: "Puzzle Bets",
-  description: "Play wagered puzzle games with your friends.",
-  url: "https://beta.puzzlebets.xyz",
-  icons: ["https://beta.puzzlebets.xyz/favicon.ico"],
-}
 
 const modal = createAppKit({
   adapters: [wagmiAdapter],
@@ -131,7 +131,10 @@ function makeWalletStore(wagmiConfig: WagmiConfig) {
 
       try {
         const [account] = await reconnect(wagmiConfig, {
-          connectors: getConnectors(),
+          connectors: [
+            ...wagmiAdapter.wagmiConfig.connectors,
+            getDefaultConnector(),
+          ],
         })
 
         if (account) {
