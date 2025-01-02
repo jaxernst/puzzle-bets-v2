@@ -8,4 +8,23 @@
   <meta property="og:title" content={title} />
   <meta name="description" content={description} />
   <meta property="og:description" content={description} />
+
+  <meta
+    name="fc:frame"
+    content={JSON.stringify({
+      version: "next",
+      imageUrl: `https://puzzlebets.xyz/join-wordle-splash.png`,
+      button: {
+        title: { title },
+        action: {
+          type: "launch_frame",
+          name: "launch",
+          url: "https://beta.puzzlebets.xyz",
+          iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
+          splashImageUrl: `https://puzzlebets.xyz/character1.png`,
+          splashBackgroundColor: "#FFC700",
+        },
+      },
+    })}
+  />
 </svelte:head>

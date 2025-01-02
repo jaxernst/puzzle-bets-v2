@@ -13,34 +13,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>Puzzle Bets - Competitive Wordle Matches</title>
-
-  <meta
-    name="description"
-    content="Play competitive Wordle matches with friends"
-  />
-
-  <meta
-    name="fc:frame"
-    content={JSON.stringify({
-      version: "next",
-      imageUrl: `https://puzzlebets.xyz/home-splash-landscape.png`,
-      button: {
-        title: "Launch",
-        action: {
-          type: "launch_frame",
-          name: "launch",
-          url: "https://beta.puzzlebets.xyz",
-          iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
-          splashImageUrl: `https://puzzlebets.xyz/character1.png`,
-          splashBackgroundColor: "#FFC700",
-        },
-      },
-    })}
-  />
-</svelte:head>
-
 <img
   class="absolute left-1/2 top-1/4 hidden h-[306px] w-[293px] -translate-x-[480px] sm:block"
   src="/character2.png"
