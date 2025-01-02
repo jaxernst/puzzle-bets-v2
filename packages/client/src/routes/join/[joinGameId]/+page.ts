@@ -27,5 +27,6 @@ export async function load({ url }) {
   return {
     description,
     title,
+    usdValue,
   }
 }

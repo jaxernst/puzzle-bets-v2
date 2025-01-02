@@ -2,7 +2,7 @@
   import { page } from "$app/state"
 
   export let data
-  let { description, title } = data
+  let { description, title, usdValue } = data
 </script>
 
 <svelte:head>
@@ -17,7 +17,7 @@
       version: "next",
       imageUrl: `https://puzzlebets.xyz/join-wordle-splash.png`,
       button: {
-        title,
+        title: `Join ${usdValue} Wordle Game`,
         action: {
           type: "launch_frame",
           name: "launch",
