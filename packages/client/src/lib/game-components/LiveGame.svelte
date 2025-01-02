@@ -101,7 +101,9 @@
     if (typeof navigator === "undefined" || !navigator.clipboard) return
 
     try {
-      await navigator.clipboard.writeText(exportWordleBoard(gameId, board))
+      await navigator.clipboard.writeText(
+        exportWordleBoard(entityToInt(gameId), board),
+      )
       copied = true
       setTimeout(() => (copied = false), 1800)
     } catch (err) {
