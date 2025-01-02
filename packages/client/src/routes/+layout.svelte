@@ -101,29 +101,31 @@
 
 <!-- prettier-ignore -->
 <svelte:head>
-  <title>Puzzle Bets - Compete with friends</title>
-  <meta property="og:title" content="Puzzle Bets - Compete with friends" />
-  <meta name="description" content="Play wagered Wordle matches with friends" />
-  <meta property="og:description" content="Play wagered Wordle matches with friends" />
+  {#if !$page.url.pathname.includes("join")}
+    <title>Puzzle Bets - Compete with friends</title>
+    <meta property="og:title" content="Puzzle Bets - Compete with friends" />
+    <meta name="description" content="Play wagered Wordle matches with friends" />
+    <meta property="og:description" content="Play wagered Wordle matches with friends" />
 
-  <meta
-    name="fc:frame"
-    content={JSON.stringify({
-      version: "next",
-      imageUrl: `https://puzzlebets.xyz/home-splash-landscape.png`,
-      button: {
-        title: "Launch",
-        action: {
-          type: "launch_frame",
-          name: "launch",
-          url: "https://beta.puzzlebets.xyz",
-          iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
-          splashImageUrl: `https://puzzlebets.xyz/character1.png`,
-          splashBackgroundColor: "#FFC700",
+    <meta
+      name="fc:frame"
+      content={JSON.stringify({
+        version: "next",
+        imageUrl: `https://puzzlebets.xyz/home-splash-landscape.png`,
+        button: {
+          title: "Launch",
+          action: {
+            type: "launch_frame",
+            name: "launch",
+            url: "https://beta.puzzlebets.xyz",
+            iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
+            splashImageUrl: `https://puzzlebets.xyz/character1.png`,
+            splashBackgroundColor: "#FFC700",
+          },
         },
-      },
-    })}
-  />
+      })}
+    />
+  {/if}
 </svelte:head>
 
 <Confetti />
