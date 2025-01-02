@@ -26,16 +26,12 @@
 
   /**
    * TODO:
-   * - Add link prev + other seo improvementsiews
-        - Make default 'puzzle bets .xyz preview look good' (This can be the default for all routes and overwritten on a per route basis)
-        - Add 'x player challenged you to a wordle game' to 'join' routes
-
-   * - Get frame to render at dashboard, create game, and join game pages
-   * - Add notifications (web push + farcaster frames)
    * - Fix leaderboard
+   * - Add notifications (web push + farcaster frames)
    * - Set frame to add to the dashboard url
    * - Fix confetti
    * - Add png characters to bgs
+   * - Try 'add frame' modal again
    *
    * - getOrCreateGame cache issue is still present, where you can switch your wallet and get the solution from your opponent.
    *    i think this happens because after switching wallet, the backend will still serve with the cache key from
@@ -134,7 +130,6 @@
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
-<AddFrameModal />
 
 <div class="text-base leading-snug">
   <SvelteToast />
