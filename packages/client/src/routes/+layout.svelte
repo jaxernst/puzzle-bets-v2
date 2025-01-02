@@ -12,7 +12,7 @@
   import AboutModal from "$lib/components/modals/AboutModal.svelte"
 
   import { walletStore } from "$lib/walletStore.svelte"
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
   import { slide } from "svelte/transition"
   import { SvelteToast } from "@zerodevx/svelte-toast"
   import { user } from "$lib/userStore.svelte"
@@ -49,9 +49,9 @@
 
   let { children } = $props()
 
-  console.log("pre-auth address:", $page.data.user)
-  if (!user.authenticated && $page.data.user) {
-    user.authenticated = $page.data.user
+  console.log("pre-auth address:", page.data.user)
+  if (!user.authenticated && page.data.user) {
+    user.authenticated = page.data.user
   }
 
   // App can be run as a farcaster frame app, so we need to initialize the frame sdk if launched as a frame
@@ -95,13 +95,13 @@
     }
   })
 
-  let isHomePage = $derived($page.url.pathname === "/")
-  let isGamePath = $derived($page.url.pathname.startsWith("/game"))
+  let isHomePage = $derived(page.url.pathname === "/")
+  let isGamePath = $derived(page.url.pathname.startsWith("/game"))
 </script>
 
 <!-- prettier-ignore -->
 <svelte:head>
-  {#if !$page.url.pathname.includes("join")}
+  {#if !page.url.pathname.includes("join")}
     <title>Puzzle Bets - Compete with friends</title>
     <meta property="og:title" content="Puzzle Bets - Compete with friends" />
     <meta name="description" content="Play wagered Wordle matches with friends" />
@@ -117,7 +117,7 @@
           action: {
             type: "launch_frame",
             name: "launch",
-            url: "https://beta.puzzlebets.xyz",
+            url: page.url.href,
             iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
             splashImageUrl: `https://puzzlebets.xyz/character1.png`,
             splashBackgroundColor: "#FFC700",
