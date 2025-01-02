@@ -48,7 +48,10 @@
 {/snippet}
 
 {#snippet returnHomeButton()}
-  <a href="/" class="rounded bg-black p-2 text-center font-bold text-white">
+  <a
+    href="/dashboard"
+    class="rounded bg-black p-2 text-center font-bold text-white"
+  >
     Return Home
   </a>
 {/snippet}
