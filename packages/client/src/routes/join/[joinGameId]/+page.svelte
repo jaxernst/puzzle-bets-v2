@@ -1,4 +1,6 @@
 <script>
+  import { page } from "$app/state"
+
   export let data
   let { description, title } = data
 </script>
@@ -15,11 +17,11 @@
       version: "next",
       imageUrl: `https://puzzlebets.xyz/join-wordle-splash.png`,
       button: {
-        title: { title },
+        title,
         action: {
           type: "launch_frame",
           name: "launch",
-          url: "https://beta.puzzlebets.xyz",
+          url: page.url.href,
           iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
           splashImageUrl: `https://puzzlebets.xyz/character1.png`,
           splashBackgroundColor: "#FFC700",
