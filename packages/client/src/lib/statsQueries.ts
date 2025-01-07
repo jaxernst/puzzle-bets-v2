@@ -14,7 +14,6 @@ export function getPlayerStats(
   if (!player || !mud.synced || !mud.components) return null
 
   const playerGames = getPlayerGames(player, mud)
-  const activeGames = getActivePlayerGames(player, _mud)
 
   const gameStats = playerGames.reduce(
     (stats, game) => {
@@ -46,6 +45,7 @@ export function getPlayerStats(
     },
   )
 
+  const activeGames = getActivePlayerGames(player, _mud)
   const activeWagerAmount = activeGames.reduce(
     (total, game) => total + game.buyInAmount,
     0n,
@@ -64,12 +64,11 @@ export function getLeaderboard(_mud: typeof mud) {
 
   const allPlayers = new Set<EvmAddress>()
 
-  // Get all players who have participated in games
-  const p1Games = runQuery([
+  const allCompletedGames = runQuery([
     HasValue(components.GameStatus, { value: GameStatus.Complete }),
   ])
 
-  p1Games.forEach((gameId) => {
+  allCompletedGames.forEach((gameId) => {
     const p1 = getComponentValueStrict(components.Player1, gameId).value
     const p2 = getComponentValueStrict(components.Player2, gameId).value
     allPlayers.add(p1 as EvmAddress)
