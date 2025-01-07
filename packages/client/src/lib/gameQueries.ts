@@ -1,5 +1,4 @@
 import { mud } from "./mudStore.svelte"
-import { user } from "./userStore.svelte"
 import {
   Has,
   HasValue,
@@ -32,7 +31,7 @@ export function getPlayerGames(
 
   const p1Games = runQuery([
     Has(c.GameStatus),
-    HasValue(c.Player1, { value: user.address }),
+    HasValue(c.Player1, { value: player }),
     HasValue(c.PuzzleMasterEoa, {
       value: PUBLIC_PUZZLE_MASTER_ADDRESS,
     }),
@@ -40,7 +39,7 @@ export function getPlayerGames(
 
   const p2Games = runQuery([
     Has(c.GameStatus),
-    HasValue(c.Player2, { value: user.address }),
+    HasValue(c.Player2, { value: player }),
     HasValue(c.PuzzleMasterEoa, {
       value: PUBLIC_PUZZLE_MASTER_ADDRESS,
     }),
