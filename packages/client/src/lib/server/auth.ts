@@ -2,7 +2,7 @@ import { JWT_SECRET } from "$env/static/private"
 import jwt from "jsonwebtoken"
 
 export function createSessionToken(user: string) {
-  const expiresIn = "1h" // Token expires in 1 hour
+  const expiresIn = "30d"
   const payload = {
     user,
     iat: Math.floor(Date.now() / 1000), // Issued at timestamp
