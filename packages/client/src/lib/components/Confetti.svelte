@@ -34,12 +34,12 @@
 {#key $trigger}
   {#if $trigger}
     <div
-      style="position: absolute; left: 50%; top: 30%"
+      style="position: fixed; left: 50%; top: 30%"
       use:confetti={{
-        particleCount: $prefersReducedMotion ? 0 : undefined,
+        particleCount: $prefersReducedMotion ? 0 : 120,
         force: 0.7,
-        stageWidth: $stageWidth, // Use $ to access store value
-        stageHeight: $stageHeight, // Use $ to access store value
+        stageWidth: $stageWidth / 1.5,
+        stageHeight: $stageHeight,
         colors: ["#EACB28", "#E2E4F4", "#FEECC8", "#2FB163"],
       }}
     ></div>
