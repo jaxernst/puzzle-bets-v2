@@ -184,8 +184,8 @@
 
   <OpponentDisplay {opponent} pending={game.status === GameStatus.Pending} />
 
-  <div class="px-2 sm:px-0">
-    {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
+  {#if game.status === GameStatus.Pending && timers.inviteTimeLeft !== -1}
+    <div class="px-2 sm:px-0">
       <div
         class="flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
       >
@@ -229,7 +229,9 @@
           {/if}
         </div>
       </div>
-    {:else if awaitingTurnStart}
+    </div>
+  {:else if awaitingTurnStart}
+    <div class="px-2 sm:px-0">
       <div
         class="flex min-h-72 w-full max-w-[560px] flex-col items-center justify-evenly gap-6 rounded-xl border-2 border-black p-4 text-center text-base"
       >
@@ -259,54 +261,54 @@
           </LoadingButton>
         {/if}
       </div>
-    {:else if puzzleState}
-      <Wordle
-        {...puzzleState}
-        paused={Boolean(
-          gameOver || submitted || game?.status !== GameStatus.Active,
-        )}
-        onSubmitGuess={enterGuess}
-        onGameOver={() => {}}
-      />
+    </div>
+  {:else if puzzleState}
+    <Wordle
+      {...puzzleState}
+      paused={Boolean(
+        gameOver || submitted || game?.status !== GameStatus.Active,
+      )}
+      onSubmitGuess={enterGuess}
+      onGameOver={() => {}}
+    />
 
-      {#if puzzleState.solved && !submitted && !expired}
-        <div class="w-full text-center">
-          Submit your solution before the deadline
-        </div>
-      {/if}
-
-      {#if puzzleState.solved || puzzleState.lost}
-        <div class="flex w-full justify-center">
-          <button
-            class="bg-pb-yellow rounded-md border-2 border-black px-2 py-1 font-semibold text-black"
-            onclick={() => copyBoard(puzzleState?.answers ?? [])}
-          >
-            {#if copied}
-              <div
-                in:slide={{ axis: "x", easing: cubicOut }}
-                class="whitespace-nowrap"
-              >
-                Copied
-              </div>
-            {:else}
-              <div
-                in:slide={{ axis: "x", easing: cubicOut }}
-                class="whitespace-nowrap"
-              >
-                Share Board
-              </div>
-            {/if}
-          </button>
-        </div>
-      {/if}
-    {:else if game.status === GameStatus.Inactive}
-      <p class="py-4 font-bold">Game Canceled</p>
-    {:else if !puzzleState}
-      <div class="flex h-[200px] items-center justify-center self-center">
-        <DotLoader class="h-10 w-10 fill-black" />
+    {#if puzzleState.solved && !submitted && !expired}
+      <div class="w-full text-center">
+        Submit your solution before the deadline
       </div>
     {/if}
-  </div>
+
+    {#if puzzleState.solved || puzzleState.lost}
+      <div class="flex w-full justify-center">
+        <button
+          class="bg-pb-yellow rounded-md border-2 border-black px-2 py-1 font-semibold text-black"
+          onclick={() => copyBoard(puzzleState?.answers ?? [])}
+        >
+          {#if copied}
+            <div
+              in:slide={{ axis: "x", easing: cubicOut }}
+              class="whitespace-nowrap"
+            >
+              Copied
+            </div>
+          {:else}
+            <div
+              in:slide={{ axis: "x", easing: cubicOut }}
+              class="whitespace-nowrap"
+            >
+              Share Board
+            </div>
+          {/if}
+        </button>
+      </div>
+    {/if}
+  {:else if game.status === GameStatus.Inactive}
+    <p class="py-4 font-bold">Game Canceled</p>
+  {:else if !puzzleState}
+    <div class="flex h-[200px] items-center justify-center self-center">
+      <DotLoader class="h-10 w-10 fill-black" />
+    </div>
+  {/if}
 
   <div class="min-h-5 flex-grow"></div>
 
