@@ -29,6 +29,8 @@
    * - Fix leaderboard
    * - Add notifications (web push + farcaster frames)
    * - Set frame to add to the dashboard url
+   * - Make sign in last way longer
+   * - Add padding on bottom for mobile
    * - Fix confetti
    * - Add png characters to bgs
    * - Try 'add frame' modal again
