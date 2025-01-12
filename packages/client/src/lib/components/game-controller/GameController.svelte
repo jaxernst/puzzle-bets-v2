@@ -67,10 +67,26 @@
     return ""
   })
 
-  const SIZE_CLOSED = 60
+  let sizeClosed = $state(60)
+  const SIZE_CLOSED_DEFAULT = 60
+  const SIZE_CLOSED_MOBILE = 75
   const SIZE_OPEN = 600
 
-  const size = spring(SIZE_CLOSED, {
+  const updateSizeClosed = () => {
+    if (window.innerWidth < 640) {
+      sizeClosed = SIZE_CLOSED_MOBILE
+    } else {
+      sizeClosed = SIZE_CLOSED_DEFAULT
+    }
+  }
+
+  $effect(() => {
+    updateSizeClosed()
+    window.addEventListener("resize", updateSizeClosed)
+    return () => window.removeEventListener("resize", updateSizeClosed)
+  })
+
+  const size = spring(sizeClosed, {
     damping: 0.5,
     stiffness: 0.075,
     precision: 0.005,
@@ -80,7 +96,7 @@
     if (open) {
       $size = SIZE_OPEN
     } else {
-      $size = SIZE_CLOSED
+      $size = sizeClosed
     }
   })
 
