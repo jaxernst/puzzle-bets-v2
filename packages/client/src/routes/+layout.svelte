@@ -113,7 +113,7 @@
           action: {
             type: "launch_frame",
             name: "launch",
-            url: "https://puzzlebets.xyz",
+            url: page.url.href,
             iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
             splashImageUrl: `https://puzzlebets.xyz/character1.png`,
             splashBackgroundColor: "#FFC700",
