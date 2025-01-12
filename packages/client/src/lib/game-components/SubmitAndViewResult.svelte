@@ -182,7 +182,7 @@
 {#if !outcomes.canViewResults}
   <button
     class={twMerge(
-      "rounded-t bg-black px-6 py-2 font-black text-white disabled:opacity-70 md:rounded",
+      "sm:py-2font-black rounded-t bg-black px-6 pb-4 pt-3 text-white disabled:opacity-70 sm:pb-2 sm:pt-2 md:rounded",
       className,
     )}
     disabled={!outcomes.canSubmit || submitting || disabled}
