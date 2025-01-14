@@ -120,10 +120,19 @@ export async function checkFidAssociation(user: EvmAddress) {
   return data?.fid ?? null
 }
 
+export async function getAssociatedAddresses(fid: number) {
+  const { data } = await supabase
+    .from("fid-associations")
+    .select("address")
+    .eq("fid", fid)
+
+  return data?.map((d) => d.address) ?? []
+}
+
 // Faracster Frame Notifications //
 
-export async function updateFrameNotification(
-  user: EvmAddress,
+export async function updateFrameNotificationState(
+  userAddrs: EvmAddress[],
   notification: FrameNotificationDetails | null,
 ) {
   let result
@@ -131,19 +140,20 @@ export async function updateFrameNotification(
     result = await supabase
       .from("frame-notifications")
       .delete()
-      .eq("address", user)
+      .in("address", userAddrs)
       .select()
       .single()
   } else {
     result = await supabase
       .from("frame-notifications")
-      .upsert({
-        address: user,
-        token: notification?.token,
-        url: notification?.url,
-      })
+      .upsert(
+        userAddrs.map((addr) => ({
+          address: addr,
+          token: notification?.token,
+          url: notification?.url,
+        })),
+      )
       .select()
-      .single()
   }
 
   if (result.error) {
