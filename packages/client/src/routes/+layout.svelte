@@ -71,11 +71,16 @@
   $effect(() => {
     if (frameStore.initialized && user.authenticated) {
       frameStore.addFrame()
+
+      // This is not an authenticated user context and can be spoofed, but we don't really care because this is
+      // only used for setting display names and sending notifications
+      if (!user.fid) {
+        user.associateFid(frameStore.context!.user.fid)
+      }
+
       maybeSetFarcasterName(user.authenticated, frameStore.context!.user)
     }
   })
-
-  $inspect(frameStore.context)
 
   // There is an issue where the mud network sync won't stop properly,
   // so we reload the page when we identify a disconnect.
@@ -91,6 +96,8 @@
       }, 500)
     }
   })
+
+  $inspect(user)
 
   let isHomePage = $derived(page.url.pathname === "/")
   let isGamePath = $derived(page.url.pathname.startsWith("/game"))

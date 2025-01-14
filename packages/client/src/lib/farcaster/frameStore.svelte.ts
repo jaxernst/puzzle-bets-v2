@@ -51,8 +51,6 @@ export const frameStore = (() => {
       if (res.added) {
         ctx!.client.added = true
         ctx!.client.notificationDetails = res.notificationDetails
-
-        // Make a post request to save notification details
       }
     },
   }

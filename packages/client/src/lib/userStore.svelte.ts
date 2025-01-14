@@ -12,6 +12,7 @@ const initialState = {
   authenticated: undefined,
   balance: 0n,
   balanceFetched: false,
+  fid: undefined,
 }
 
 export const user = (() => {
@@ -21,6 +22,7 @@ export const user = (() => {
     balance: bigint
     balanceFetched: boolean
     displayName?: string
+    fid: number | undefined
   }>(initialState)
 
   const balanceSync = makeBalanceSync((balance: bigint) => {
@@ -58,6 +60,13 @@ export const user = (() => {
     }
   }
 
+  const checkFidAssociation = async (address: EvmAddress) => {
+    const response = await fetch(`/api/farcaster/fid-association/${address}`)
+    if (!response.ok) return undefined
+    const fid = await response.text()
+    return Number(fid)
+  }
+
   const handleAccountChange = async (address: EvmAddress | undefined) => {
     balanceSync.stop()
 
@@ -70,6 +79,7 @@ export const user = (() => {
 
       balanceSync.start(address)
       userState.displayName = await displayNameStore.fetch(address)
+      userState.fid = await checkFidAssociation(address)
     } else {
       // No address -> reset store and sign out
       if (userState.authenticated) await logout()
@@ -79,6 +89,7 @@ export const user = (() => {
       userState.balance = 0n
       userState.balanceFetched = false
       userState.displayName = undefined
+      userState.fid = undefined
     }
   }
 
@@ -115,8 +126,23 @@ export const user = (() => {
     get balanceFetched() {
       return userState.balanceFetched
     },
+    get fid() {
+      return userState.fid
+    },
 
     authenticate,
+
+    associateFid: async (fid: number) => {
+      if (!userState.authenticated)
+        return console.error("No address to associate FID with")
+
+      await fetch(`/api/farcaster/fid-association/${userState.authenticated}`, {
+        method: "POST",
+        body: JSON.stringify({ fid }),
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      })
+    },
   }
 })()
 

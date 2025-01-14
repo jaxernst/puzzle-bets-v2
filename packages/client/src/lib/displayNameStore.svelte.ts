@@ -56,6 +56,7 @@ export async function updateDisplayName(
   try {
     const response = await fetch("/api/display-name", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ displayName }),
     })
