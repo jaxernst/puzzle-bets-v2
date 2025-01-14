@@ -58,9 +58,9 @@
   // When launched as a frame app, we can auto-set the user's display name to match their farcaster name
   const maybeSetFarcasterName = async (
     forUser: EvmAddress,
-    ctx: FrameContext,
+    fcUser: FrameContext["user"],
   ) => {
-    const fcName = ctx.user.displayName || ctx.user.username
+    const fcName = fcUser.displayName || fcUser.username
     const pbName = await displayNameStore.fetch(forUser)
 
     if (!pbName && fcName) {
@@ -71,7 +71,7 @@
   $effect(() => {
     if (frameStore.initialized && user.authenticated) {
       frameStore.addFrame()
-      maybeSetFarcasterName(user.authenticated, frameStore.context!)
+      maybeSetFarcasterName(user.authenticated, frameStore.context!.user)
     }
   })
 
