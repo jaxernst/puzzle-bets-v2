@@ -1,4 +1,4 @@
-import { sendFrameNotification } from "$lib/farcaster/notifs"
+import { sendFrameNotification } from "$lib/farcaster/notifs.server"
 import {
   getAssociatedAddresses,
   updateFrameNotificationState,
