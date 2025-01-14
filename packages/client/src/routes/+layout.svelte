@@ -26,12 +26,8 @@
 
   /**
    * TODO:
-   * - Fix leaderboard
    * - Add notifications (web push + farcaster frames)
    * - Set frame to add to the dashboard url
-   * - Make sign in last way longer
-   * - Add padding on bottom for mobile
-   * - Fix confetti
    * - Add png characters to bgs
    * - Try 'add frame' modal again
    *
@@ -74,6 +70,11 @@
 
   $effect(() => {
     if (frameStore.initialized && user.authenticated) {
+      if (!frameStore.context?.client.added) {
+        console.log("Requesting frame add")
+        frameStore.actions?.addFrame()
+      }
+
       maybeSetFarcasterName(user.authenticated, frameStore.context!)
     }
   })
