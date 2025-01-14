@@ -70,9 +70,7 @@
 
   $effect(() => {
     if (frameStore.initialized && user.authenticated) {
-      if (!frameStore.context?.client.added) {
-        frameStore.addFrame()
-      }
+      frameStore.addFrame()
       maybeSetFarcasterName(user.authenticated, frameStore.context!)
     }
   })
