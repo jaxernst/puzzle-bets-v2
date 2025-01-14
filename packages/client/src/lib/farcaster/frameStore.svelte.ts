@@ -44,5 +44,11 @@ export const frameStore = (() => {
     get initialized() {
       return initialized
     },
+
+    addFrame: async () => {
+      await sdk!.actions?.addFrame()
+      console.log("Frame added")
+      ctx = await sdk!.context
+    },
   }
 })()

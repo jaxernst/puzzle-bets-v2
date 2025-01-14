@@ -71,13 +71,13 @@
   $effect(() => {
     if (frameStore.initialized && user.authenticated) {
       if (!frameStore.context?.client.added) {
-        console.log("Requesting frame add")
-        frameStore.actions?.addFrame()
+        frameStore.addFrame()
       }
-
       maybeSetFarcasterName(user.authenticated, frameStore.context!)
     }
   })
+
+  $inspect(frameStore.context)
 
   // There is an issue where the mud network sync won't stop properly,
   // so we reload the page when we identify a disconnect.
