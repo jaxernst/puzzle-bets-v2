@@ -1,4 +1,3 @@
-import { browser } from "$app/environment"
 import type { FrameContext } from "@farcaster/frame-sdk"
 import type { FrameSDK } from "@farcaster/frame-sdk/dist/types"
 
