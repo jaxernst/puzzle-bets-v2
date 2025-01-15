@@ -38,7 +38,7 @@
       use:confetti={{
         particleCount: $prefersReducedMotion ? 0 : 120,
         force: 0.7,
-        stageWidth: $stageWidth / 1.5,
+        stageWidth: $stageWidth * 0.8,
         stageHeight: $stageHeight,
         colors: ["#EACB28", "#E2E4F4", "#FEECC8", "#2FB163"],
       }}

@@ -310,7 +310,7 @@
     </div>
   {/if}
 
-  <div class="min-h-5 flex-grow"></div>
+  <div class=" min-h-12 flex-grow sm:min-h-5"></div>
 
   <div
     class="absolute bottom-0 flex w-full grow items-end md:relative md:hidden"
