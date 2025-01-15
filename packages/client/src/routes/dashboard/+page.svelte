@@ -156,7 +156,7 @@
           <div>
             {#if stats}
               {weiToDollarFormatted(stats.totalBetAmount, prices.eth)} /
-              {weiToDollarFormatted(stats.totalWonAmount, prices.eth)}
+              {weiToDollarFormatted(stats.profit, prices.eth)}
             {:else}
               ---
             {/if}

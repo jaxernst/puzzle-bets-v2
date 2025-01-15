@@ -23,14 +23,15 @@ export function getPlayerStats(
         stats.totalBetAmount += game.buyInAmount
 
         if (outcome.gameOutcome === "win") {
+          const totalPot = game.buyInAmount * 2n
+          const fee = (totalPot * 25n) / 1000n // 2.5% fee
+          stats.profit += totalPot - fee - game.buyInAmount
           stats.numWins++
-          const fee = (game.buyInAmount * 25n) / 1000n // 2.5% fee
-          stats.totalWonAmount += game.buyInAmount - fee
         } else if (outcome.gameOutcome === "lose") {
           stats.numLosses++
+          stats.profit -= game.buyInAmount
         } else if (outcome.gameOutcome === "tie") {
           stats.numTies++
-          stats.totalBetAmount -= game.buyInAmount
         }
       }
 
@@ -41,7 +42,7 @@ export function getPlayerStats(
       numLosses: 0,
       numTies: 0,
       totalBetAmount: 0n,
-      totalWonAmount: 0n,
+      profit: 0n,
     },
   )
 
@@ -83,12 +84,13 @@ export function getLeaderboard(_mud: typeof mud) {
       won: stats?.numWins ?? 0,
       lost: stats?.numLosses ?? 0,
       tied: stats?.numTies ?? 0,
-      totalWonAmount: stats?.totalWonAmount ?? 0n,
+      totalBet: stats?.totalBetAmount ?? 0n,
+      profit: stats?.profit ?? 0n,
     }
   })
 
   // Sort players by total won amount
-  playerStats.sort((a, b) => Number(b.totalWonAmount - a.totalWonAmount))
+  playerStats.sort((a, b) => Number(b.profit - a.profit))
 
   // Add rank to each player
   return playerStats.map((stats, index) => ({

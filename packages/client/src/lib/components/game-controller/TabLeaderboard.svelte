@@ -1,7 +1,7 @@
 <script lang="ts">
   import { mud } from "$lib/mudStore.svelte"
   import { getLeaderboard } from "$lib/statsQueries"
-  import { formatAsDollar, shortenAddress } from "$lib/util"
+  import { formatAsDollar, shortenAddress, formatSigFig } from "$lib/util"
   import { prices } from "$lib/prices.svelte"
   import { formatEther } from "viem"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
@@ -23,8 +23,9 @@
         </tr>
       </thead>
       <tbody>
-        {#each leaderboard as { rank, player, won, lost, tied, totalWonAmount }}
+        {#each leaderboard as { rank, player, won, lost, tied, profit }}
           {@const playerName = displayNameStore.get(player, false)}
+          {@const profitEth = Number(formatEther(profit))}
 
           <tr class=" bg-pb-off-white rounded">
             <td
@@ -54,10 +55,10 @@
             <td
               class="rounded-r p-3 font-bold"
               style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
-              >{formatAsDollar(
-                Number(formatEther(totalWonAmount)) * prices.eth,
-              )}</td
             >
+              {formatAsDollar(profitEth * prices.eth)}
+              ({formatSigFig(profitEth, 2)} ETH)
+            </td>
           </tr>
         {/each}
       </tbody>
