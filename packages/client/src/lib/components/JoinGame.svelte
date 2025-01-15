@@ -41,8 +41,13 @@
 
     joinGameLoading = false
 
-    fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
+    fetch(`/api/notify/game-joined`, {
       method: "POST",
+      body: JSON.stringify({ targetUser: game.p1 }),
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
 
     goto(`/game/${game.type}/${entityToInt(game.id)}`)

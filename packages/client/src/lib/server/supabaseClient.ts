@@ -163,7 +163,7 @@ export async function updateFrameNotificationState(
   return result.data
 }
 
-export async function getFrameNotification(user: EvmAddress) {
+export async function getFrameNotificationState(user: EvmAddress) {
   const { data } = await supabase
     .from("frame-notifications")
     .select("token, url")

@@ -46,7 +46,7 @@ export const frameStore = (() => {
 
     addFrame: async () => {
       const res = await sdk!.actions?.addFrame()
-      console.log("Frame added", res)
+
       if (res.added) {
         ctx!.client.added = true
         ctx!.client.notificationDetails = res.notificationDetails
