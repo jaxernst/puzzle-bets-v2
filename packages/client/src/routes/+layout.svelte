@@ -26,7 +26,7 @@
 
   /**
    * TODO:
-   * - Add notifications (web push + farcaster frames)
+   * - Set up system to notify when a user has won a game
    * - Set frame to add to the dashboard url
    * - Add png characters to bgs
    * - Try 'add frame' modal again
@@ -96,8 +96,6 @@
       }, 500)
     }
   })
-
-  $inspect(user)
 
   let isHomePage = $derived(page.url.pathname === "/")
   let isGamePath = $derived(page.url.pathname.startsWith("/game"))
