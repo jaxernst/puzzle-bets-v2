@@ -19,7 +19,7 @@ export const POST = async ({ request, url }) => {
     title: "Opponent Joined!",
     body: "Your opponent has joined and started their turn, make your move!",
     notificationDetails: notificationState,
-    route: `${url.origin}/game/wordle/${gameId}`,
+    url: `${url.origin}/game/wordle/${gameId}`,
   })
 
   if (res.state === "success") {
