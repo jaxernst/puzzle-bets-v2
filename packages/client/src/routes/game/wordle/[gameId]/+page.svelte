@@ -38,7 +38,6 @@
     }
   })
 
-
   $effect(() => {
     setTimeout(() => {
       if (!mud.synced) {
@@ -54,6 +53,6 @@
   </div>
 {/if}
 
-{#if game && user.address}
+{#if game && user.address && user.address === user.authenticated}
   <LiveGame {game} user={user.address} />
 {/if}
