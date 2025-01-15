@@ -182,7 +182,7 @@
 {#if !outcomes.canViewResults}
   <button
     class={twMerge(
-      "sm:py-2font-black rounded-t bg-black px-6 pb-4 pt-3 text-white disabled:opacity-70 sm:pb-2 sm:pt-2 md:rounded",
+      "rounded-t bg-black px-6 pb-5 pt-3 font-black text-white disabled:opacity-70 sm:py-2 sm:pb-2 sm:pt-2 md:rounded",
       className,
     )}
     disabled={!outcomes.canSubmit || submitting || disabled}
@@ -193,7 +193,7 @@
 {:else}
   <button
     class={twMerge(
-      "rounded-t bg-black px-6 py-2 font-black text-white disabled:opacity-70 md:rounded",
+      "rounded-t bg-black px-6 pb-5 pt-3 font-black text-white disabled:opacity-70 sm:py-2 sm:pb-2 sm:pt-2 md:rounded",
       className,
     )}
     onclick={() => (showResults = true)}
