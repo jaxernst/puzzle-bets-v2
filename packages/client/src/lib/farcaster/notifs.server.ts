@@ -16,10 +16,12 @@ type SendFrameNotificationResult =
 export async function sendFrameNotification({
   title,
   body,
+  url,
   notificationDetails,
 }: {
   title: string
   body: string
+  url: string
   notificationDetails: FrameNotificationDetails
 }): Promise<SendFrameNotificationResult> {
   const response = await fetch(notificationDetails.url, {
@@ -31,7 +33,7 @@ export async function sendFrameNotification({
       notificationId: crypto.randomUUID(),
       title,
       body,
-      targetUrl: "https://beta.puzzlebets.xyz/dashboard",
+      targetUrl: url,
       tokens: [notificationDetails.token],
     } satisfies SendNotificationRequest),
   })

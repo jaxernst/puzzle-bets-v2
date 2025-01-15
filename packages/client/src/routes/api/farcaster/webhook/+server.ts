@@ -60,6 +60,7 @@ export const POST: RequestHandler = async ({ request }) => {
           title: "Welcome to Puzzle Bets!",
           body: "You'll receive status updates about your games here",
           notificationDetails: event.notificationDetails,
+          route: "https://puzzlebets.xyz/dashboard",
         })
       } else {
         await updateFrameNotificationState(addresses, null)

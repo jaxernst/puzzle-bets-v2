@@ -2,8 +2,11 @@ import { sendFrameNotification } from "$lib/farcaster/notifs.server.js"
 import { getFrameNotificationState } from "$lib/server/supabaseClient.js"
 import type { EvmAddress } from "$lib/types.js"
 
-export const POST = async ({ request }) => {
-  const { targetUser } = (await request.json()) as { targetUser: EvmAddress }
+export const POST = async ({ request, url }) => {
+  const { targetUser, gameId } = (await request.json()) as {
+    targetUser: EvmAddress
+    gameId: string
+  }
 
   const notificationState = await getFrameNotificationState(targetUser)
   if (!notificationState) {
@@ -13,9 +16,10 @@ export const POST = async ({ request }) => {
   }
 
   const res = await sendFrameNotification({
-    title: "Opponent Joined",
+    title: "Opponent Joined!",
     body: "Your opponent has joined and started their turn, make your move!",
     notificationDetails: notificationState,
+    route: `${url.origin}/game/wordle/${gameId}`,
   })
 
   if (res.state === "success") {
