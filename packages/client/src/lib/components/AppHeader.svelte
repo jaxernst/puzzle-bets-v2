@@ -19,7 +19,7 @@
   class=" border-b-1 mx-2 flex items-center justify-between border-black/20 py-2 font-bold sm:mx-4"
 >
   {#if $page.route.id !== "/"}
-    <a href="/" class="">
+    <a href="/?nav=true" class="">
       <PuzzleBetsSmall />
     </a>
 
