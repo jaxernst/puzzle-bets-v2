@@ -11,7 +11,7 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.2.3-main-5277399692c805c8b2b80274888bad3a7e527048",
+    "@latticexyz/cli": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
     "mprocs": "^0.6.4",
     "rimraf": "^3.0.2",
     "typescript": "5.4.2"
