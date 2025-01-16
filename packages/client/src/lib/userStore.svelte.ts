@@ -36,6 +36,7 @@ export const user = (() => {
     const response = await fetch("/api/siwe-auth/logout", {
       method: "POST",
       credentials: "include",
+      headers: { "Content-Type": "application/json" },
     })
 
     if (response.ok) {
