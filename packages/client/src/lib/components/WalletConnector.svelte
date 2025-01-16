@@ -32,13 +32,10 @@
   let setupCalled = false
 
   const autoConnectWallet = async () => {
-    console.log("autoConnectWallet")
     const walletClient = await walletStore.autoConnect()
-    console.log("walletClient", walletClient)
-    console.log("setupCalled", setupCalled)
     if (walletClient && !setupCalled) {
       setupCalled = true
-      console.log("setup mud")
+      console.log("[autoconnect] setup mud")
       await mud.setup(walletClient)
     }
   }
@@ -59,6 +56,7 @@
 
     if (!setupCalled) {
       setupCalled = true
+      console.log("[manual connect] setup mud")
       await mud.setup(walletClient)
     }
   }
@@ -73,7 +71,7 @@
     console.log("triedFrameStoreInit", triedFrameStoreInit)
     console.log("user.address", user.address)
 
-    if (!user.address && shouldAutoconnect && triedFrameStoreInit) {
+    if (!walletStore.walletClient && shouldAutoconnect && triedFrameStoreInit) {
       autoConnectWallet().finally(() => {
         autoconnectAttempted = true
       })
