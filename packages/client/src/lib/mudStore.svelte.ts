@@ -18,6 +18,7 @@ export const mud = (function createMudStore() {
 
   async function setup(wallet: Wallet) {
     const network = await setupNetwork(wallet)
+    console.log("Network setup complete, starting state sync", network)
 
     await waitForSync(network.components)
 
@@ -91,6 +92,8 @@ export const mud = (function createMudStore() {
 async function waitForSync(components: Components) {
   return new Promise((resolve) => {
     components.SyncProgress.update$.subscribe((update) => {
+      console.log("Sync Progress:", update.value[0]?.percentage, "%")
+
       if (update.value[0]?.step === "live") {
         resolve(true)
       }
