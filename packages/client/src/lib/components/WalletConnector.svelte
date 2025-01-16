@@ -129,22 +129,28 @@
 
   {#if !user.address}
     <button
-      class="flex w-full justify-center rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
+      class="flex w-full justify-center gap-3 rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
       onclick={handleConnect}
     >
       {#if walletStore.connecting}
-        <DotLoader class="fill-white" />
+        Connecting
+        <DotLoader class="self-center fill-white" />
       {:else}
-        Continue
+        Connect Wallet
       {/if}
     </button>
   {:else if user.authenticated !== user.address}
     <div class="flex flex-col gap-2">
       <button
-        class="w-full rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
+        class="flex w-full justify-center gap-3 rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
         onclick={manualSignIn}
       >
-        Sign in with your wallet
+        {#if user.authenticating}
+          Signing in
+          <DotLoader class="self-center fill-white" />
+        {:else}
+          Sign in with your wallet
+        {/if}
       </button>
 
       <button

@@ -25,6 +25,8 @@ export const user = (() => {
     fid: number | undefined
   }>(initialState)
 
+  let authenticating = $state(false)
+
   const balanceSync = makeBalanceSync((balance: bigint) => {
     userState.balanceFetched = true
     if (balance !== userState.balance) {
@@ -50,6 +52,8 @@ export const user = (() => {
   const authenticate = async () => {
     if (!userState.address) throw new Error("No user address to authenticate")
 
+    authenticating = true
+
     try {
       const success = await signInWithEthereum(userState.address)
 
@@ -58,6 +62,8 @@ export const user = (() => {
       }
     } catch (error) {
       console.error("Failed to sign in with Ethereum", error)
+    } finally {
+      authenticating = false
     }
   }
 
@@ -120,6 +126,9 @@ export const user = (() => {
     },
     get authenticated() {
       return userState.authenticated
+    },
+    get authenticating() {
+      return authenticating
     },
     set authenticated(authenticated: EvmAddress | undefined) {
       userState.authenticated = authenticated
