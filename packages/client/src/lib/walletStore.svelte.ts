@@ -76,22 +76,30 @@ function makeWalletStore(wagmiConfig: WagmiConfig) {
   const connectWithModal = async () => {
     await modal.open()
 
-    return new Promise((resolve) => {
-      const unsub = modal.subscribeState(async (state) => {
+    return new Promise<Wallet | undefined>((resolve) => {
+      // Wait for the modal to close to resolve the promise
+      const unsub = modal.subscribeState((state) => {
         if (!state.open) {
           unsub()
-          resolve(await getWalletAndUpdateClient())
+          getWalletAndUpdateClient()
+            .then(resolve)
+            .catch(() => resolve(undefined))
         }
       })
     })
   }
 
   const connectWithFramesConnector = async () => {
-    await connect(wagmiConfig, {
-      chainId: networkConfig.chainId,
-      connector: getFrameConnector(),
-    })
-    return await getWalletAndUpdateClient()
+    try {
+      await connect(wagmiConfig, {
+        chainId: networkConfig.chainId,
+        connector: getFrameConnector(),
+      })
+
+      return await getWalletAndUpdateClient()
+    } catch (err) {
+      return undefined
+    }
   }
 
   // Ensure we stay on the correct chain
@@ -130,12 +138,14 @@ function makeWalletStore(wagmiConfig: WagmiConfig) {
       connecting = true
 
       try {
+        console.log("reconnect")
         const [account] = await reconnect(wagmiConfig, {
           connectors: [
             ...wagmiAdapter.wagmiConfig.connectors,
-            getDefaultConnector(),
+            getFrameConnector(),
           ],
         })
+        console.log("reconnected", account)
 
         if (account) {
           const walletClient = await getWalletClient(wagmiConfig)
