@@ -34,6 +34,7 @@
    * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
    * - Test that rainbow wallet mobile transactions work on mainnet
+   * - Remove testnet drip logic
 
    Nice to haves:
    * - Show an indicator with 'sign in with wallet' is in progress
@@ -51,7 +52,7 @@
 
   let { children } = $props()
 
-  console.log("pre-auth address:", page.data.user)
+  console.log("[pre-auth address]", page.data.user)
   if (!user.authenticated && page.data.user) {
     user.authenticated = page.data.user
   }
