@@ -49,12 +49,7 @@
       return
     }
 
-    if (!walletClient?.account.address) {
-      toastError("No wallet account available")
-      return
-    }
-
-    if (!setupCalled) {
+    if (walletClient && !setupCalled) {
       setupCalled = true
       console.log("[manual connect] setup mud")
       await mud.setup(walletClient)

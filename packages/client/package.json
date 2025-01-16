@@ -36,7 +36,7 @@
   "type": "module",
   "dependencies": {
     "@farcaster/frame-node": "^0.0.13",
-    "@farcaster/frame-sdk": "^0.0.20",
+    "@farcaster/frame-sdk": "^0.0.26",
     "@neoconfetti/svelte": "^1.0.0",
     "@reown/appkit": "^1.6.3",
     "@reown/appkit-adapter-wagmi": "^1.6.3",
