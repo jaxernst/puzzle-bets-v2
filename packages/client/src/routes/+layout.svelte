@@ -21,7 +21,6 @@
     updateDisplayName,
   } from "$lib/displayNameStore.svelte"
   import { frameStore } from "$lib/farcaster/frameStore.svelte"
-  import { mud } from "$lib/mudStore.svelte"
   import type { FrameContext } from "@farcaster/frame-sdk"
   import type { EvmAddress } from "$lib"
 
@@ -34,6 +33,7 @@
    * - Testnet with a mainnet RPC endpoint (test websockets, test sync)
    * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
+   * - Test that rainbow wallet mobile transactions work on mainnet
 
    Nice to haves:
    * - Show an indicator with 'sign in with wallet' is in progress
