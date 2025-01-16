@@ -21,15 +21,23 @@
     updateDisplayName,
   } from "$lib/displayNameStore.svelte"
   import { frameStore } from "$lib/farcaster/frameStore.svelte"
+  import { mud } from "$lib/mudStore.svelte"
   import type { FrameContext } from "@farcaster/frame-sdk"
   import type { EvmAddress } from "$lib"
 
   /**
    * TODO:
+   For launch:
+   * - Add a limit to the bet size (UI only)
+   * - Add splits contract to collect fees
+   * - Fix get or create caching bug
+   * - Testnet with a mainnet RPC endpoint (test websockets, test sync)
+   * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
+   *   to have a 'check to agree' for this)
+
+   Nice to haves:
+   * - Show an indicator with 'sign in with wallet' is in progress
    * - Set up system to notify when a user has won a game
-   * - Set frame to add to the dashboard url
-   * - Add png characters to bgs
-   * - Try 'add frame' modal again
    *
    * - getOrCreateGame cache issue is still present, where you can switch your wallet and get the solution from your opponent.
    *    i think this happens because after switching wallet, the backend will still serve with the cache key from
@@ -79,21 +87,6 @@
       }
 
       maybeSetFarcasterName(user.authenticated, frameStore.context!.user)
-    }
-  })
-
-  // There is an issue where the mud network sync won't stop properly,
-  // so we reload the page when we identify a disconnect.
-  let walletWasSet = false
-  $effect(() => {
-    if (walletStore.walletClient) {
-      walletWasSet = true
-    }
-
-    if (walletWasSet && !walletStore.walletClient) {
-      setTimeout(() => {
-        window.location.reload()
-      }, 500)
     }
   })
 
