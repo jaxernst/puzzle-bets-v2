@@ -16,7 +16,7 @@
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
     "test": "tsc --noEmit && mud test",
     "test-dev": "export WORLD_ADDRESS=0xc14fbdb7808d9e2a37c1a45b635c8c3ff64a1cc1 && forge test -vv --fork-url=http://127.0.0.1:8545",
-    "start-indexer": "npx -y -p @latticexyz/store-indexer@next postgres-indexer",
+    "start-indexer": "npx -y -p @latticexyz/store-indexer postgres-indexer",
     "serve-index": "pnpm postgres-frontend"
   },
   "dependencies": {
