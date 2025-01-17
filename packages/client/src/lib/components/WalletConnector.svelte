@@ -62,7 +62,7 @@
     const triedFrameStoreInit = frameStore.initialized || frameStore.unavailable
     const shouldAutoconnect = autoconnect && !autoconnectAttempted
 
-    if (!user.address && shouldAutoconnect && triedFrameStoreInit) {
+    if (user.authenticated && shouldAutoconnect && triedFrameStoreInit) {
       autoConnectWallet().finally(() => {
         autoconnectAttempted = true
       })
