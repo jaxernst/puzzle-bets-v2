@@ -30,3 +30,15 @@ contract PostDeploy is Script {
     vm.stopBroadcast();
   }
 }
+
+contract UpdateFeeReceiver is Script {
+  function run(address worldAddress, address feeReceiver) external {
+    StoreSwitch.setStoreAddress(worldAddress);
+
+    uint256 adminPk = vm.envUint("PRIVATE_KEY");
+
+    vm.startBroadcast(adminPk);
+    ProtocolFeeRecipient.set(feeReceiver);
+    vm.stopBroadcast();
+  }
+}
