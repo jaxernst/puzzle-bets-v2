@@ -167,14 +167,8 @@ export const gameIdToGame = (
     | EvmAddress
     | undefined
 
-  let status: GameStatus
-  try {
-    status = getComponentValueStrict(mudComponents.GameStatus, gameId)
-      .value as GameStatus
-  } catch (e) {
-    console.log(e)
-    status = GameStatus.Complete
-  }
+  const status = getComponentValueStrict(mudComponents.GameStatus, gameId)
+    .value as GameStatus
 
   const buyInAmount =
     getComponentValue(mudComponents.BuyIn, gameId)?.value ?? 0n
