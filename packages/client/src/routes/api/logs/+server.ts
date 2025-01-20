@@ -20,31 +20,20 @@ export const GET = async () => {
     return new Response("Error fetching records", { status: 500 })
   }
 
-  const logRecords = data
-    .map(
-      (row: any) =>
-        ({
-          address: fallbackHex(row.address),
-          eventName: "Store_SetRecord",
-          args: {
-            tableId: fallbackHex(row.table_id),
-            keyTuple: decodeDynamicField(
-              "bytes32[]",
-              fallbackHex(row.key_bytes),
-            ),
-            staticData: fallbackHex(row.static_data),
-            encodedLengths: fallbackHex(row.encoded_lengths),
-            dynamicData: fallbackHex(row.dynamic_data),
-          },
-        }) as const,
-    )
-    .filter((x: any) => {
-      // TODO: Temp fix for indexer state bug -> entity '3f' has invalid state indexed, so filter it out
-      return (
-        x.args.keyTuple ===
-        "0x000000000000000000000000000000000000000000000000000000000000003f"
-      )
-    })
+  const logRecords = data.map(
+    (row: any) =>
+      ({
+        address: fallbackHex(row.address),
+        eventName: "Store_SetRecord",
+        args: {
+          tableId: fallbackHex(row.table_id),
+          keyTuple: decodeDynamicField("bytes32[]", fallbackHex(row.key_bytes)),
+          staticData: fallbackHex(row.static_data),
+          encodedLengths: fallbackHex(row.encoded_lengths),
+          dynamicData: fallbackHex(row.dynamic_data),
+        },
+      }) as const,
+  )
 
   return new Response(
     JSON.stringify({
