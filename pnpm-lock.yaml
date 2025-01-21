@@ -49,6 +49,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
+      postgres:
+        specifier: ^3.4.5
+        version: 3.4.5
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
