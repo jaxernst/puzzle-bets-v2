@@ -167,10 +167,7 @@ export const gameIdToGame = (
     | EvmAddress
     | undefined
 
-  // TODO: Temp fix for indexer state bug -> game status should be 'strict'
-  const status =
-    getComponentValue(mudComponents.GameStatus, gameId)?.value ??
-    GameStatus.Complete
+  const status = getComponentValueStrict(mudComponents.GameStatus, gameId).value
 
   const buyInAmount =
     getComponentValue(mudComponents.BuyIn, gameId)?.value ?? 0n
