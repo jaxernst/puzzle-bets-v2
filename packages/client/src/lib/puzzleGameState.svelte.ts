@@ -5,6 +5,7 @@ import { entityToInt } from "$lib/util"
 import { SvelteMap as Map } from "svelte/reactivity"
 import { gameIdToGame } from "./gameQueries"
 import type { Entity } from "@latticexyz/recs"
+import { walletStore } from "./walletStore.svelte"
 
 export interface PuzzleState {
   solved: boolean
@@ -164,6 +165,11 @@ export const wordleGameStates = (() => {
       resetLoading = false
     }
   }
+
+  // Auto clear cache state when wallet is disconnected
+  walletStore.onAccountChange(() => {
+    store.clear()
+  })
 
   return {
     get(gameId: GameId) {
