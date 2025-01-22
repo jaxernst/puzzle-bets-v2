@@ -27,18 +27,19 @@
   /**
    * TODO:
    For launch:
-   * - Add a limit to the bet size (UI only)
-   * - Add splits contract to collect fees
    * - Fix get or create caching bug
    * - Testnet with a mainnet RPC endpoint (test websockets, test sync)
    * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
-   * - Test that rainbow wallet mobile transactions work on mainnet
+   * 
+   * Deployment todos:
    * - Remove testnet drip logic
-
+   * - Add splits contract to collect fees
+   * - Add a limit to the bet size (UI only)
+   *
    Nice to haves:
-   * - Show an indicator with 'sign in with wallet' is in progress
    * - Set up system to notify when a user has won a game
+   * - The 'cancel game' card button should take you directly the 'cancel game' modal
    *
    * - getOrCreateGame cache issue is still present, where you can switch your wallet and get the solution from your opponent.
    *    i think this happens because after switching wallet, the backend will still serve with the cache key from
