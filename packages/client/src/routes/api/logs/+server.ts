@@ -32,6 +32,10 @@ export type Record = RecordData & RecordMetadata
 
 const schemaName = "mud"
 
+if (!PRIVATE_84532_INDEXER_DATABASE_URL) {
+  throw new Error("PRIVATE_84532_INDEXER_DATABASE_URL is not set")
+}
+
 const database = postgres(PRIVATE_84532_INDEXER_DATABASE_URL, {
   prepare: false,
 })
@@ -142,9 +146,7 @@ export const GET = async ({ url }) => {
         : []
 
     // Query the database
-    console.log("query records")
     const records = await queryLogs(database, options ?? {}).execute()
-    console.log(records)
 
     // Check if records exist
     if (records.length === 0) {
