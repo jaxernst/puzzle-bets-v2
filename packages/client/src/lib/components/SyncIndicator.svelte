@@ -1,5 +1,6 @@
 <script>
   import { mud } from "$lib/mudStore.svelte"
+  import { user } from "$lib/userStore.svelte"
   import { networkConfig } from "$lib/mud/networkConfig"
 
   const entryDelay = 200
@@ -62,7 +63,7 @@
   class={`
     bg-pb-off-white fixed left-1/2 isolate z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-2 py-1.5 text-base font-semibold shadow-md
       transition-all duration-150 ease-in-out 
-      ${mud.syncProgress === null || !started || synced ? "-top-10" : "top-4"}
+      ${!user.address || mud.syncProgress === null || !started || synced ? "-top-10" : "top-4"}
   `}
 >
   {@render progressRing()}
