@@ -13,6 +13,7 @@ type MudState =
 
 export const mud = (function createMudStore() {
   let mudState = $state<MudState>({ synced: false })
+  let syncProgress = $state<number | null>(null)
   let stop = $state(() => {})
   let tick = $state(1)
 
@@ -20,7 +21,9 @@ export const mud = (function createMudStore() {
     const network = await setupNetwork(wallet)
     console.log("Network setup complete, starting state sync", network)
 
-    await waitForSync(network.components)
+    await waitForSync(network.components, (progress) => {
+      syncProgress = progress
+    })
 
     mudState = {
       synced: true,
@@ -79,7 +82,12 @@ export const mud = (function createMudStore() {
       return mudState.synced
     },
 
+    get syncProgress() {
+      return syncProgress
+    },
+
     setup: async (wallet: Wallet) => {
+      syncProgress = null
       stop = await setup(wallet)
     },
 
@@ -89,10 +97,14 @@ export const mud = (function createMudStore() {
   }
 })()
 
-async function waitForSync(components: Components) {
+async function waitForSync(
+  components: Components,
+  onProgress: (perc: number) => void,
+) {
   return new Promise((resolve) => {
     components.SyncProgress.update$.subscribe((update) => {
-      console.log("Sync Progress:", update.value[0]?.percentage, "%")
+      console.log("Sync Progress:", update.value[1]?.percentage, "%")
+      onProgress(update.value[1]?.percentage ?? 0)
 
       if (update.value[0]?.step === "live") {
         resolve(true)

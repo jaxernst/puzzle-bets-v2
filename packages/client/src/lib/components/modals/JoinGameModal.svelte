@@ -68,7 +68,6 @@
     <div class="self-center">
       <DotLoader class="fill-black" />
     </div>
-    <div class="self-center text-sm font-bold">Syncing blockchain state...</div>
   {:else if !gameId || !game}
     {@render returnHomeMessage("Game not found")}
   {:else if !userIsEligible}

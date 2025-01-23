@@ -8,10 +8,9 @@
   import NewGameModal from "$lib/components/modals/NewGameModal.svelte"
   import DripGameModal from "$lib/components/modals/DripGameModal.svelte"
   import DisplayNameModal from "$lib/components/modals/DisplayNameModal.svelte"
-  import AddFrameModal from "$lib/components/modals/AddFrameModal.svelte"
   import AboutModal from "$lib/components/modals/AboutModal.svelte"
+  import SyncIndicator from "$lib/components/SyncIndicator.svelte"
 
-  import { walletStore } from "$lib/walletStore.svelte"
   import { page } from "$app/state"
   import { slide } from "svelte/transition"
   import { SvelteToast } from "@zerodevx/svelte-toast"
@@ -26,29 +25,21 @@
 
   /**
    * TODO:
-   For launch:
-   * - Fix get or create caching bug
-   * - Testnet with a mainnet RPC endpoint (test websockets, test sync)
+   * 
+   * Mainnet deployment steps:
+   * - Deploy splits contract to collect fees
+   * - Run the deployment script, set fee receiver to splits contract
+   * - Test with a mainnet RPC endpoint (test websockets, test sync)
+   * - Remove testnet drip logic
+   * - Remove references to 'beta'
    * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
-   * 
-   * Deployment todos:
-   * - Remove testnet drip logic
-   * - Add splits contract to collect fees
    * - Add a limit to the bet size (UI only)
    *
    Nice to haves:
-   * - Set up system to notify when a user has won a game
    * - The 'cancel game' card button should take you directly the 'cancel game' modal
-   *
-   * - getOrCreateGame cache issue is still present, where you can switch your wallet and get the solution from your opponent.
-   *    i think this happens because after switching wallet, the backend will still serve with the cache key from
-   *    the previous wallet. Maybe this could be fixed my forcing a logout when the wallet switches
-   *
-   * - On 'liveGame' the 'back' button should include all the top left text
+   * - Set up system to notify when a user has won a game
    * - Cbsw popup window still fails to open on mobile
-   * - Should stop the user from creating a game with 0 balance
-   * - It is weird/inconvenient to newcomers when you need a wallet popup for every action
    */
 
   let { children } = $props()
@@ -131,6 +122,7 @@
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
+<SyncIndicator />
 
 <div class="text-base leading-snug">
   <SvelteToast />

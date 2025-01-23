@@ -43,14 +43,13 @@
       if (!mud.synced) {
         goto("/dashboard")
       }
-    }, 6000)
+    }, 10000)
   })
 </script>
 
 {#if !mud.synced}
   <div class="flex h-screen flex-col items-center justify-center">
     <div class="flex flex-col items-center justify-center gap-3 font-bold">
-      Loading game
       <DotLoader class="h-8 w-8" />
     </div>
   </div>
