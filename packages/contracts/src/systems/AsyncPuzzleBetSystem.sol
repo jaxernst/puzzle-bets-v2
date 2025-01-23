@@ -25,8 +25,8 @@ import { console } from "forge-std/console.sol";
  * - Games can be made private by including a inviteKeyHash when creating the game
  * - The creator sets a 'password' offchain, and posts only the hash to the 'newGame' function
  * - The joining player submits the raw password when joining, which is hashed and verified against the creators hash
- * - The main shortcoming to this is the a mempool obvserving agent could technically frontrun a joining player, causing
- *   an unintended 2nd player to join, but this is a low probability and minimal severity risk
+ *    - This is technically susceptible to frontrunning, but this should not present a concern for the joining user, as
+ *      a frontrunner can not extract value without playing the game and getting an attestation from the puzzle master
  */
 contract AsyncPuzzleBetSystem is System {
   modifier playerOnly(bytes32 gameId) {
