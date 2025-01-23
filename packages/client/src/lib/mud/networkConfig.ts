@@ -77,7 +77,7 @@ export const networkConfig = (() => {
    */
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))
-    : world?.blockNumber ?? 0n
+    : (world?.blockNumber ?? 0n)
 
   return {
     chainId,
