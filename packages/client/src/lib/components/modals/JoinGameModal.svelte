@@ -48,12 +48,12 @@
 {/snippet}
 
 {#snippet returnHomeButton()}
-  <a
-    href="/dashboard"
+  <button
+    onclick={() => goto("/dashboard")}
     class="rounded bg-black p-2 text-center font-bold text-white"
   >
     Return Home
-  </a>
+  </button>
 {/snippet}
 
 <Modal {show} onClose={() => goto("/dashboard")} class="sm:w-[375px]">
