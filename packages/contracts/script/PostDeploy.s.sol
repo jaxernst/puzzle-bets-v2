@@ -15,6 +15,9 @@ contract PostDeploy is Script {
 
     // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+    // address deployer = vm.addr(deployerPrivateKey);
+
+    address feeRecipient = vm.envAddress("FEE_RECIPIENT");
 
     // Start broadcasting transactions from the deployer account
     vm.startBroadcast(deployerPrivateKey);
@@ -24,7 +27,7 @@ contract PostDeploy is Script {
     IWorld(worldAddress).grantAccess(ProtocolFeeRecipient._tableId, creator);
     IWorld(worldAddress).grantAccess(ProtocolFeeBasisPoints._tableId, creator);
 
-    ProtocolFeeRecipient.set(0x9B8DB9bffcCd1F2Cc5044d67a1b9C68dD6Deff6a);
+    ProtocolFeeRecipient.set(feeRecipient);
     ProtocolFeeBasisPoints.set(250);
 
     vm.stopBroadcast();
