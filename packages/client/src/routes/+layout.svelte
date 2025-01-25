@@ -35,6 +35,7 @@
    * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
    * - Add a limit to the bet size (UI only)
+   * - Add deployment key to frame notification endpoint
    *
    Nice to haves:
    * - The 'cancel game' card button should take you directly the 'cancel game' modal
