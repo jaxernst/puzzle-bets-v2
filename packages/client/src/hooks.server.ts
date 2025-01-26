@@ -1,7 +1,7 @@
 import { verifyUserToken } from "$lib/server/auth"
 import type { Handle } from "@sveltejs/kit"
 
-const authPaths = ["api/drip", "api/game-settings", "api/notifications"]
+const authPaths = ["api/drip", "api/notify/game-joined"]
 
 function isAuthPath(urlPathname: string) {
   return authPaths.some((pathSegment) => urlPathname.includes(pathSegment))
