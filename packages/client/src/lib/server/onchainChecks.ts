@@ -40,7 +40,6 @@ export async function verifyGameParticipants(
   p1: EvmAddress,
   p2: EvmAddress,
 ) {
-  console.log("Verify game", gameId, p1, p2)
   const [p1Lookup, p2Lookup] = (await Promise.all([
     await worldContract.read.getField([
       Player1,
@@ -54,8 +53,6 @@ export async function verifyGameParticipants(
       0,
     ]),
   ])) as [string, string]
-
-  console.log(p1Lookup, p2Lookup)
 
   const onchainPlayers = [p1Lookup, p2Lookup]
 

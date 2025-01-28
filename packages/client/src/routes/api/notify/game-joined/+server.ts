@@ -9,7 +9,13 @@ export const POST = async ({ request, url, locals }) => {
     gameId: string
   }
 
-  if (await verifyGameParticipants(Number(gameId), targetUser, locals.user)) {
+  const playersValid = await verifyGameParticipants(
+    Number(gameId),
+    targetUser,
+    locals.user,
+  )
+
+  if (!playersValid) {
     return new Response("Only game partipicant can notify opponent", {
       status: 403,
     })
