@@ -11,14 +11,14 @@ export const POST = async ({ request, url, locals }) => {
 
   if (await verifyGameParticipants(Number(gameId), targetUser, locals.user)) {
     return new Response("Only game partipicant can notify opponent", {
-      status: 401,
+      status: 403,
     })
   }
 
   const notificationState = await getFrameNotificationState(targetUser)
   if (!notificationState) {
     return new Response("User not registered for notifications", {
-      status: 442,
+      status: 412,
     })
   }
 
