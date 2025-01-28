@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
   let data
   try {
-    // Mock the app key verification. This allows notificaiton subscriptions to be spoofed, but we don't really care
+    // Mock the app key verification. This allows notification subscriptions to be spoofed, but we don't really care
     // about that for our notification use case
     data = await parseWebhookEvent(requestJson, async () => ({
       valid: true,

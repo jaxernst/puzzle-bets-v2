@@ -1,11 +1,18 @@
 import { sendFrameNotification } from "$lib/farcaster/notifs.server.js"
+import { verifyGameParticipants } from "$lib/server/onchainChecks.js"
 import { getFrameNotificationState } from "$lib/server/supabaseClient.js"
 import type { EvmAddress } from "$lib/types.js"
 
-export const POST = async ({ request, url }) => {
+export const POST = async ({ request, url, locals }) => {
   const { targetUser, gameId } = (await request.json()) as {
     targetUser: EvmAddress
     gameId: string
+  }
+
+  if (await verifyGameParticipants(Number(gameId), targetUser, locals.user)) {
+    return new Response("Only game partipicant can notify opponent", {
+      status: 401,
+    })
   }
 
   const notificationState = await getFrameNotificationState(targetUser)
