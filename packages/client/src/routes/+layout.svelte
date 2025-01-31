@@ -33,9 +33,9 @@
    * [x] Setup indexer against mainnet deployment
    * [x] Setup frontend against mainnet deployment
    * [x] Test with a mainnet RPC endpoint (test websockets, test sync)
-   * - Remove testnet drip logic
-   * - Remove references to 'beta'
-   * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
+   * [x] Remove testnet drip logic
+   * [] Remove references to 'beta'
+   * [x] Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
    * - Add a limit to the bet size (UI only)
    * - Add deployment key to frame notification endpoint
@@ -100,6 +100,7 @@
     <meta property="og:title" content="Puzzle Bets - Compete with friends" />
     <meta name="description" content="Play wagered Wordle matches with friends" />
     <meta property="og:description" content="Play wagered Wordle matches with friends" />
+    <meta property="og:image" data-default content="https://puzzlebets.xyz/home-splash-landscape.png" />
 
     <meta
       name="fc:frame"
