@@ -13,7 +13,7 @@
   import { prices } from "$lib/prices.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import type { PuzzleType } from "$lib/types"
-  import { capitalized, entityToInt, formatSigFig } from "$lib/util"
+  import { capitalized, entityToInt, formatSigFig, WEEK } from "$lib/util"
   import { openControls } from "$lib/components/game-controller/GameController.svelte"
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { user } from "$lib/userStore.svelte"
@@ -30,12 +30,15 @@
 </script>
 
 <script lang="ts">
+  // Public games will always set to the default expiration
+  const DEFAULT_EXPIRATION = 1 * WEEK
+
   let puzzleType: PuzzleType = $state("wordle")
   let visibility: "public" | "private" = $state("public")
   let currencyInput = $state("2.00")
   let selectedCurrency = $state<"USD" | "ETH">("USD")
   let inputTimeLimit = $state(8)
-  let inviteExpirationMin = $state(30)
+  let inviteExpirationMin = $state(DEFAULT_EXPIRATION)
 
   let selectedCurrencySymbol = $derived(
     { USD: "$", ETH: "Ξ" }[selectedCurrency],
@@ -102,7 +105,7 @@
     }
 
     const _inviteExpirationMin =
-      visibility === "public" ? 60 * 24 * 3 : inviteExpirationMin
+      visibility === "public" ? DEFAULT_EXPIRATION : inviteExpirationMin
 
     gamePassword =
       visibility === "public"
@@ -252,7 +255,7 @@
 
           <button
             class={`rounded-md border-2 border-black p-3 py-2 font-bold
-             ${isSelected ? "bg-black text-white" : "bg-white text-black"}
+             ${isSelected ? "bg-black text-white" : "text-black"}
             `}
             onclick={() => (inputTimeLimit = timeLimit)}
           >
@@ -268,12 +271,12 @@
         <div class="mb-2 text-[11px]">Invite Expires</div>
 
         <div class="flex gap-2">
-          {#each [[30, "30 min"], [60, "1 hour"], [60 * 24, "1 day"], [60 * 24 * 3, "3 days"]] as [expTime, label]}
+          {#each [[30, "1 hour"], [60, "6 hours"], [60 * 24, "1 day"], [60 * 24 * 3, "1 week"]] as [expTime, label]}
             {@const isSelected = inviteExpirationMin === expTime}
 
             <button
               class={`rounded-md border-2 border-black p-3 py-2 font-bold
-             ${isSelected ? "bg-black text-white" : "bg-white text-black"}
+             ${isSelected ? "bg-black text-white" : "bg-pb-off-white text-black"}
             `}
               onclick={() => (inviteExpirationMin = Number(expTime))}
             >
