@@ -29,8 +29,8 @@
    * Mainnet deployment steps:
    * [x] Deploy splits contract to collect fees
    * [x] Run the deployment script, set fee receiver to splits contract
-   * - Setup indexer against mainnet deployment
-   * - Setup frontend against mainnet deployment
+   * [x] Setup indexer against mainnet deployment
+   * [x] Setup frontend against mainnet deployment
    * - Test with a mainnet RPC endpoint (test websockets, test sync)
    * - Remove testnet drip logic
    * - Remove references to 'beta'
@@ -40,6 +40,8 @@
    * - Add deployment key to frame notification endpoint
    *
    Nice to haves:
+   * - Its possible for the 'connect' modal to get in a state where no button is shown
+   * - If a player misses the playback window but their opponent scored 0, that should be treated as a tie
    * - The 'cancel game' card button should take you directly the 'cancel game' modal
    * - Set up system to notify when a user has won a game
    * - Cbsw popup window still fails to open on mobile
