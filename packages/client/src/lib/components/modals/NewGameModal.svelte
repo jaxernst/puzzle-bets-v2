@@ -13,7 +13,7 @@
   import { prices } from "$lib/prices.svelte"
   import { mud } from "$lib/mudStore.svelte"
   import type { PuzzleType } from "$lib/types"
-  import { capitalized, entityToInt, formatSigFig, WEEK } from "$lib/util"
+  import { capitalized, entityToInt, formatSigFig, formatTime } from "$lib/util"
   import { openControls } from "$lib/components/game-controller/GameController.svelte"
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { user } from "$lib/userStore.svelte"
@@ -31,14 +31,14 @@
 
 <script lang="ts">
   // Public games will always set to the default expiration
-  const DEFAULT_EXPIRATION = 1 * WEEK
+  const DEFAULT_EXPIRATION_MINUTES = 60 * 24 * 7
 
   let puzzleType: PuzzleType = $state("wordle")
   let visibility: "public" | "private" = $state("public")
   let currencyInput = $state("2.00")
   let selectedCurrency = $state<"USD" | "ETH">("USD")
   let inputTimeLimit = $state(8)
-  let inviteExpirationMin = $state(DEFAULT_EXPIRATION)
+  let inviteExpirationMin = $state(DEFAULT_EXPIRATION_MINUTES)
 
   let selectedCurrencySymbol = $derived(
     { USD: "$", ETH: "Ξ" }[selectedCurrency],
@@ -105,7 +105,7 @@
     }
 
     const _inviteExpirationMin =
-      visibility === "public" ? DEFAULT_EXPIRATION : inviteExpirationMin
+      visibility === "public" ? DEFAULT_EXPIRATION_MINUTES : inviteExpirationMin
 
     gamePassword =
       visibility === "public"
@@ -161,7 +161,10 @@
           class={`flex w-full flex-col items-center gap-1 rounded-l-lg border-2 border-r-0 border-black px-4 py-2 transition-colors ${
             visibility === "public" ? "bg-black text-white" : ""
           }`}
-          onclick={() => (visibility = "public")}
+          onclick={() => {
+            visibility = "public"
+            inviteExpirationMin = DEFAULT_EXPIRATION_MINUTES
+          }}
         >
           <Smiley class={visibility === "public" ? "invert" : ""} />
           <div>Public Game</div>
@@ -271,7 +274,7 @@
         <div class="mb-2 text-[11px]">Invite Expires</div>
 
         <div class="flex gap-2">
-          {#each [[30, "1 hour"], [60, "6 hours"], [60 * 24, "1 day"], [60 * 24 * 3, "1 week"]] as [expTime, label]}
+          {#each [[60, "1 hour"], [60 * 6, "6 hours"], [60 * 24, "1 day"], [60 * 24 * 7, "1 week"]] as [expTime, label]}
             {@const isSelected = inviteExpirationMin === expTime}
 
             <button
@@ -369,7 +372,7 @@
           class="bg-pb-gray-1 flex items-center gap-1 self-start rounded-full px-2 py-1 text-[13px]"
         >
           <Clock class="h-[18px] w-[18px]" />
-          <span class="font-bold">{inviteExpirationMin} min</span>
+          <span class="font-bold">{formatTime(inviteExpirationMin * 60)}</span>
         </div>
       </div>
     </div>
