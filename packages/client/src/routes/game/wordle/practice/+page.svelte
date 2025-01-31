@@ -8,6 +8,7 @@
   import { user } from "$lib/userStore.svelte"
   import { parseEther } from "viem"
   import { toastInfo } from "$lib/toast"
+  import { networkConfig } from "$lib/mud/networkConfig"
 
   const storedGameId = localStorage.getItem("wordleDemoGameId")
   const gameId = storedGameId ?? generateRandomID(32)
@@ -29,7 +30,11 @@
     if (puzzleState?.solved) {
       launchConfetti()
 
-      if (user.authenticated && user.balance < parseEther(".01")) {
+      if (
+        networkConfig.chain.testnet &&
+        user.authenticated &&
+        user.balance < parseEther(".01")
+      ) {
         const res = await fetch("/api/drip", {
           method: "POST",
           credentials: "include",

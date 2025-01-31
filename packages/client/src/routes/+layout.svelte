@@ -22,6 +22,7 @@
   import { frameStore } from "$lib/farcaster/frameStore.svelte"
   import type { FrameContext } from "@farcaster/frame-sdk"
   import type { EvmAddress } from "$lib"
+  import { networkConfig } from "$lib/mud/networkConfig"
 
   /**
    * TODO:
@@ -31,7 +32,7 @@
    * [x] Run the deployment script, set fee receiver to splits contract
    * [x] Setup indexer against mainnet deployment
    * [x] Setup frontend against mainnet deployment
-   * - Test with a mainnet RPC endpoint (test websockets, test sync)
+   * [x] Test with a mainnet RPC endpoint (test websockets, test sync)
    * - Remove testnet drip logic
    * - Remove references to 'beta'
    * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
@@ -123,11 +124,14 @@
 
 <Confetti />
 <WalletConnector autoconnect />
-<DripGameModal />
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
 <SyncIndicator />
+
+{#if networkConfig.chain.testnet}
+  <DripGameModal />
+{/if}
 
 <div class="text-base leading-snug">
   <SvelteToast />
