@@ -70,7 +70,7 @@ export async function setupNetwork(wallet: Wallet) {
       networkConfig.chainId === 8453
         ? window.location.origin
         : networkConfig.chainId === 84532
-          ? "http://ec2-3-148-144-14.us-east-2.compute.amazonaws.com:3001"
+          ? "https://testnet-indexer.puzzlebets.xyz"
           : undefined,
   })
 
