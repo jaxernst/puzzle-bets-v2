@@ -32,40 +32,32 @@ export const WEEK = DAY * 7
 export const MONTH = DAY * 30
 
 export function formatTime(timeInSeconds: number) {
-  const MINUTE_IN_SECONDS = 60
-  const HOUR_IN_SECONDS = MINUTE_IN_SECONDS * 60
-  const DAY_IN_SECONDS = HOUR_IN_SECONDS * 24
-  const WEEK_IN_SECONDS = DAY_IN_SECONDS * 7
+  const TIME_UNITS = [
+    { value: 7 * 24 * 3600, label: "week" },
+    { value: 24 * 3600, label: "day" },
+    { value: 3600, label: "hour" },
+    { value: 60, label: "minute" },
+    { value: 1, label: "second" },
+  ] as const
 
-  if (timeInSeconds < MINUTE_IN_SECONDS) {
-    return `${timeInSeconds} second${timeInSeconds === 1 ? "" : "s"}`
-  } else if (timeInSeconds < HOUR_IN_SECONDS) {
-    const minutes = Math.floor(timeInSeconds / MINUTE_IN_SECONDS)
-    const seconds = timeInSeconds % MINUTE_IN_SECONDS
-    return `${minutes} minute${minutes === 1 ? "" : "s"}${
-      seconds > 0 ? ` and ${seconds} second${seconds === 1 ? "" : "s"}` : ""
-    }`
-  } else if (timeInSeconds < DAY_IN_SECONDS) {
-    const hours = Math.floor(timeInSeconds / HOUR_IN_SECONDS)
-    const minutes = Math.floor(
-      (timeInSeconds % HOUR_IN_SECONDS) / MINUTE_IN_SECONDS,
-    )
-    return `${hours} hour${hours === 1 ? "" : "s"}, ${minutes} minute${
-      minutes === 1 ? "" : "s"
-    }`
-  } else if (timeInSeconds < WEEK_IN_SECONDS) {
-    const days = Math.floor(timeInSeconds / DAY_IN_SECONDS)
-    const hours = Math.floor((timeInSeconds % DAY_IN_SECONDS) / HOUR_IN_SECONDS)
-    return `${days} day${days === 1 ? "" : "s"}, ${hours} hour${
-      hours === 1 ? "" : "s"
-    }`
-  } else {
-    const weeks = Math.floor(timeInSeconds / WEEK_IN_SECONDS)
-    const days = Math.floor((timeInSeconds % WEEK_IN_SECONDS) / DAY_IN_SECONDS)
-    return `${weeks} week${weeks === 1 ? "" : "s"}, ${days} day${
-      days === 1 ? "" : "s"
-    }`
+  // Handle 0 seconds case
+  if (timeInSeconds === 0) return "0 seconds"
+
+  // Find the two largest non-zero units
+  const parts: string[] = []
+  let remainingTime = timeInSeconds
+
+  for (const { value, label } of TIME_UNITS) {
+    const count = Math.floor(remainingTime / value)
+    if (count > 0) {
+      parts.push(`${count} ${label}${count === 1 ? "" : "s"}`)
+      remainingTime %= value
+      if (parts.length === 2) break
+    }
   }
+
+  // Join with appropriate conjunction
+  return parts.length > 1 ? `${parts[0]} and ${parts[1]}` : parts[0]
 }
 
 export function formatTimeAbbr(timeInSeconds: number) {
