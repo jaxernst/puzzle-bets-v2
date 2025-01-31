@@ -1,36 +1,29 @@
 /*
- * Network specific configuration for the client.
- * By default connect to the anvil test network.
- */
-
-/*
  * Import the addresses of the World, possibly on multiple chains,
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
  */
 import worlds from "contracts/worlds.json"
 
-/*
- * The supported chains.
- * By default, there are only two chains here:
- *
- * - mudFoundry, the chain running on anvil that pnpm dev
- *   starts by default. It is similar to the viem anvil chain
- *   (see https://viem.sh/docs/clients/test.html), but with the
- *   basefee set to zero to avoid transaction fees.
- * - latticeTestnet, our public test network.
- *
- * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
- * for instructions on how to add networks.
- */
-
 // @ts-ignore
-import { PUBLIC_CHAIN_ID } from "$env/static/public"
+import { PUBLIC_CHAIN_ID, PUBLIC_ALCHEMY_API_KEY } from "$env/static/public"
 
 import { supportedChains } from "./supportedChains"
-import { fallback, http } from "viem"
+import { fallback, http, webSocket } from "viem"
 import { transportObserver } from "@latticexyz/common"
 import type { MUDChain } from "@latticexyz/common/chains"
+
+const transports = {
+  84532: transportObserver(http()),
+  8453: transportObserver(
+    fallback([
+      webSocket(
+        `wss://base-mainnet.g.alchemy.com/v2/${PUBLIC_ALCHEMY_API_KEY}`,
+      ),
+      http(`https://base-mainnet.g.alchemy.com/v2/${PUBLIC_ALCHEMY_API_KEY}`),
+    ]),
+  ),
+} as const
 
 export const networkConfig = (() => {
   const params = new URLSearchParams("") // window.location.search);
@@ -85,6 +78,6 @@ export const networkConfig = (() => {
     faucetServiceUrl: params.get("faucet") ?? (chain as MUDChain).faucetUrl,
     worldAddress,
     initialBlockNumber,
-    transport: transportObserver(fallback([http()])),
+    transport: transports[chainId as keyof typeof transports],
   }
 })()

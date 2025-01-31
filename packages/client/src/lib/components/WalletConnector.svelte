@@ -10,6 +10,7 @@
   import { mud } from "$lib/mudStore.svelte"
   import { toastError } from "$lib/toast"
   import { frameStore } from "$lib/farcaster/frameStore.svelte"
+  import { networkConfig } from "$lib/mud/networkConfig"
 
   let showModal = $state(false)
 
@@ -95,6 +96,29 @@
   }
 </script>
 
+{#snippet testnetDisclaimer()}
+  <div class="flex flex-grow flex-col gap-4">
+    <div style={"font-weight: 900"}>We're in Beta!</div>
+    <div class="text-sm leading-tight">
+      Basically it's all “play money” and not real until launch. Connecting and
+      playing games will NOT use your real ETH.
+    </div>
+
+    <div class="text-sm"></div>
+  </div>
+{/snippet}
+
+{#snippet mainnetDisclaimer()}
+  <div class="flex flex-grow flex-col gap-4">
+    <div style={"font-weight: 900"}>Connect to play live wagers on Base!</div>
+    <div class="text-sm italic leading-tight">
+      This is an inferface for smart contracts that are not known to have been
+      audited. Use at your own risk.
+    </div>
+    <div class="text-sm"></div>
+  </div>
+{/snippet}
+
 <Modal bind:show={showModal} class="sm:w-[375px]">
   {#snippet header()}
     <div
@@ -112,15 +136,11 @@
     </div>
   {/snippet}
 
-  <div class="flex flex-grow flex-col gap-4">
-    <div style={"font-weight: 900"}>We're in Beta!</div>
-    <div class="text-sm leading-tight">
-      Basically it's all “play money” and not real until launch. Connecting and
-      playing games will NOT use your real ETH.
-    </div>
-
-    <div class="text-sm"></div>
-  </div>
+  {#if networkConfig.chain.testnet}
+    {@render testnetDisclaimer()}
+  {:else}
+    {@render mainnetDisclaimer()}
+  {/if}
 
   {#if !user.address}
     <button
