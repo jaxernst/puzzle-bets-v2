@@ -5,13 +5,13 @@ import { type Entity } from "@latticexyz/recs"
 import type { SetupNetworkResult } from "./setupNetwork"
 import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "$lib/types"
 import { padHex, parseEther, type Hex } from "viem"
-import { hashString, systemTimestamp } from "$lib/util"
+import { DAY, hashString, systemTimestamp } from "$lib/util"
 import { toastError } from "$lib/toast"
 import { user } from "$lib/userStore.svelte"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
-const DEFAULT_PLAYBACK_WINDOW = 60 * 60 * 24 // 1 Day
+const DEFAULT_PLAYBACK_WINDOW = 3 * DAY // 3 Days
 
 export function createSystemCalls({
   worldContract,
