@@ -53,12 +53,6 @@ export async function setupNetwork(wallet: Wallet) {
     },
   })
 
-  /*
-   * Sync on-chain state into RECS and keeps our client in sync.
-   * Uses the MUD indexer if available, otherwise falls back
-   * to the viem publicClient to make RPC calls to fetch MUD
-   * events from the chain.
-   */
   const {
     components,
     latestBlock$,
@@ -73,9 +67,11 @@ export async function setupNetwork(wallet: Wallet) {
     startBlock: BigInt(networkConfig.initialBlockNumber),
     // Only running an indexer on 4242 currently
     indexerUrl:
-      browser && networkConfig.chainId !== 31337
+      networkConfig.chainId === 8453
         ? window.location.origin
-        : undefined,
+        : networkConfig.chainId === 84532
+          ? "http://ec2-3-148-144-14.us-east-2.compute.amazonaws.com:3001"
+          : undefined,
   })
 
   /* if (networkConfig.faucetServiceUrl) {

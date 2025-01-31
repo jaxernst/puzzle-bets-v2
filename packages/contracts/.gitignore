@@ -1,4 +1,7 @@
 .env
+.env.testnet
+.env.mainnet
+
 out/*/
 !out/IWorld.sol/
 

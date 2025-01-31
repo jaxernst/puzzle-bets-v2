@@ -17,15 +17,15 @@
     "test": "tsc --noEmit && mud test",
     "test-dev": "export WORLD_ADDRESS=0xc14fbdb7808d9e2a37c1a45b635c8c3ff64a1cc1 && forge test -vv --fork-url=http://127.0.0.1:8545",
     "start-indexer": "npx -y -p @latticexyz/store-indexer postgres-indexer",
-    "serve-index": "pnpm postgres-frontend"
+    "serve-index": "npx -y -p @latticexyz/store-indexer postgres-frontend"
   },
   "dependencies": {
-    "@latticexyz/cli": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
-    "@latticexyz/schema-type": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
-    "@latticexyz/store": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
-    "@latticexyz/store-indexer": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
-    "@latticexyz/world": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
-    "@latticexyz/world-modules": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd"
+    "@latticexyz/cli": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "@latticexyz/schema-type": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "@latticexyz/store": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "@latticexyz/store-indexer": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "@latticexyz/world": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "@latticexyz/world-modules": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
@@ -34,7 +34,7 @@
     "prettier": "^2.6.2",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solhint": "^3.3.7",
-    "solhint-config-mud": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd",
-    "solhint-plugin-mud": "2.2.15-9578e45d37630993d5e5063d06d04aa917b53cbd"
+    "solhint-config-mud": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc",
+    "solhint-plugin-mud": "2.2.18-491a5acc8ab6d5e1a65a9845160860199b5173fc"
   }
 }

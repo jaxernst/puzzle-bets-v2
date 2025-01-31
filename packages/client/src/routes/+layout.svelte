@@ -27,8 +27,10 @@
    * TODO:
    * 
    * Mainnet deployment steps:
-   * - Deploy splits contract to collect fees
-   * - Run the deployment script, set fee receiver to splits contract
+   * [x] Deploy splits contract to collect fees
+   * [x] Run the deployment script, set fee receiver to splits contract
+   * - Setup indexer against mainnet deployment
+   * - Setup frontend against mainnet deployment
    * - Test with a mainnet RPC endpoint (test websockets, test sync)
    * - Remove testnet drip logic
    * - Remove references to 'beta'

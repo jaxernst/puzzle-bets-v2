@@ -83,7 +83,7 @@ export default defineWorld({
 
   modules: [
     {
-      name: "UniqueEntityModule",
+      artifactPath: "@latticexyz/world-modules/out/UniqueEntityModule.sol/UniqueEntityModule.json",
       root: true,
       args: [],
     },
