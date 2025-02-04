@@ -155,6 +155,21 @@
     cancelGameState = null
   }
 
+  const startTurn = async () => {
+    await mud.systemCalls?.startTurn(gameId)
+
+    fetch("/api/notify/game-complete", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gameId,
+        targetUser: opponent,
+        delayMinutes: game.submissionWindow * 60,
+      }),
+    })
+  }
+
   let submitModalAutoOpened = false
   $effect(() => {
     if (
@@ -253,9 +268,7 @@
 
           <LoadingButton
             class="w-full max-w-[375px] rounded border-2 border-black bg-black p-3 text-base font-bold text-white"
-            onClick={async () => {
-              await mud.systemCalls?.startTurn(gameId)
-            }}
+            onClick={startTurn}
           >
             Start Turn
           </LoadingButton>
