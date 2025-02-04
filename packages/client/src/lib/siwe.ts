@@ -36,11 +36,9 @@ export async function signInWithEthereum(address: EvmAddress) {
 
   const result = await fetch("/api/siwe-auth/verify", {
     method: "POST",
-    body: JSON.stringify({ message, signature }),
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, signature }),
   })
 
   nonce = null

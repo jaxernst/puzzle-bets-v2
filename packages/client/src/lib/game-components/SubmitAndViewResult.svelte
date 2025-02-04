@@ -82,9 +82,8 @@
   const getPuzzleVerification = async () => {
     const res = await fetch(`/api/${game.type}/verify-user-solution`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         gameId: parseInt(game.id, 16),
       }),

@@ -52,11 +52,9 @@ export const wordleGameStates = (() => {
 
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
-        body: JSON.stringify({ gameId: gameIdParam, opponent, isDemo }),
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gameId: gameIdParam, opponent, isDemo }),
       })
 
       if (!res.ok) return
@@ -81,15 +79,13 @@ export const wordleGameStates = (() => {
 
       const res = await fetch("/api/wordle/submit-guess", {
         method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           gameId: gameIdParam,
           guess,
           isDemo,
         }),
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
       })
 
       if (!res.ok) return
@@ -141,15 +137,13 @@ export const wordleGameStates = (() => {
 
       const res = await fetch("/api/wordle/reset-game", {
         method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           gameId: gameIdParam,
           otherPlayer: opponent,
           isDemo,
         }),
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
       })
 
       // A reset can fail if the other player reset the game first, in this case,

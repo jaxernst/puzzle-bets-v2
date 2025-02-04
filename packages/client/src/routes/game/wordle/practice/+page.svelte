@@ -33,9 +33,7 @@
         const res = await fetch("/api/drip", {
           method: "POST",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         })
 
         if (res.ok) {
