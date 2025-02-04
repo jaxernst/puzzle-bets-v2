@@ -282,7 +282,7 @@
       <div class="mb-2 text-[11px]">Puzzle Time Limit</div>
 
       <div class="flex gap-2">
-        {#each [5, 8, 12, 17] as timeLimit}
+        {#each [4, 8, 20] as timeLimit}
           {@const isSelected = inputTimeLimit === timeLimit}
 
           {@render SelectButton(
