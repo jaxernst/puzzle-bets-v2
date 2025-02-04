@@ -19,7 +19,7 @@
   import { user } from "$lib/userStore.svelte"
   import { gameInviteUrls } from "$lib/inviteUrls"
   import { type Entity } from "@latticexyz/recs"
-
+  import { twMerge } from "tailwind-merge"
   let showCreate = $state(false)
   let showConfirm = $state(false)
   let showCreated = $state(false)
@@ -141,6 +141,24 @@
   }
 </script>
 
+{#snippet SelectButton(
+  label: any,
+  selected: boolean,
+  onclick: () => void,
+  className?: string,
+)}
+  <button
+    class={twMerge(
+      "rounded-md border-2 border-black p-3 py-2 font-bold",
+      className,
+      selected ? "bg-black text-white" : "text-black",
+    )}
+    {onclick}
+  >
+    {label}
+  </button>
+{/snippet}
+
 <Modal bind:show={showCreate} class="px-6 pb-0 pt-6 sm:w-[450px]">
   {#snippet header()}
     <div class="flex items-center gap-2">
@@ -213,6 +231,17 @@
     <div>
       <div class="mb-2 text-[11px]">Wager</div>
 
+      <div class="mb-1.5 flex gap-2">
+        {#each { USD: [1, 2, 5, 20], ETH: [0.001, 0.01, 0.05, 0.2] }[selectedCurrency] as wager}
+          {@render SelectButton(
+            `${selectedCurrencySymbol}${wager}`,
+            Number(currencyInput) === wager,
+            () => (currencyInput = String(wager)),
+            "text-sm",
+          )}
+        {/each}
+      </div>
+
       <div class="flex gap-2">
         <div
           class="flex w-full items-center rounded-md bg-[#E7E1D2] pl-3 font-bold"
@@ -256,14 +285,11 @@
         {#each [5, 8, 12, 17] as timeLimit}
           {@const isSelected = inputTimeLimit === timeLimit}
 
-          <button
-            class={`rounded-md border-2 border-black p-3 py-2 font-bold
-             ${isSelected ? "bg-black text-white" : "text-black"}
-            `}
-            onclick={() => (inputTimeLimit = timeLimit)}
-          >
-            {timeLimit} min
-          </button>
+          {@render SelectButton(
+            `${timeLimit} min`,
+            isSelected,
+            () => (inputTimeLimit = timeLimit),
+          )}
         {/each}
       </div>
     </div>
@@ -277,14 +303,11 @@
           {#each [[60, "1 hour"], [60 * 6, "6 hours"], [60 * 24, "1 day"], [60 * 24 * 7, "1 week"]] as [expTime, label]}
             {@const isSelected = inviteExpirationMin === expTime}
 
-            <button
-              class={`rounded-md border-2 border-black p-3 py-2 font-bold
-             ${isSelected ? "bg-black text-white" : "bg-pb-off-white text-black"}
-            `}
-              onclick={() => (inviteExpirationMin = Number(expTime))}
-            >
-              {label}
-            </button>
+            {@render SelectButton(
+              label,
+              isSelected,
+              () => (inviteExpirationMin = Number(expTime)),
+            )}
           {/each}
         </div>
       </div>
