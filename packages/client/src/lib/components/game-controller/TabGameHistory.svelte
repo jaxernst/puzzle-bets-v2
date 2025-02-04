@@ -12,11 +12,17 @@
       .filter(({ status }) => {
         return status === GameStatus.Complete || status === GameStatus.Inactive
       })
-      .sort(({ status: statusA }, { status: statusB }) => {
-        return (
-          (statusA === GameStatus.Inactive ? 1 : 0) -
-          (statusB === GameStatus.Inactive ? 1 : 0)
-        )
+      .sort(({ status: statusA, id: idA }, { status: statusB, id: idB }) => {
+        if ( statusA === GameStatus.Inactive && statusB !== GameStatus.Inactive) {
+          return 1 // gameA is inactive, move it down
+        }
+
+        if ( statusA !== GameStatus.Inactive && statusB === GameStatus.Inactive) {
+          return -1 // gameB is inactive, move it down
+        }
+
+        // Both are complete, sort by gameId descending
+        return idB - idA
       }),
   )
 </script>
