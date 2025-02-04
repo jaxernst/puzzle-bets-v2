@@ -165,7 +165,7 @@
       body: JSON.stringify({
         gameId,
         targetUser: opponent,
-        delayMinutes: game.submissionWindow * 60,
+        delaySeconds: game.submissionWindow,
       }),
     })
   }

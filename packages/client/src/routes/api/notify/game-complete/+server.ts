@@ -3,10 +3,10 @@ import { verifyGameParticipants } from "$lib/server/onchainChecks"
 import { getFrameNotificationState, supabase } from "$lib/server/supabaseClient"
 
 export const POST = async ({ request, locals, url }) => {
-  const { targetUser, gameId, delayMinutes } = (await request.json()) as {
+  const { targetUser, gameId, delaySeconds } = (await request.json()) as {
     targetUser: EvmAddress
     gameId: string
-    delayMinutes: number
+    delaySeconds: number
   }
 
   const playersValid = await verifyGameParticipants(
@@ -29,16 +29,16 @@ export const POST = async ({ request, locals, url }) => {
   }
 
   const notification = {
-    title: "Game Complete!",
-    body: "Your opponent has joined and started their turn, make your move!",
+    title: "Wordle game complete!",
+    body: "Check the results to see how you did.",
     notificationDetails: notificationState,
-    url: `${url.origin}/game/wordle/${gameId}`,
+    url: `${url.origin}/game/wordle/${gameId}?results=true`,
   }
 
   const { error } = await supabase.schema("pgmq").rpc("send", {
     queue_name: "game_complete_notification_queue",
     msg: notification,
-    delay: 0,
+    delay: delaySeconds,
   })
 
   if (error) {
