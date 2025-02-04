@@ -49,18 +49,26 @@
     failedToSolve?: boolean
   }>()
 
-  $effect(() => {
-    if (new URLSearchParams(window.location.search).get("results") === "true") {
-      showResults = true
-    }
-  })
-
   let submitting = $state(false)
   let claiming = $state(false)
   let votingRematch = $state(false)
   let outcomes = $derived(getPlayerOutcomes(game))
+  let canViewResults = $derived(outcomes.canViewResults)
   let opponentName = $derived(displayNameStore.get(game.opponent))
   let puzzleDueIn = $derived(outcomes.mySubmissionTimeLeft)
+
+  $effect(() => {
+    if (
+      canViewResults &&
+      new URLSearchParams(window.location.search).get("results") === "true"
+    ) {
+      showResults = true
+    }
+
+    return () => {
+      showResults = false
+    }
+  })
 
   const confirmSubmit = async () => {
     const success = await submissionSolution()
@@ -179,7 +187,7 @@
   }
 </script>
 
-{#if !outcomes.canViewResults}
+{#if !canViewResults}
   <button
     class={twMerge(
       "rounded-t bg-black px-6 pb-5 pt-3 font-black text-white disabled:opacity-70 sm:py-2 sm:pb-2 sm:pt-2 md:rounded",
