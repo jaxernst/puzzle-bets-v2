@@ -114,7 +114,6 @@ export async function updateFrameNotificationState(
       .delete()
       .in("address", userAddrs)
       .select()
-      .single()
   } else {
     result = await supabase
       .from("frame-notifications")
