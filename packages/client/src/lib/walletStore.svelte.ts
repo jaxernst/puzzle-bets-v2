@@ -24,8 +24,8 @@ const projectId = "226a30717601f2bb0c6782d18597f828"
 const metadata = {
   name: "Puzzle Bets",
   description: "Play wagered puzzle games with your friends.",
-  url: "https://beta.puzzlebets.xyz",
-  icons: ["https://beta.puzzlebets.xyz/favicon.ico"],
+  url: "https://puzzlebets.xyz",
+  icons: ["https://puzzlebets.xyz/favicon.ico"],
 }
 
 const wagmiAdapter = new WagmiAdapter({
