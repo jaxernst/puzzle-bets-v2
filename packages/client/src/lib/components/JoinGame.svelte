@@ -43,14 +43,12 @@
 
     fetch(`/api/notify/game-joined`, {
       method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         targetUser: game.p1,
         gameId: entityToInt(game.id),
       }),
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
     })
 
     goto(`/game/${game.type}/${entityToInt(game.id)}`)

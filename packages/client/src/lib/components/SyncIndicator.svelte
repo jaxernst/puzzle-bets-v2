@@ -61,9 +61,9 @@
 
 <div
   class={`
-    bg-pb-off-white fixed left-1/2 isolate z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-2 py-1.5 text-base font-semibold shadow-md
+    bg-pb-off-white fixed left-1/2 isolate z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-2 py-1.5 text-base font-semibold
       transition-all duration-150 ease-in-out 
-      ${!user.address || mud.syncProgress === null || !started || synced ? "-top-10" : "top-4"}
+      ${!user.address || mud.syncProgress === null || !started || synced ? "-top-10" : "top-4 shadow-md"}
   `}
 >
   {@render progressRing()}

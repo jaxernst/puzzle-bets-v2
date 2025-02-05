@@ -148,9 +148,9 @@ export const user = (() => {
 
       await fetch(`/api/farcaster/fid-association/${userState.authenticated}`, {
         method: "POST",
-        body: JSON.stringify({ fid }),
         credentials: "include",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fid }),
       })
     },
   }

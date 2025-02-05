@@ -26,9 +26,7 @@ export async function sendFrameNotification({
 }): Promise<SendFrameNotificationResult> {
   const response = await fetch(notificationDetails.url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       notificationId: crypto.randomUUID(),
       title,
