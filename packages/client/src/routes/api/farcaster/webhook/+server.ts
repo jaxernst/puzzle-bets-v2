@@ -4,10 +4,23 @@ import {
   updateFrameNotificationState,
 } from "$lib/server/supabaseClient"
 import {
+  createVerifyAppKeyWithHub,
+  verifyAppKeyWithNeynar,
   parseWebhookEvent,
   type ParseWebhookEvent,
+  type VerifyAppKey,
+  type VerifyAppKeyResult,
 } from "@farcaster/frame-node"
 import type { RequestHandler } from "@sveltejs/kit"
+
+const verifyAppKeyWithPinata: VerifyAppKey = async (
+  fid: number,
+  appKey: string,
+): Promise<VerifyAppKeyResult> => {
+  const verifier = createVerifyAppKeyWithHub("https://hub.pinata.cloud")
+  console.log("verifier result", await verifier(fid, appKey))
+  return verifier(fid, appKey)
+}
 
 export const POST: RequestHandler = async ({ request }) => {
   const requestJson = await request.json()
@@ -16,10 +29,7 @@ export const POST: RequestHandler = async ({ request }) => {
   try {
     // Mock the app key verification. This allows notification subscriptions to be spoofed, but we don't really care
     // about that for our notification use case
-    data = await parseWebhookEvent(requestJson, async () => ({
-      valid: true,
-      appFid: 0,
-    }))
+    data = await parseWebhookEvent(requestJson, verifyAppKeyWithPinata)
   } catch (e: unknown) {
     const error = e as ParseWebhookEvent.ErrorType
 
