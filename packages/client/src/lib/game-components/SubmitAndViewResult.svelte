@@ -96,7 +96,6 @@
     }
   }
 
-  let verificationFetching = false
   let puzzleVerification: {
     won: boolean
     score: number
@@ -106,6 +105,8 @@
   // Fetch the verification as an effect (when the confirm modal is opened) so that the verification
   // doesn't need to be fetched when the user goes to make the submission transaction (the async delay
   // can cause the wallet popup to be blocked by the browser)
+  let verificationFetching = false
+
   $effect(() => {
     if (showConfirmSubmit && !puzzleVerification && !verificationFetching) {
       verificationFetching = true
@@ -122,13 +123,14 @@
   const submissionSolution = async () => {
     if (submitting || !mud.systemCalls) return
 
+    submitting = true
+
     if (!puzzleVerification) {
       puzzleVerification = await getPuzzleVerification()
     }
 
     try {
       if (!puzzleVerification.won) {
-        // submitError = "Puzzle not solved!"
         return await mud.systemCalls.submitSolution(game.id, 0, "0x")
       } else {
         return await mud.systemCalls.submitSolution(
@@ -192,7 +194,7 @@
       "rounded-t bg-black px-6 pb-5 pt-3 font-black text-white disabled:opacity-70 sm:py-2 sm:pb-2 sm:pt-2 md:rounded",
       className,
     )}
-    disabled={!outcomes.canSubmit || submitting || disabled}
+    disabled={!outcomes.canSubmit || disabled}
     onclick={openSubmitModal}
   >
     Submit
@@ -342,7 +344,7 @@
         disabled={!outcomes.gameOutcome || outcomes.claimed}
         onclick={claim}
       >
-        {#if claiming || verificationFetching}
+        {#if claiming}
           <DotLoader class="fill-white " />
         {:else if outcomes.gameOutcome === "tie"}
           Withdraw {formatSigFig(Number(formatEther(game.buyInAmount)), 3)} ETH
@@ -414,9 +416,8 @@
     <LoadingButton
       class="rounded bg-black px-6 py-2 font-black text-white disabled:opacity-70"
       onClick={confirmSubmit}
-      disabled={submitting}
     >
-      {submitting ? "Submitting..." : "Submit Puzzle"}
+      Submit Puzzle
     </LoadingButton>
 
     <button
