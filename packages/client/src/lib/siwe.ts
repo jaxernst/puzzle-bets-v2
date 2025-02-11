@@ -32,7 +32,14 @@ export async function signInWithEthereum(address: EvmAddress) {
     version: "1",
   })
 
-  const signature = await signMessage(wagmiConfig, { message })
+  let signature: string
+  try {
+    signature = await signMessage(wagmiConfig, { message })
+  } catch (error: any) {
+    console.error("Error signing message", error)
+    toastError(`Error signing message: ${error.shortMessage}`)
+    return
+  }
 
   const result = await fetch("/api/siwe-auth/verify", {
     method: "POST",
