@@ -35,6 +35,7 @@
   import Coins from "$lib/icons/Coins.svelte"
   import Trophy from "$lib/icons/Trophy.svelte"
   import { goto } from "$app/navigation"
+  import { toastError } from "$lib/toast"
 
   let {
     game,
@@ -139,6 +140,9 @@
           puzzleVerification.signature,
         )
       }
+    } catch (e: any) {
+      console.error("Error submitting solution", e)
+      toastError(`Error submitting solution: ${e.shortMessage}`)
     } finally {
       submitting = false
     }
