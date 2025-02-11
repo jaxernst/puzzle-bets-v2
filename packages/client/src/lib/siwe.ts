@@ -27,7 +27,7 @@ export async function signInWithEthereum(address: EvmAddress) {
     address,
     nonce,
     chainId: Number(PUBLIC_CHAIN_ID),
-    domain: "beta.puzzlebets.xyz",
+    domain: window.location.hostname,
     uri: window.location.origin,
     version: "1",
   })

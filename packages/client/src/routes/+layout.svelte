@@ -22,6 +22,7 @@
   import { frameStore } from "$lib/farcaster/frameStore.svelte"
   import type { FrameContext } from "@farcaster/frame-sdk"
   import type { EvmAddress } from "$lib"
+  import { networkConfig } from "$lib/mud/networkConfig"
 
   /**
    * TODO:
@@ -29,16 +30,18 @@
    * Mainnet deployment steps:
    * [x] Deploy splits contract to collect fees
    * [x] Run the deployment script, set fee receiver to splits contract
-   * - Setup indexer against mainnet deployment
-   * - Setup frontend against mainnet deployment
-   * - Test with a mainnet RPC endpoint (test websockets, test sync)
-   * - Remove testnet drip logic
-   * - Remove references to 'beta'
-   * - Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
+   * [x] Setup indexer against mainnet deployment
+   * [x] Setup frontend against mainnet deployment
+   * [x] Test with a mainnet RPC endpoint (test websockets, test sync)
+   * [x] Remove testnet drip logic
+   * [] Remove references to 'beta'
+   * [x] Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
-   * - Add a limit to the bet size (UI only)
-   *
+   * [x] Add deployment key to frame notification endpoint
+   * [x] Update farcaster manifest for base domain   
+
    Nice to haves:
+   * - Its possible for the 'connect' modal to get in a state where no button is shown
    * - Add a 'turn on notifications' button in the join game and create game modals
    * - If a player misses the playback window but their opponent scored 0, that should be treated as a tie
    * - The 'cancel game' card button should take you directly the 'cancel game' modal
@@ -98,6 +101,7 @@
     <meta property="og:title" content="Puzzle Bets - Compete with friends" />
     <meta name="description" content="Play wagered Wordle matches with friends" />
     <meta property="og:description" content="Play wagered Wordle matches with friends" />
+    <meta property="og:image" data-default content="https://puzzlebets.xyz/home-splash-landscape.png" />
 
     <meta
       name="fc:frame"
@@ -122,11 +126,14 @@
 
 <Confetti />
 <WalletConnector autoconnect />
-<DripGameModal />
 <NewGameModal />
 <AboutModal />
 <DisplayNameModal />
 <SyncIndicator />
+
+{#if networkConfig.chain.testnet}
+  <DripGameModal />
+{/if}
 
 <div class="text-base leading-snug">
   <SvelteToast />

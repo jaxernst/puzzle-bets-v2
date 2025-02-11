@@ -4,6 +4,7 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { user } from "$lib/userStore.svelte"
   import { toggleAboutModal } from "$lib/components/modals/AboutModal.svelte"
+  import { networkConfig } from "$lib/mud/networkConfig"
 
   const connect = async () => {
     try {
@@ -40,7 +41,11 @@
 
     <div class="flex flex-col items-center gap-2 sm:gap-4">
       <div class="rounded-full border-2 border-black px-2">
-        Testnet <span class="font-bold">Beta</span>
+        {#if networkConfig.chainId === 8453}
+          Live on <span class="font-bold">Base</span>
+        {:else}
+          Testnet <span class="font-bold">Beta</span>
+        {/if}
       </div>
 
       <PuzzleBetsMoneyLogo class="h-[175px] sm:h-[251px]" />

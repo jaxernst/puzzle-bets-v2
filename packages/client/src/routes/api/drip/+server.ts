@@ -9,6 +9,10 @@ const DRIP_LIMIT_ETH = 0.05
 const DRIP_AMOUNT_ETH = 0.01
 
 export const POST = async ({ locals }) => {
+  if (!networkConfig.chain.testnet) {
+    return new Response("Drip not allowed on this network", { status: 400 })
+  }
+
   const user = locals.user
   if (!user || !isAddress(user)) return new Response("No user", { status: 401 })
 

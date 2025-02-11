@@ -10,6 +10,7 @@
   <meta property="og:title" content={title} />
   <meta name="description" content={description} />
   <meta property="og:description" content={description} />
+  <meta property="og:image" data-default content="/home-splash-landscape.png" />
 
   <meta
     name="fc:frame"

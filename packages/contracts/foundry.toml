@@ -28,3 +28,6 @@ eth_rpc_url = "https://miner.testnet-chain.linfra.xyz"
 
 [profile.base-sepolia]
 eth_rpc_url = "https://sepolia.base.org"
+
+[profile.base]
+eth_rpc_url = "https://mainnet.base.org"
