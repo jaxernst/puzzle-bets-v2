@@ -16,7 +16,9 @@
     >
       <thead>
         <tr>
-          <th class="text-left">Rank</th>
+          <th class="hidden sm:table-cell">Rank</th>
+          <th class=" sm:hidden">#</th>
+
           <th class="text-left">Player</th>
           <th class="text-left">W / L / T</th>
           <th class="text-left">Amount Won</th>
@@ -29,15 +31,20 @@
 
           <tr class=" bg-pb-off-white rounded">
             <td
-              class="rounded-l p-3"
-              style="box-shadow: 0px 5px 0px 0px #E3DDCD;">{rank}</td
+              class="rounded-l p-1.5 text-center sm:p-3"
+              style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
             >
-            <td class="p-3" style="box-shadow: 0px 5px 0px 0px #E3DDCD;">
+              {rank}
+            </td>
+            <td
+              class="p-1.5 sm:p-3"
+              style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
+            >
               <div class="flex items-center">
                 <img
                   src="/avatar-1.png"
                   alt="Avatar"
-                  class="mr-2 h-6 w-6 rounded-full"
+                  class="mr-2 h-5 w-5 rounded-full sm:h-6 sm:w-6"
                 />
                 <div>
                   {#if playerName}
@@ -49,7 +56,9 @@
                 </div>
               </div>
             </td>
-            <td class="p-3" style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
+            <td
+              class="whitespace-nowrap p-1.5 sm:p-3"
+              style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
               >{won} / {lost} / {tied}</td
             >
             <td
