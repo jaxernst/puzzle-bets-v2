@@ -37,9 +37,9 @@
    * [] Remove references to 'beta'
    * [x] Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
-   * - Add a limit to the bet size (UI only)
-   * - Add deployment key to frame notification endpoint
-   *
+   * [x] Add deployment key to frame notification endpoint
+   * [x] Update farcaster manifest for base domain   
+
    Nice to haves:
    * - Its possible for the 'connect' modal to get in a state where no button is shown
    * - Add a 'turn on notifications' button in the join game and create game modals
