@@ -19,9 +19,9 @@
           <th class="hidden sm:table-cell">Rank</th>
           <th class=" sm:hidden">#</th>
 
-          <th class="pl-1.5 text-left">Player</th>
-          <th class="pl-1.5 text-left">W / L / T</th>
-          <th class="pl-1.5 text-left">Amount Won</th>
+          <th class="pl-1 text-left">Player</th>
+          <th class="whitespace-nowrap pl-1 text-left">W / L / T</th>
+          <th class="whitespace-nowrap pl-1 text-left">Amount Won</th>
         </tr>
       </thead>
       <tbody>
