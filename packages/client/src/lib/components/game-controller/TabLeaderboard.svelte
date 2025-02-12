@@ -19,9 +19,9 @@
           <th class="hidden sm:table-cell">Rank</th>
           <th class=" sm:hidden">#</th>
 
-          <th class="text-left">Player</th>
-          <th class="text-left">W / L / T</th>
-          <th class="text-left">Amount Won</th>
+          <th class="pl-1.5 text-left">Player</th>
+          <th class="pl-1.5 text-left">W / L / T</th>
+          <th class="pl-1.5 text-left">Amount Won</th>
         </tr>
       </thead>
       <tbody>
@@ -62,11 +62,13 @@
               >{won} / {lost} / {tied}</td
             >
             <td
-              class="rounded-r p-3 font-bold"
+              class=" rounded-r p-1.5 font-bold sm:p-3"
               style="box-shadow: 0px 5px 0px 0px #E3DDCD;"
             >
-              {formatAsDollar(profitEth * prices.eth)}
-              ({formatSigFig(profitEth, 2)} ETH)
+              <div class="flex flex-wrap gap-1">
+                <div>{formatAsDollar(profitEth * prices.eth)}</div>
+                <div>({formatSigFig(profitEth, 2)} ETH)</div>
+              </div>
             </td>
           </tr>
         {/each}
