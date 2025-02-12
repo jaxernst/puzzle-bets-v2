@@ -21,7 +21,7 @@
         title: `Join $${usdValue} Wordle Game`,
         action: {
           type: "launch_frame",
-          name: "launch",
+          name: "Puzzle Bets",
           url: page.url.href,
           iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
           splashImageUrl: `https://puzzlebets.xyz/character1.png`,
