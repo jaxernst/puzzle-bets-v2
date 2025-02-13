@@ -469,9 +469,9 @@
       </div>
 
       <div class="leading-tight">
-        <span class="underline"
-          >Once your opponent joins, you'll have 12 hours to start your turn</span
-        >
+        <span class="underline">
+          Once your opponent joins, you'll have 24 hours to start your turn
+        </span>
       </div>
     </div>
 
