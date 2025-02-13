@@ -11,7 +11,7 @@ import { user } from "$lib/userStore.svelte"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
-const DEFAULT_PLAYBACK_WINDOW = 3 * DAY // 3 Days
+const DEFAULT_PLAYBACK_WINDOW = 1 * DAY // 1 Day
 
 export function createSystemCalls({
   worldContract,

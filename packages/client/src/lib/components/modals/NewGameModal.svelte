@@ -172,7 +172,7 @@
 
     <!-- Game Visibility -->
     <div class="flex flex-col gap-2">
-      <div class="text-[11px]">Choose Game Visibility</div>
+      <div class="text-[12px]">Choose Game Visibility</div>
 
       <div class="flex h-[62px] items-stretch text-[13px] font-extrabold">
         <button
@@ -199,7 +199,7 @@
         </button>
       </div>
 
-      <div class="text-xs">
+      <div class="text-xs text-black/50">
         {#if visibility === "public"}
           Anyone can join your game from the lobby
         {:else if visibility === "private"}
@@ -229,7 +229,7 @@
 
     <!-- Game Wager -->
     <div>
-      <div class="mb-2 text-[11px]">Wager</div>
+      <div class="mb-2 text-[12px]">Wager</div>
 
       <div class="mb-1.5 flex gap-2">
         {#each { USD: [1, 2, 5, 20], ETH: [0.001, 0.01, 0.05, 0.2] }[selectedCurrency] as wager}
@@ -279,7 +279,7 @@
 
     <!-- Puzzle Time Limit -->
     <div>
-      <div class="mb-2 text-[11px]">Puzzle Time Limit</div>
+      <div class="mb-2 text-[12px]">Puzzle Time Limit</div>
 
       <div class="flex gap-2">
         {#each [4, 8, 20] as timeLimit}
@@ -469,9 +469,9 @@
       </div>
 
       <div class="leading-tight">
-        <span class="underline"
-          >Once your opponent joins, you'll have 12 hours to start your turn</span
-        >
+        <span class="underline">
+          Once your opponent joins, you'll have 24 hours to start your turn
+        </span>
       </div>
     </div>
 
@@ -483,38 +483,26 @@
       </div>
 
       <div class="flex flex-col gap-2 font-bold">
-        {#if visibility === "public"}
-          <button
-            onclick={() => {
-              goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
-              showCreated = false
-            }}
-            class="rounded-md border-2 border-black bg-black py-2 text-center text-white"
-          >
-            Go To Game Room
-          </button>
-        {:else}
-          <button
-            class="flex items-center justify-center gap-2 rounded-md border-2 border-black bg-black py-2 text-white"
-            onclick={copyInviteLink}
-          >
-            {#if showInviteCopied}
-              Invite Copied!
-            {:else}
-              Copy Invite Link
-              <Link />
-            {/if}
-          </button>
-          <button
-            class="rounded-md border-2 border-black py-2"
-            onclick={() => {
-              goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
-              showCreated = false
-            }}
-          >
-            Go To Game Room
-          </button>
-        {/if}
+        <button
+          class="flex items-center justify-center gap-2 rounded-md border-2 border-black bg-black py-2 text-white"
+          onclick={copyInviteLink}
+        >
+          {#if showInviteCopied}
+            Invite Copied!
+          {:else}
+            Copy Invite Link
+            <Link />
+          {/if}
+        </button>
+        <button
+          class="rounded-md border-2 border-black py-2"
+          onclick={() => {
+            goto(`/game/${puzzleType}/${entityToInt(createdGameId)}`)
+            showCreated = false
+          }}
+        >
+          Go To Game Room
+        </button>
 
         <button
           class="rounded-md border-2 border-black py-2"
