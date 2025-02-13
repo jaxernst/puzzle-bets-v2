@@ -17,6 +17,8 @@
   let walletConnectSuccess = $state<(wallet: Wallet) => any>(() => {})
   let walletConnectFail = $state<(err: string) => void>(() => {}) // Not used currently
 
+  let disclaimerAcknowledged = $state(false)
+
   export async function promptConnectWallet() {
     showModal = true
 
@@ -100,7 +102,7 @@
   <div class="flex flex-grow flex-col gap-4">
     <div style={"font-weight: 900"}>We're in Beta!</div>
     <div class="text-sm leading-tight">
-      Basically it's all “play money” and not real until launch. Connecting and
+      Basically it's all "play money" and not real until launch. Connecting and
       playing games will NOT use your real ETH.
     </div>
 
@@ -111,11 +113,35 @@
 {#snippet mainnetDisclaimer()}
   <div class="flex flex-grow flex-col gap-4">
     <div style={"font-weight: 900"}>Connect to play live wagers on Base!</div>
-    <div class="text-sm italic leading-tight">
-      This is an inferface for smart contracts that are not known to have been
-      audited. Use at your own risk.
+    <div
+      class="space-y-2 rounded border border-black p-1.5 text-sm leading-tight"
+    >
+      <p class="underline">Important Disclaimers:</p>
+      <div class="space-y-1">
+        <p>
+          <i
+            >• This is an experimental interface for smart contracts that are
+            not known to have been audited.</i
+          >
+        </p>
+        <p>
+          <i
+            >• Funds wagered in timed games are at risk of loss from network
+            issues, interface errors, or smart contract bugs.</i
+          >
+        </p>
+        <p><i>• Use at your own risk.</i></p>
+      </div>
     </div>
-    <div class="text-sm"></div>
+
+    <label class="flex items-start gap-2 text-sm">
+      <input
+        type="checkbox"
+        bind:checked={disclaimerAcknowledged}
+        class="mt-.5"
+      />
+      <span>I have read the disclaimers and accept these risks.</span>
+    </label>
   </div>
 {/snippet}
 
@@ -146,6 +172,8 @@
     <button
       class="flex w-full justify-center gap-3 rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
       onclick={handleConnect}
+      disabled={!disclaimerAcknowledged}
+      class:opacity-50={!disclaimerAcknowledged}
     >
       {#if walletStore.connecting}
         Connecting

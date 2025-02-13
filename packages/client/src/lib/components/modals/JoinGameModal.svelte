@@ -13,6 +13,7 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import { getComponentValue } from "@latticexyz/recs"
   import { goto } from "$app/navigation"
+  import { toggleNewGameModal } from "./NewGameModal.svelte"
 
   const { show } = $props()
 
@@ -42,18 +43,31 @@
 </script>
 
 {#snippet returnHomeMessage(msg: string)}
-  <div class="self-center font-bold">{msg}</div>
-  <hr />
-  {@render returnHomeButton()}
-{/snippet}
+  <div class="flex flex-col gap-2">
+    <div class="self-center font-bold">{msg}</div>
+    <p class="text-center text-sm leading-snug">
+      You can create your own game and challenge your friends by sharing the
+      invite link
+    </p>
+  </div>
 
-{#snippet returnHomeButton()}
-  <button
-    onclick={() => goto("/dashboard")}
-    class="rounded bg-black p-2 text-center font-bold text-white"
-  >
-    Return Home
-  </button>
+  <hr />
+
+  <div class="flex flex-col gap-2">
+    <button
+      onclick={toggleNewGameModal}
+      class="rounded border-2 border-black bg-black p-2 text-center font-bold text-white"
+    >
+      Create New Game
+    </button>
+
+    <button
+      onclick={() => goto("/dashboard")}
+      class="rounded border-2 border-black p-2 text-center font-bold"
+    >
+      Return Home
+    </button>
+  </div>
 {/snippet}
 
 <Modal {show} onClose={() => goto("/dashboard")} class="sm:w-[375px]">

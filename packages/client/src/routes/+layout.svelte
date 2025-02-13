@@ -32,15 +32,20 @@
    * [x] Run the deployment script, set fee receiver to splits contract
    * [x] Setup indexer against mainnet deployment
    * [x] Setup frontend against mainnet deployment
-   * [x] Test with a mainnet RPC endpoint (test websockets, test sync)
+   * [x] Test with a mainnet RPC endpoint (test websockets, test sync).en
    * [x] Remove testnet drip logic
    * [] Remove references to 'beta'
    * [x] Add disclaimer to warn that contracts have not been audited and interface failures are possible (probably want 
    *   to have a 'check to agree' for this)
    * [x] Add deployment key to frame notification endpoint
    * [x] Update farcaster manifest for base domain   
+   * [ ] If joining a game that has already started, show an action to start and share their own game
+   * [ ] Add a prompt to turn on notifications in frame envs
+
 
    Nice to haves:
+   * - Create invite links for specific farcaster user @ (username based game password)
+   * - Display name endpoint getting duplicate calls
    * - Its possible for the 'connect' modal to get in a state where no button is shown
    * - Add a 'turn on notifications' button in the join game and create game modals
    * - If a player misses the playback window but their opponent scored 0, that should be treated as a tie
@@ -112,7 +117,7 @@
           title: "Launch",
           action: {
             type: "launch_frame",
-            name: "launch",
+            name: "Puzzle Bets",
             url: page.url.href,
             iconImageUrl: `https://puzzlebets.xyz/character-logo.png`,
             splashImageUrl: `https://puzzlebets.xyz/character1.png`,
