@@ -172,8 +172,10 @@
     <button
       class="flex w-full justify-center gap-3 rounded-md border-2 border-black bg-black px-3 py-2 text-center font-bold text-white"
       onclick={handleConnect}
-      disabled={!disclaimerAcknowledged}
-      class:opacity-50={!disclaimerAcknowledged}
+      disabled={networkConfig.chain.testnet ? false : !disclaimerAcknowledged}
+      class:opacity-50={networkConfig.chain.testnet
+        ? false
+        : !disclaimerAcknowledged}
     >
       {#if walletStore.connecting}
         Connecting
