@@ -21,7 +21,7 @@
   import LoadingButton from "$lib/components/LoadingButton.svelte"
   import { displayNameStore } from "$lib/displayNameStore.svelte"
   import { mud } from "$lib/mudStore.svelte"
-  import { type PlayerGame } from "$lib/types"
+  import { GameStatus, type PlayerGame } from "$lib/types"
   import {
     capitalized,
     entityToInt,
@@ -151,6 +151,12 @@
   const claim = async () => {
     if (claiming || !mud.systemCalls) return
 
+    if (game.iVotedRematch) {
+      alert(
+        "You have voted to rematch, withdrawing will cancel your vote and end the game.",
+      )
+    }
+
     claiming = true
     try {
       await mud.systemCalls.claim(game.id)
@@ -164,8 +170,23 @@
 
     votingRematch = true
 
+    // Check if opponent has voted to rematch before voting yourself (rematch flags will reset one both vote)
+    const opponentRematched = game.opponentVotedRematch
+
     try {
       await mud.systemCalls.voteRematch(game.id)
+
+      if (opponentRematched) {
+        fetch(`/api/notify/game-rematch`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            targetUser: game.opponent,
+            gameId: entityToInt(game.id),
+          }),
+        })
+      }
     } finally {
       votingRematch = false
     }
@@ -239,7 +260,7 @@
     {:else if outcomes.gameOutcome === "tie"}
       Tie game!
       <div class="text-sm font-medium">
-        You can withdraw your wager and start a new game
+        You can withdraw your wager or vote to rematch
       </div>
     {:else}
       You lost :( Better luck next time!
@@ -252,7 +273,7 @@
       You
     </div>
 
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <div
         class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
       >
@@ -278,6 +299,15 @@
           Balance: {formatSigFig(Number(formatEther(game.myBalance)), 2)} ETH
         </div>
       {/if}
+
+      {#if game.iVotedRematch && game.status === GameStatus.Active}
+        <div
+          class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
+        >
+          <span class="text-pb-green flex h-[21px] items-center text-lg">✓</span
+          > Rematch
+        </div>
+      {/if}
     </div>
 
     {#if outcomes.iMissedPlaybackWindow}
@@ -291,7 +321,7 @@
       {opponentName}
     </div>
 
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <div
         class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
       >
@@ -317,6 +347,15 @@
         >
           <Coins class="h-[21px] w-[20px]" />
           Balance: {formatSigFig(Number(formatEther(game.opponentBalance)), 2)} ETH
+        </div>
+      {/if}
+
+      {#if game.opponentVotedRematch && game.status === GameStatus.Active}
+        <div
+          class="text-md flex items-center gap-2 self-start rounded-full bg-[#ccccccbf] px-2 py-1 font-bold"
+        >
+          <span class="text-pb-green flex h-[21px] items-center text-lg">✓</span
+          > Rematch
         </div>
       {/if}
     </div>
@@ -376,20 +415,25 @@
       </p>
     {/if}
 
-    <!--  Rematch Button
-    {#if outcomes.gameOutcome === "tie"}
+    {#if outcomes.gameOutcome === "tie" && game.status === GameStatus.Active}
       <button
-        class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-        disabled={!outcomes.gameOutcome || outcomes.gameOutcome !== "tie"}
+        class="mt-2 flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+        disabled={!outcomes.gameOutcome ||
+          outcomes.gameOutcome !== "tie" ||
+          game.iVotedRematch}
         onclick={voteRematch}
       >
         {#if votingRematch}
           <DotLoader class="fill-white " />
+        {:else if game.iVotedRematch}
+          Voted Rematch
+        {:else if game.opponentVotedRematch}
+          Start Rematch
         {:else}
           Vote Rematch
         {/if}
       </button>
-    {/if} -->
+    {/if}
   </div>
 </Modal>
 

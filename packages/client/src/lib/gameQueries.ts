@@ -271,13 +271,13 @@ export const playerFields = (game: Game, player: EvmAddress) => {
       myBalance: game.p1Balance,
       myStartTime: game.p1StartTime,
       myScore: game.p1Score,
-      myRematchVote: game.p1Rematch,
+      iVotedRematch: game.p1Rematch,
       iSubmitted: game.p1Submitted,
       opponent: game.p2,
       opponentBalance: game.p2Balance,
       opponentStartTime: game.p2StartTime,
       opponentScore: game.p2Score,
-      opponentRematchVote: game.p2Rematch,
+      opponentVotedRematch: game.p2Rematch,
       opponentSubmitted: game.p2Submitted,
     }
   } else {
@@ -285,13 +285,13 @@ export const playerFields = (game: Game, player: EvmAddress) => {
       myBalance: game.p2Balance,
       myStartTime: game.p2StartTime,
       myScore: game.p2Score,
-      myRematchVote: game.p2Rematch,
+      iVotedRematch: game.p2Rematch,
       iSubmitted: game.p2Submitted,
       opponent: game.p1,
       opponentBalance: game.p1Balance,
       opponentStartTime: game.p1StartTime,
       opponentScore: game.p1Score,
-      opponentRematchVote: game.p1Rematch,
+      opponentVotedRematch: game.p1Rematch,
       opponentSubmitted: game.p1Submitted,
     }
   }
@@ -372,12 +372,12 @@ export function getGameTimers(game: PlayerGame) {
     : -1
 
   const opponentPlaybackTime =
-    game.opponent === game.p1 && game.myStartTime && !game.opponentStartTime
+    game.myStartTime && !game.opponentStartTime
       ? timeRemaining(Number(game.myStartTime) + game.playbackWindow)
       : -1
 
   const myPlaybackTime =
-    game.opponent === game.p2 && !game.myStartTime && game.opponentStartTime
+    !game.myStartTime && game.opponentStartTime
       ? timeRemaining(Number(game.opponentStartTime) + game.playbackWindow)
       : -1
 
