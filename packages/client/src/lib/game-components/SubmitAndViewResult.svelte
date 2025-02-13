@@ -170,8 +170,23 @@
 
     votingRematch = true
 
+    // Check if opponent has voted to rematch before voting yourself (rematch flags will reset one both vote)
+    const opponentRematched = game.opponentVotedRematch
+
     try {
       await mud.systemCalls.voteRematch(game.id)
+
+      if (opponentRematched) {
+        fetch(`/api/notify/game-rematch`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            targetUser: game.opponent,
+            gameId: entityToInt(game.id),
+          }),
+        })
+      }
     } finally {
       votingRematch = false
     }
