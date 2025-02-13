@@ -18,7 +18,7 @@
       version: "next",
       imageUrl: `https://puzzlebets.xyz/join-wordle-splash.png`,
       button: {
-        title: `Join $${usdValue} Wordle Game`,
+        title: usdValue ? `Join $${usdValue} Wordle Game` : `Join Wordle Game`,
         action: {
           type: "launch_frame",
           name: "Puzzle Bets",

@@ -99,7 +99,11 @@
           Start Turn ({formatTimeAbbr(outcomes.myPlaybackTime)} left)
         {/if}
       {:else if outcomes.canViewResults}
-        Show Results
+        {#if ["tie", "win"].includes(outcomes.gameOutcome ?? "") && game.myBalance > 0}
+          Withdraw
+        {:else}
+          Show Results
+        {/if}
       {/if}
     </a>
   {/if}
