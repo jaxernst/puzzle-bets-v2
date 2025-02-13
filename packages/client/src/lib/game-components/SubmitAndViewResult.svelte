@@ -151,12 +151,6 @@
   const claim = async () => {
     if (claiming || !mud.systemCalls) return
 
-    if (game.iVotedRematch) {
-      alert(
-        "You have voted to rematch, withdrawing will cancel your vote and end the game.",
-      )
-    }
-
     claiming = true
     try {
       await mud.systemCalls.claim(game.id)
@@ -374,6 +368,26 @@
   <hr />
 
   <div class="flex flex-col">
+    {#if outcomes.gameOutcome === "tie" && game.status === GameStatus.Active}
+      <button
+        class="mb-2 flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
+        disabled={!outcomes.gameOutcome ||
+          outcomes.gameOutcome !== "tie" ||
+          game.iVotedRematch}
+        onclick={voteRematch}
+      >
+        {#if votingRematch}
+          <DotLoader class="fill-white " />
+        {:else if game.iVotedRematch}
+          Voted Rematch
+        {:else if game.opponentVotedRematch}
+          Start Rematch
+        {:else}
+          Vote Rematch
+        {/if}
+      </button>
+    {/if}
+
     {#if outcomes.gameOutcome === "lose" || outcomes.claimed}
       <button
         class="flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
@@ -407,32 +421,18 @@
           {PROTOCOL_FEE_PERCENTAGE}% protocol fee applied
         </p>
       {/if}
+
+      {#if outcomes.gameOutcome === "tie" && game.iVotedRematch && game.status === GameStatus.Active}
+        <i class="mt-1.5 self-center text-sm">
+          Withdrawing will cancel your rematch vote
+        </i>
+      {/if}
     {/if}
 
     {#if outcomes.claimed}
       <p class="mt-1.5 self-center text-sm font-bold">
         {formatSigFig(Number(formatEther(getClaimableAmount("user"))), 3)} ETH Claimed
       </p>
-    {/if}
-
-    {#if outcomes.gameOutcome === "tie" && game.status === GameStatus.Active}
-      <button
-        class="mt-2 flex justify-center rounded border-2 border-black bg-black p-3 text-base font-bold text-white disabled:opacity-55"
-        disabled={!outcomes.gameOutcome ||
-          outcomes.gameOutcome !== "tie" ||
-          game.iVotedRematch}
-        onclick={voteRematch}
-      >
-        {#if votingRematch}
-          <DotLoader class="fill-white " />
-        {:else if game.iVotedRematch}
-          Voted Rematch
-        {:else if game.opponentVotedRematch}
-          Start Rematch
-        {:else}
-          Vote Rematch
-        {/if}
-      </button>
     {/if}
   </div>
 </Modal>
