@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({
   }
 
   const gameState = await supabaseGameStore.getGame("wordle", gameId, user)
-  console.log("verifying game state", gameState)
+  console.log("verifying game state", gameState, "for user", user)
   const game = new Game(gameState)
 
   if (game.won()) {
