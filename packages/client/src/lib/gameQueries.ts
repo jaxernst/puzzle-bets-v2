@@ -372,12 +372,12 @@ export function getGameTimers(game: PlayerGame) {
     : -1
 
   const opponentPlaybackTime =
-    game.opponent === game.p1 && game.myStartTime && !game.opponentStartTime
+    game.myStartTime && !game.opponentStartTime
       ? timeRemaining(Number(game.myStartTime) + game.playbackWindow)
       : -1
 
   const myPlaybackTime =
-    game.opponent === game.p2 && !game.myStartTime && game.opponentStartTime
+    !game.myStartTime && game.opponentStartTime
       ? timeRemaining(Number(game.opponentStartTime) + game.playbackWindow)
       : -1
 
