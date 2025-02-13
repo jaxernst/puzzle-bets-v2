@@ -44,6 +44,7 @@
 
 
    Nice to haves:
+   * - Create invite links for specific farcaster user @ (username based game password)
    * - Display name endpoint getting duplicate calls
    * - Its possible for the 'connect' modal to get in a state where no button is shown
    * - Add a 'turn on notifications' button in the join game and create game modals
