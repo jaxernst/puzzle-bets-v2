@@ -79,11 +79,13 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 
   if (!gameId) return new Response("Missing game ID", { status: 400 })
 
-  // Optimistically clear cookie cache for game
-  const cachedGame = cookies.get(wordleGameCacheKey(gameId, locals.user))
-  if (cachedGame) {
-    cookies.delete(wordleGameCacheKey(gameId, locals.user), { path: "/" })
-  }
+  // Optimistically clear all cached games for this gameId
+  cookies
+    .getAll()
+    .filter((cookie) => cookie.name.startsWith(`wordleCache_${gameId}`))
+    .forEach((cookie) => {
+      cookies.delete(cookie.name, { path: "/" })
+    })
 
   if (isDemo) {
     return resetDemoGame(gameId)
