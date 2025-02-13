@@ -172,7 +172,7 @@
 
     <!-- Game Visibility -->
     <div class="flex flex-col gap-2">
-      <div class="text-[11px]">Choose Game Visibility</div>
+      <div class="text-[12px]">Choose Game Visibility</div>
 
       <div class="flex h-[62px] items-stretch text-[13px] font-extrabold">
         <button
@@ -199,7 +199,7 @@
         </button>
       </div>
 
-      <div class="text-xs">
+      <div class="text-xs text-black/50">
         {#if visibility === "public"}
           Anyone can join your game from the lobby
         {:else if visibility === "private"}
@@ -229,7 +229,7 @@
 
     <!-- Game Wager -->
     <div>
-      <div class="mb-2 text-[11px]">Wager</div>
+      <div class="mb-2 text-[12px]">Wager</div>
 
       <div class="mb-1.5 flex gap-2">
         {#each { USD: [1, 2, 5, 20], ETH: [0.001, 0.01, 0.05, 0.2] }[selectedCurrency] as wager}
@@ -279,7 +279,7 @@
 
     <!-- Puzzle Time Limit -->
     <div>
-      <div class="mb-2 text-[11px]">Puzzle Time Limit</div>
+      <div class="mb-2 text-[12px]">Puzzle Time Limit</div>
 
       <div class="flex gap-2">
         {#each [4, 8, 20] as timeLimit}
