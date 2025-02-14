@@ -277,7 +277,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
     // Sign game solved message with puzzleMaster key for p1
     uint32 score = 24;
-    bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, score);
+    bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, score, 0);
 
     vm.prank(creator);
     IWorld(worldAddress).v1__submitSolution(gameId, score, creatorSignature);
@@ -285,7 +285,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(Submitted.get(gameId, creator), true);
 
     // Sign game solved message with puzzleMaster key for p2
-    bytes memory opponentSignature = signPuzzleSolved(masterKey, gameId, opponent, score);
+    bytes memory opponentSignature = signPuzzleSolved(masterKey, gameId, opponent, score, 0);
 
     vm.prank(opponent);
     IWorld(worldAddress).v1__submitSolution(gameId, score, opponentSignature);
@@ -348,7 +348,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__startTurn(gameId);
 
     // Attempt to reuse p1's signature for p2 submission
-    bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, 1);
+    bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, 1, 0);
 
     vm.prank(creator);
     IWorld(worldAddress).v1__submitSolution(gameId, 1, creatorSignature);
@@ -358,6 +358,13 @@ contract DeadlinePuzzleSystemTest is MudTest {
     vm.prank(opponent);
     vm.expectRevert("Puzzle master signature invalid");
     IWorld(worldAddress).v1__submitSolution(gameId, 1, creatorSignature);
+
+    // Attempt sign for p1 submission with wrong resetNonce
+    bytes memory creatorSignatureWrongNonce = signPuzzleSolved(masterKey, gameId, creator, 1, 1);
+
+    vm.prank(creator);
+    vm.expectRevert("Puzzle master signature invalid");
+    IWorld(worldAddress).v1__submitSolution(gameId, 1, creatorSignatureWrongNonce);
   }
 
   function test_submitSolution_RevertsWhen_SubmissionWindowHasClosed() public {
@@ -369,6 +376,123 @@ contract DeadlinePuzzleSystemTest is MudTest {
     bytes memory sig = "ahhhh";
     vm.expectRevert("Submission window closed");
     IWorld(worldAddress).v1__submitSolution(gameId, 0, sig);
+  }
+
+  function test_submitSolution_SingaturesWithCorrectResetNonceCanVerifyRematchedGames() public {
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+
+    vm.prank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 100,
+      playbackWindowSeconds: 100,
+      inviteExpirationTimestamp: block.timestamp + 1000,
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
+    });
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame(gameId);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn(gameId);
+
+    // Both players submit same score for first game (resetNonce = 0)
+    uint32 score = 10;
+    bytes memory p1Signature = signPuzzleSolved(masterKey, gameId, p1, score, 0);
+    bytes memory p2Signature = signPuzzleSolved(masterKey, gameId, p2, score, 0);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, p1Signature);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, p2Signature);
+
+    // Both players vote for rematch
+    vm.prank(p1);
+    IWorld(worldAddress).v1__voteRematch(gameId);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__voteRematch(gameId);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn(gameId);
+
+    // Both players submit new solutions with incremented resetNonce
+    uint32 newScore = 20;
+    bytes memory p1SignatureRematch = signPuzzleSolved(masterKey, gameId, p1, newScore, 1);
+    bytes memory p2SignatureRematch = signPuzzleSolved(masterKey, gameId, p2, newScore, 1);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, newScore, p1SignatureRematch);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__submitSolution(gameId, newScore, p2SignatureRematch);
+
+    assertEq(Score.get(gameId, p1), newScore);
+    assertEq(Score.get(gameId, p2), newScore);
+    assertEq(Submitted.get(gameId, p1), true);
+    assertEq(Submitted.get(gameId, p2), true);
+
+    // Withdraw funds
+    vm.prank(p1);
+    IWorld(worldAddress).v1__claim(gameId);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__claim(gameId);
+
+    assertEq(p1.balance, 0);
+    assertEq(p2.balance, 0);
+  }
+
+  function test_submitSolution_SingaturesCannotBeReusedAfterRematch() public {
+    // Set up puzzle master
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+
+    // Create and set up initial game
+    vm.startPrank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 100,
+      playbackWindowSeconds: 100,
+      inviteExpirationTimestamp: block.timestamp + 1000,
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
+    });
+    vm.stopPrank();
+
+    // P2 joins game
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame(gameId);
+
+    // Both players start their turns
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn(gameId);
+
+    // Both players submit same score for first game
+    uint32 score = 10;
+    bytes memory p1Signature = signPuzzleSolved(masterKey, gameId, p1, score, 0);
+    bytes memory p2Signature = signPuzzleSolved(masterKey, gameId, p2, score, 0);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, p1Signature);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, p2Signature);
+
+    // Both players vote for rematch
+    vm.prank(p1);
+    IWorld(worldAddress).v1__voteRematch(gameId);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__voteRematch(gameId);
+
+    // P1 starts turn in new game
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn(gameId);
+
+    // Here's the exploit: P1 reuses their signature from the previous game
+    vm.prank(p1);
+    vm.expectRevert("Puzzle master signature invalid");
+    IWorld(worldAddress).v1__submitSolution(gameId, score, p1Signature);
   }
 
   function test_claim_ReturnsEachPlayersDepositIfNeitherSubmitAfterTheDeadline() public {
@@ -429,8 +553,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(p2.balance, 6 ether);
 
     // Both players successfully solve
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
-    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, p2, 1);
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1, 0);
+    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, p2, 1, 0);
 
     vm.prank(p1);
     IWorld(worldAddress).v1__submitSolution(gameId, 0, sig1);
@@ -478,7 +602,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__startTurn(gameId);
 
     uint32 score = 1;
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score);
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score, 0);
 
     vm.startPrank(p1);
     IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
@@ -524,7 +648,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(GamePlayerStartTime.get(gameId, p1), GamePlayerStartTime.get(gameId, p2));
 
     uint32 score = 32;
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score);
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score, 0);
 
     vm.startPrank(p1);
     IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
@@ -562,7 +686,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__startTurn(gameId);
 
     uint32 score = 10;
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score);
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score, 0);
 
     vm.prank(p1);
     IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
@@ -723,13 +847,12 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
     // Creator submits a non-zero score
     uint32 score = 10;
-    bytes memory sig = signPuzzleSolved(masterKey, gameId, creator, score);
+    bytes memory sig = signPuzzleSolved(masterKey, gameId, creator, score, 0);
 
     vm.prank(creator);
     IWorld(worldAddress).v1__submitSolution(gameId, score, sig);
 
     // Creator should be able to claim immediately
-    uint256 creatorBalanceBefore = creator.balance;
     vm.prank(creator);
     IWorld(worldAddress).v1__claim(gameId);
 
@@ -772,9 +895,9 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__startTurn(gameId);
 
     vm.prank(p1);
-    IWorld(worldAddress).v1__submitSolution(gameId, 10, signPuzzleSolved(masterKey, gameId, p1, 10));
+    IWorld(worldAddress).v1__submitSolution(gameId, 10, signPuzzleSolved(masterKey, gameId, p1, 10, 0));
     vm.prank(p2);
-    IWorld(worldAddress).v1__submitSolution(gameId, 5, signPuzzleSolved(masterKey, gameId, p2, 5));
+    IWorld(worldAddress).v1__submitSolution(gameId, 5, signPuzzleSolved(masterKey, gameId, p2, 5, 0));
 
     // Record balances before claim
     uint256 p1BalanceBefore = p1.balance;
@@ -830,8 +953,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
     // Both players successfully solve
     uint32 score = 1;
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, creator, score);
-    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, opponent, score);
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, creator, score, 0);
+    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, opponent, score, 0);
 
     vm.prank(creator);
     IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
@@ -900,9 +1023,10 @@ contract DeadlinePuzzleSystemTest is MudTest {
     uint puzzleMasterPk,
     bytes32 gameId,
     address playerAddr,
-    uint32 score
+    uint32 score,
+    uint16 resetNonce
   ) private pure returns (bytes memory) {
-    bytes memory data = abi.encodePacked(gameId, playerAddr, score);
+    bytes memory data = abi.encodePacked(gameId, playerAddr, score, resetNonce);
     bytes32 messageHash = data.toEthSignedMessageHash();
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(puzzleMasterPk, messageHash);
     return abi.encodePacked(r, s, v);

@@ -12,10 +12,11 @@ export async function signPlayerSolvedMessage(
   gameId: number,
   player: EvmAddress,
   gameScore: number,
+  resetCount: number,
 ) {
   const encodedMessage = encodePacked(
-    ["bytes32", "address", "uint32"],
-    [intToEntity(gameId) as `0x${string}`, player, gameScore],
+    ["bytes32", "address", "uint32", "uint16"],
+    [intToEntity(gameId) as `0x${string}`, player, gameScore, resetCount],
   )
 
   return await puzzleMasterSigner.signMessage({

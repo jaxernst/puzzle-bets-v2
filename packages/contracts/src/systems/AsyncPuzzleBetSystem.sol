@@ -134,7 +134,11 @@ contract AsyncPuzzleBetSystem is System {
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
 
-    Submitted.set(gameId, sender, true);
+    _submitSolution(gameId, sender, score, puzzleMasterSignature);
+  }
+
+  function _submitSolution(bytes32 gameId, address player, uint32 score, bytes memory puzzleMasterSignature) private {
+    Submitted.set(gameId, player, true);
 
     // No signature check necessary for a 0 score (essentially a forfeit)
     if (score == 0) {
@@ -143,15 +147,16 @@ contract AsyncPuzzleBetSystem is System {
 
     bool isValid = SolutionVerificationLib.verifyPuzzleMasterSignature({
       gameId: gameId,
-      player: sender,
+      player: player,
       score: score,
+      resetNonce: RematchCount.get(gameId),
       puzzleMaster: PuzzleMasterEoa.get(gameId),
       puzzleMasterSignature: puzzleMasterSignature
     });
 
     require(isValid, "Puzzle master signature invalid");
 
-    Score.set(gameId, sender, score);
+    Score.set(gameId, player, score);
   }
 
   /**

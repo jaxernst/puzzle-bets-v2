@@ -78,6 +78,8 @@
       showConfirmSubmit = false
       showResults = true
     }
+
+    puzzleVerification = null
   }
 
   const getPuzzleVerification = async () => {
@@ -93,6 +95,7 @@
     return (await res.json()) as {
       won: boolean
       score: number
+      resetCount: number
       signature: `0x${string}`
     }
   }
@@ -100,6 +103,7 @@
   let puzzleVerification: {
     won: boolean
     score: number
+    resetCount: number
     signature: `0x${string}`
   } | null = $state(null)
 
