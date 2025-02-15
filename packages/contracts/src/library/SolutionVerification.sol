@@ -13,15 +13,25 @@ library SolutionVerificationLib {
     bytes32 gameId,
     address player,
     uint32 score,
+    uint16 resetNonce,
     address puzzleMaster,
     bytes memory puzzleMasterSignature
   ) public pure returns (bool) {
-    address recoveredAddress = _recoverSigner(abi.encodePacked(gameId, player, score), puzzleMasterSignature);
+    address recoveredAddress = _recoverSigner(
+      abi.encodePacked(gameId, player, score, resetNonce),
+      puzzleMasterSignature
+    );
+
     return recoveredAddress == puzzleMaster;
   }
 
-  function getMessageHash(bytes32 gameId, address player, uint32 solutionIndex) public pure returns (bytes32) {
-    return keccak256(abi.encodePacked(gameId, player, solutionIndex));
+  function getMessageHash(
+    bytes32 gameId,
+    address player,
+    uint32 solutionIndex,
+    uint16 resetNonce
+  ) public pure returns (bytes32) {
+    return keccak256(abi.encodePacked(gameId, player, solutionIndex, resetNonce));
   }
 
   function _recoverSigner(bytes memory data, bytes memory signature) internal pure returns (address) {

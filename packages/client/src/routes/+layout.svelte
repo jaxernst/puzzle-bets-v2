@@ -51,7 +51,8 @@
    * - If a player misses the playback window but their opponent scored 0, that should be treated as a tie
    * - The 'cancel game' card button should take you directly the 'cancel game' modal
    * - Set up system to notify when a user has won a game
-   * - Cbsw popup window still fails to open on mobile
+   * - Players who have the beta frame with notifications on and add the new frame may get their notifications turned off on the main frame because notification states are shared between deployments
+   
    */
 
   let { children } = $props()

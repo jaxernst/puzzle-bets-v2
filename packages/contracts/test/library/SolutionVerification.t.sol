@@ -11,39 +11,68 @@ contract SolutionVerificationLibTest is Test {
   function prepareTestSignature(
     bytes32 gameId,
     address playerAddr,
-    uint32 solutionIndex
+    uint32 solution,
+    uint16 nonce
   ) public pure returns (bytes32) {
-    bytes memory data = abi.encodePacked(gameId, playerAddr, solutionIndex);
+    bytes memory data = abi.encodePacked(gameId, playerAddr, solution, nonce);
     return data.toEthSignedMessageHash();
   }
 
+  struct TestParams {
+    bytes32 gameId;
+    address playerAddr;
+    uint32 solution;
+    uint16 nonce;
+    address master;
+    uint256 key;
+  }
+
   function test_verifies_message_signed_by_puzzle_master() public {
-    (address master, uint256 key) = makeAddrAndKey("master");
+    TestParams memory params;
+    (params.master, params.key) = makeAddrAndKey("master");
 
-    bytes32 gameId = bytes32(uint256(1));
-    address playerAddr = address(0x94B3219d193e9e214d019699fFEa55c1D6098f3E);
-    uint32 solutionIndex = uint32(1);
+    params.gameId = bytes32(uint256(1));
+    params.playerAddr = address(0x94B3219d193e9e214d019699fFEa55c1D6098f3E);
+    params.solution = uint32(1);
+    params.nonce = 0;
 
-    bytes32 messageHash = prepareTestSignature(gameId, playerAddr, solutionIndex);
-
-    (uint8 v, bytes32 r, bytes32 s) = vm.sign(key, messageHash);
+    // First run with nonce 0
+    bytes32 messageHash = prepareTestSignature(params.gameId, params.playerAddr, params.solution, params.nonce);
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(params.key, messageHash);
 
     // Sanity check: Ensure raw ecrecover works with params
     address recoveredAddress = ecrecover(messageHash, v, r, s);
-    assertEq(recoveredAddress, master);
+    assertEq(recoveredAddress, params.master);
     assertEq(
-      SolutionVerificationLib.getMessageHash(gameId, playerAddr, solutionIndex),
-      keccak256(abi.encodePacked(gameId, playerAddr, solutionIndex))
+      SolutionVerificationLib.getMessageHash(params.gameId, params.playerAddr, params.solution, params.nonce),
+      keccak256(abi.encodePacked(params.gameId, params.playerAddr, params.solution, params.nonce))
     );
 
     bool verified = SolutionVerificationLib.verifyPuzzleMasterSignature(
-      gameId,
-      playerAddr,
-      solutionIndex,
-      master,
+      params.gameId,
+      params.playerAddr,
+      params.solution,
+      params.nonce,
+      params.master,
       abi.encodePacked(r, s, v)
     );
+    assert(verified);
 
+    // Second run with incremented nonce
+    params.nonce = 1;
+    params.solution = 6727472;
+    messageHash = prepareTestSignature(params.gameId, params.playerAddr, params.solution, params.nonce);
+    (v, r, s) = vm.sign(params.key, messageHash);
+
+    // Verify with incremented nonce
+    verified = SolutionVerificationLib.verifyPuzzleMasterSignature(
+      params.gameId,
+      params.playerAddr,
+      params.solution,
+      params.nonce,
+      params.master,
+      abi.encodePacked(r, s, v)
+    );
     assert(verified);
   }
 }
